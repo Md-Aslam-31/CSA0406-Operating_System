@@ -9,8 +9,8 @@
 | Local WSL 2 + Ubuntu 24.04 | USER ACTION | This shell is not elevated. Run `wsl --install -d Ubuntu-24.04` in Administrator PowerShell and restart if requested. Ubuntu CI has verified the Linux workload. |
 | Tasks 1–4 evaluation | DONE | Ranked requirements, OS type/structure alternatives, services and justifications in report. |
 | Task 5 system calls and strace | DONE | Explanation and actual Ubuntu `strace -c` output included. |
-| Task 6 copy program | CI VERIFY PENDING | Main output was verified in earlier successful CI. Current branch adds boundary/error checks; new workflow run pending. |
-| Task 7 process-control program | CI VERIFY PENDING | Main output was verified in earlier successful CI. Current branch adds exec-failure and output-buffering checks; new workflow run pending. |
+| Task 6 copy program | DONE - CI run 5 passed | Main output was verified in earlier successful CI. Boundary/error checks passed in workflow run 5. |
+| Task 7 process-control program | DONE - CI run 5 passed | Main output was verified in earlier successful CI. Exec-failure and output-buffering checks passed in workflow run 5. |
 | Tasks 8–9 protection and I/O | DONE | Applied analysis and 500 MB interrupt calculation in report. |
 | Task 10 measurements | DONE | Actual one-run Ubuntu timings and `/usr/bin/time -v` captured; single-trial limitation documented. |
 | Tasks 11–12 architecture and design challenge | DONE | Architecture, scaling, virtualization and home/cloud analysis included. |
@@ -20,5 +20,5 @@
 | Genuine terminal screenshots | NOT AVAILABLE | No Linux desktop was available for screenshot capture; raw workflow logs are retained without claiming they are screenshots. |
 | DOCX/PDF report | DONE | Word-authored PDF; 8-page render visually checked page by page. |
 | Dedicated repository `CSA04-192572147-Assignment1` | USER ACTION | GitHub browser automation could read but not operate the logged-in Chrome window. Repository creation must occur in GitHub UI before pushing the standalone repository. |
-| Task-scoped commit history | IN PROGRESS | Separate task folder commits are being created. |
-| Push and remote verification | IN PROGRESS | Existing course repository is the authorized reachable remote; dedicated repository push requires its creation. |
+| Task-scoped commit history | IN PROGRESS | Each `Task-01` through `Task-12` folder has its own task-scoped commit. |
+| Push and remote verification | IN PROGRESS | Final Assignment 1 package pushed to the existing course repository at commit 3b13a4d; latest evidence and report updates are being pushed. Dedicated repository push requires its creation. |

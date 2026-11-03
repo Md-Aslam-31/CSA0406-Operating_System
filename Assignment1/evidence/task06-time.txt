@@ -1,4 +1,4 @@
-	Command being timed: "./Task06/task06"
+	Command being timed: "./Task-06/task06"
 	User time (seconds): 0.00
 	System time (seconds): 0.01
 	Percent of CPU this job got: 94%
@@ -10,9 +10,9 @@
 	Maximum resident set size (kbytes): 1512
 	Average resident set size (kbytes): 0
 	Major (requiring I/O) page faults: 0
-	Minor (reclaiming a frame) page faults: 76
+	Minor (reclaiming a frame) page faults: 75
 	Voluntary context switches: 5
-	Involuntary context switches: 0
+	Involuntary context switches: 1
 	Swaps: 0
 	File system inputs: 0
 	File system outputs: 104

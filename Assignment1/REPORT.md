@@ -7,7 +7,7 @@
 **Faculty:** Dr. Jayasakthi Velmurugan K
 **Course:** CSA0406 Operating Systems · CO1
 **Repository:** https://github.com/Md-Aslam-31/CSA0406-Operating_System/tree/main/Assignment1
-**Execution environment:** GitHub Actions runner, Ubuntu 24.04.5 LTS, GCC 13.3.0; workflow run 41688186418 completed successfully. Local authoring host: Windows 11 with MSYS2 GCC 16.1.0. Captured stdout, strace and time outputs are in `evidence/`.
+**Execution environment:** GitHub Actions runner, Ubuntu 24.04.5 LTS, GCC 13.3.0; workflow run 41692084440 completed successfully. Local authoring host: Windows 11 with MSYS2 GCC 16.1.0. Captured stdout, strace and time outputs are in `evidence/`.
 
 ## Executive decision
 
@@ -82,7 +82,7 @@ System-call categories: process control; file management; device management; inf
 
 `fopen`/`fread`/`fwrite` are C library interfaces. `fopen` usually makes an `openat`-family syscall. Buffered `fread` can satisfy many reads from a library buffer; with n bytes and buffer B, data calls are roughly ceil(n/B), plus open/close and possible metadata calls, versus about ceil(n/b) for direct reads with b-byte chunks. Library buffering costs approximately B bytes per stream plus bookkeeping and may defer errors until flush/close. Direct syscalls avoid stream buffering but require short-read/short-write handling.
 
-Linux evidence: `evidence/task06-strace-summary.txt` is the actual Ubuntu 24.04 `strace -c` output [2] for the Task-06 executable, which is also the real read/write workload discussed here. It reports 10,027 read calls overall for the complete process (including runtime and file setup), while the copy loops themselves print 10,001 + 21 + 4 = 10,026 reads. This small difference is startup/runtime I/O outside the three measured copy loops. The full workflow output is linked from the repository Actions page.
+Linux evidence: `evidence/task06-strace-summary.txt` is the actual Ubuntu 24.04 `strace -c` output [2] for the Task-06 executable, which is also the real read/write workload discussed here. It reports 10,027 read calls overall for the complete process (including runtime and file setup), while the copy loops themselves print 10,001 + 21 + 4 = 10,026 reads. This small difference is startup/runtime I/O outside the three measured copy loops. The latest full workflow output is in [run 5](https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/41692084440).
 
 ## Task 6 — Cost of system calls and completed program
 
@@ -134,7 +134,7 @@ Programmed I/O ties CPU to every transfer and suits simple low-rate controls. In
 
 ## Task 10 — Measurements
 
-Ubuntu 24.04 run evidence is in `evidence/`. GCC 13.3 compiled both programs with `-std=c11 -Wall -Wextra -pthread`; Task-06 and Task-07 outputs matched expected behavior. One timed trial measured 1,000 sequential fork+wait children at 0.139150 s and creation/join of 1,000 no-op pthreads at 0.043700 s. In this run threads were about 3.2x faster, consistent with sharing the process address space, but this is one short runner sample and must not be generalized; scheduler load, CPU, libc and kernel affect it. The accompanying `/usr/bin/time -v` reports 0.18 s elapsed and 10,024 KiB maximum RSS for the combined benchmark. Task-06 total process timing was 0.01 s (user 0.00, system 0.01) for all three buffer copies; this timer is too coarse to distinguish individual sizes. The 1,000-process and 1,000-thread comparison includes wait/join costs. Processes provide stronger isolation and initially share pages copy-on-write; threads share code/data/address space but each has a stack and synchronization requirements.
+Ubuntu 24.04 run evidence is in `evidence/`. GCC 13.3 compiled both programs with `-std=c11 -Wall -Wextra -pthread`; Task-06 and Task-07 outputs matched expected behavior. The latest timed trial measured 1,000 sequential fork+wait children at 0.137441 s and creation/join of 1,000 no-op pthreads at 0.043998 s. In this run threads were about 3.2x faster, consistent with sharing the process address space, but this is one short runner sample and must not be generalized; scheduler load, CPU, libc and kernel affect it. The accompanying `/usr/bin/time -v` reports 0.18 s elapsed and 9,896 KiB maximum RSS for the combined benchmark. Task-06 total process timing was 0.01 s (user 0.00, system 0.01) for all three buffer copies; this timer is too coarse to distinguish individual sizes. The 1,000-process and 1,000-thread comparison includes wait/join costs. Processes provide stronger isolation and initially share pages copy-on-write; threads share code/data/address space but each has a stack and synchronization requirements.
 
 ## Task 11 — Complete recommendation
 
