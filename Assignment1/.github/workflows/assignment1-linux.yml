@@ -1,0 +1,21 @@
+name: Assignment 1 Linux evidence
+on:
+  push:
+    paths:
+      - '**'
+      - '.github/workflows/assignment1-linux.yml'
+  workflow_dispatch:
+jobs:
+  linux-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install strace
+        run: sudo apt-get update && sudo apt-get install -y strace
+      - name: Run Linux evidence script
+        run: bash scripts/run_linux_evidence.sh
+      - name: Upload measured evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: assignment1-linux-evidence
+          path: evidence/*.txt
