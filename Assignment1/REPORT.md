@@ -53,11 +53,11 @@ Conflicts: hard deadlines can conflict with throughput and memory sharing; encry
 | Modular | Loadable modules combine fast kernel calls with extensibility; modules still run privileged and can destabilize the kernel. |
 | Hybrid | Combines kernel and service ideas to balance compatibility and performance; complexity can weaken the benefits of separation. |
 
-Linux is a monolithic kernel with loadable modules; Windows NT is hybrid; Android uses the Linux kernel with Android user-space framework/services; QNX is a microkernel RTOS, while FreeRTOS is a small real-time kernel rather than a full POSIX desktop OS. Verify the exact target version/configuration before making safety or certification claims.
+Linux is a monolithic kernel with loadable modules; Windows NT is hybrid; Android uses the Linux kernel with Android user-space framework/services; QNX is a microkernel RTOS, while FreeRTOS is a small real-time kernel rather than a full POSIX desktop OS [6][7]. Verify the exact target version/configuration before making safety or certification claims.
 
 **Choices:** For a monitor, use a microkernel or small RTOS design with critical sensor/alarm paths isolated from optional services, provided measured worst-case IPC and interrupt latency fit the 10-ms budget. For the database, use a mature modular kernel (e.g., Linux) for drivers, observability and storage/network performance, backed by a tested HA cluster; kernel modularity does not itself deliver HA.
 
-**Monolithic monitor alternative:** A sensor service request through a syscall is typically one trap and kernel dispatch; a microkernel design may add IPC and a context switch or two. Those fixed costs are hardware and configuration dependent and must be measured against the deadline; they are not safely represented by generic nanosecond claims. A monolithic kernel can reduce memory overhead and call overhead, but a faulty driver has a broader failure domain. Microkernel memory overhead includes servers and message buffers; isolation can justify that cost for patient safety.
+**Monolithic monitor alternative:** A sensor service request through a syscall is typically one trap and kernel dispatch; a microkernel design may add IPC and a context switch or two. Those fixed costs are hardware and configuration dependent and must be measured against the deadline; they are not safely represented by generic nanosecond claims. A monolithic kernel can reduce memory overhead and call overhead, but a faulty driver has a broader failure domain. QNX documents user-space isolation of drivers and services as a core microkernel property [8]. Microkernel memory overhead includes servers and message buffers; isolation can justify that cost for patient safety.
 
 ## Task 4 — Services
 
@@ -78,15 +78,15 @@ Remove from monitor: general-purpose shell, package manager, unused network daem
 
 ## Task 5 — System calls
 
-System-call categories: process control; file management; device management; information maintenance; communication; and protection. For `read(fd, buf, count)`, a C library wrapper places arguments according to the ABI and executes the syscall instruction/trap. CPU changes privilege to kernel mode and enters the syscall handler; kernel validates descriptor, permissions and user buffer, requests data from cache/device (possibly sleeping), copies available bytes to user space, sets return value/error, then returns to user mode. A read may return fewer bytes than requested. Parameters are commonly in registers, or a pointer to a memory block; some ABIs/stubs also use the stack.
+System-call categories: process control; file management; device management; information maintenance; communication; and protection. For `read(fd, buf, count)`, a C library wrapper places arguments according to the ABI and executes the syscall instruction/trap [1]. CPU changes privilege to kernel mode and enters the syscall handler; kernel validates descriptor, permissions and user buffer, requests data from cache/device (possibly sleeping), copies available bytes to user space, sets return value/error, then returns to user mode. A read may return fewer bytes than requested [1]. Parameters are commonly in registers, or a pointer to a memory block; some ABIs/stubs also use the stack.
 
 `fopen`/`fread`/`fwrite` are C library interfaces. `fopen` usually makes an `openat`-family syscall. Buffered `fread` can satisfy many reads from a library buffer; with n bytes and buffer B, data calls are roughly ceil(n/B), plus open/close and possible metadata calls, versus about ceil(n/b) for direct reads with b-byte chunks. Library buffering costs approximately B bytes per stream plus bookkeeping and may defer errors until flush/close. Direct syscalls avoid stream buffering but require short-read/short-write handling.
 
-Linux evidence: `evidence/task06-strace-summary.txt` is the actual Ubuntu 24.04 `strace -c` output for the Task06 executable, which is also the real read/write workload discussed here. It reports 10,027 read calls overall for the complete process (including runtime and file setup), while the copy loops themselves print 10,001 + 21 + 4 = 10,026 reads. This small difference is startup/runtime I/O outside the three measured copy loops. The full workflow output is linked from the repository Actions page.
+Linux evidence: `evidence/task06-strace-summary.txt` is the actual Ubuntu 24.04 `strace -c` output [2] for the Task-06 executable, which is also the real read/write workload discussed here. It reports 10,027 read calls overall for the complete process (including runtime and file setup), while the copy loops themselves print 10,001 + 21 + 4 = 10,026 reads. This small difference is startup/runtime I/O outside the three measured copy loops. The full workflow output is linked from the repository Actions page.
 
 ## Task 6 — Cost of system calls and completed program
 
-`Task06/copy_file.c` fills the loop, retries interrupted calls, handles partial writes, validates buffer size and checks errors. For the 10,000-byte input, with one final EOF read counted, expected calls are ceil(10000/b)+1: 10001 for b=1; 21 for b=512; 4 for b=4096. The program compiled with GCC 13.3.0 on Ubuntu and produced those exact counts. The same output was also reproduced locally with MSYS2 GCC 16.1.0. Linux `strace -c` reports process-wide syscall totals, including startup and stdio, rather than only the function’s read counter.
+`Task-06/copy_file.c` fills the loop, retries interrupted calls, handles partial writes, validates buffer size and checks errors. For the 10,000-byte input, with one final EOF read counted, expected calls are ceil(10000/b)+1: 10001 for b=1; 21 for b=512; 4 for b=4096. The program compiled with GCC 13.3.0 on Ubuntu and produced those exact counts. The same output was also reproduced locally with MSYS2 GCC 16.1.0. Linux `strace -c` reports process-wide syscall totals, including startup and stdio, rather than only the function’s read counter.
 
 | Buffer | Copy reads (measured by program) | Approx. user buffer | Assessment |
 |---:|---:|---:|---|
@@ -94,11 +94,11 @@ Linux evidence: `evidence/task06-strace-summary.txt` is the actual Ubuntu 24.04 
 | 512 B | 21 | 512 B | Far fewer calls; still more dispatches. |
 | 4096 B | 4 | 4096 B | Strong reduction with tiny memory cost for this workload. |
 
-For backup, begin with 64 KiB–1 MiB buffered I/O and benchmark throughput, memory pressure and device behavior on actual Linux hardware; 4 KiB wins among the supplied sizes by syscall count but cannot be called universally fastest without timing. A larger buffer reduces call count to O(n/b), while memory per copy remains O(b); copying itself is O(n). `mmap` can reduce explicit read/write calls and copies, but still incurs page faults, mapping calls, page-cache work and possible writeback; touching a huge mapping uses virtual address space O(n), while resident memory is workload-dependent and constrained by cache eviction. For bounded-memory backup, chunked I/O is easier to limit and recover from.
+For backup, begin with 64 KiB–1 MiB buffered I/O and benchmark throughput, memory pressure and device behavior on actual Linux hardware; 4 KiB wins among the supplied sizes by syscall count but cannot be called universally fastest without timing. A larger buffer reduces call count to O(n/b), while memory per copy remains O(b); copying itself is O(n). `mmap` can reduce explicit read/write calls and copies [9], but still incurs page faults, mapping calls, page-cache work and possible writeback; touching a huge mapping uses virtual address space O(n), while resident memory is workload-dependent and constrained by cache eviction. For bounded-memory backup, chunked I/O is easier to limit and recover from.
 
 ## Task 7 — Process control
 
-`fork()` creates a child (typically using copy-on-write); `exec()` replaces the child image; `wait()`/`waitpid()` reaps termination and returns status; `exit()` flushes user-space streams and terminates, whereas `_exit()` terminates without stdio flushing. The shell forks, child execs the requested command, parent waits/reaps and reports status. The completed `Task07/shell_jobs.c` implements `expr 6 * 7` and a child exiting 3; it ran on Ubuntu 24.04 and produced the expected output preserved in `evidence/task07-output.txt`.
+`fork()` creates a child (typically using copy-on-write) [3]; `exec()` replaces the child image [4]; `wait()`/`waitpid()` reaps termination and returns status [5]; `exit()` flushes user-space streams and terminates, whereas `_exit()` terminates without stdio flushing. The shell forks, child execs the requested command, parent waits/reaps and reports status. The completed `Task-07/shell_jobs.c` implements `expr 6 * 7` and a child exiting 3; it ran on Ubuntu 24.04 and produced the expected output preserved in `evidence/task07-output.txt`.
 
 Process sketch:
 
@@ -134,7 +134,7 @@ Programmed I/O ties CPU to every transfer and suits simple low-rate controls. In
 
 ## Task 10 — Measurements
 
-Ubuntu 24.04 run evidence is in `evidence/`. GCC 13.3 compiled both programs with `-std=c11 -Wall -Wextra -pthread`; Task06 and Task07 outputs matched expected behavior. One timed trial measured 1,000 sequential fork+wait children at 0.139150 s and creation/join of 1,000 no-op pthreads at 0.043700 s. In this run threads were about 3.2x faster, consistent with sharing the process address space, but this is one short runner sample and must not be generalized; scheduler load, CPU, libc and kernel affect it. The accompanying `/usr/bin/time -v` reports 0.18 s elapsed and 10,024 KiB maximum RSS for the combined benchmark. Task06 total process timing was 0.01 s (user 0.00, system 0.01) for all three buffer copies; this timer is too coarse to distinguish individual sizes. The 1,000-process and 1,000-thread comparison includes wait/join costs. Processes provide stronger isolation and initially share pages copy-on-write; threads share code/data/address space but each has a stack and synchronization requirements.
+Ubuntu 24.04 run evidence is in `evidence/`. GCC 13.3 compiled both programs with `-std=c11 -Wall -Wextra -pthread`; Task-06 and Task-07 outputs matched expected behavior. One timed trial measured 1,000 sequential fork+wait children at 0.139150 s and creation/join of 1,000 no-op pthreads at 0.043700 s. In this run threads were about 3.2x faster, consistent with sharing the process address space, but this is one short runner sample and must not be generalized; scheduler load, CPU, libc and kernel affect it. The accompanying `/usr/bin/time -v` reports 0.18 s elapsed and 10,024 KiB maximum RSS for the combined benchmark. Task-06 total process timing was 0.01 s (user 0.00, system 0.01) for all three buffer copies; this timer is too coarse to distinguish individual sizes. The 1,000-process and 1,000-thread comparison includes wait/join costs. Processes provide stronger isolation and initially share pages copy-on-write; threads share code/data/address space but each has a stack and synchronization requirements.
 
 ## Task 11 — Complete recommendation
 
@@ -161,6 +161,17 @@ Virtualizing everything on two large servers may improve consolidation and snaps
 
 **D. Defence:** This preserves deterministic local behavior and existing desktop/imaging tiers while adding distributed protections where the changed trust boundary requires them. The trade-off is greater identity, monitoring, governance and operational complexity, plus cloud/network cost and possible replication lag. WAN outages must reduce remote visibility, not disable local alarm response. Validate remote alert latency as a service objective, not a hard local-control guarantee; perform threat modeling, penetration testing, disaster recovery and clinical usability testing before deployment.
 
-## References / evidence boundary
+## References
 
-This report follows the assignment and evaluation-key criteria supplied with the prompt. Quantitative formulas (call counts, complexity, interrupt estimate) are derived explicitly in text. No vendor certification, price or Linux timing is asserted without a target system. Linux evidence commands are supplied but require execution on an actual Linux host before those rows can be marked complete.
+1. Linux man-pages project, `read(2)`, https://man7.org/linux/man-pages/man2/read.2.html.
+2. Linux man-pages project, `strace(1)`, https://man7.org/linux/man-pages/man1/strace.1.html.
+3. Linux man-pages project, `fork(2)`, https://man7.org/linux/man-pages/man2/fork.2.html.
+4. Linux man-pages project, `execve(2)`, https://man7.org/linux/man-pages/man2/execve.2.html.
+5. Linux man-pages project, `wait(2)`, https://man7.org/linux/man-pages/man2/waitpid.2.html.
+6. AWS, FreeRTOS Kernel Fundamentals, https://docs.aws.amazon.com/freertos/latest/userguide/dev-guide-freertos-kernel.html.
+7. FreeRTOS, Task Scheduling, https://github.com/FreeRTOS/FreeRTOS-Kernel-Book/blob/main/ch04.md.
+8. QNX, Microkernel Architecture, https://qnx.com/developers/docs/8.0/com.qnx.doc.neutrino.sys_arch/topic/intro_MICROKERNELARCH.html.
+9. Linux man-pages project, `mmap(2)`, https://man7.org/linux/man-pages/man2/mmap.2.html.
+10. Canonical, Install Ubuntu on WSL 2, https://ubuntu.com/wsl/docs/latest/howto/install-ubuntu-wsl2/.
+
+The assignment PDF and evaluation key supplied for this work are the controlling rubric. Quantitative formulas (call counts, complexity, interrupt estimate) are derived explicitly in text. Timing values are actual single-run CI measurements and are not universal benchmarks. No vendor certification or price is asserted without a target system. Linux program outputs and measurements were executed in the Ubuntu 24.04.5 CI workflow; local Windows WSL installation remains pending an elevated install and restart.

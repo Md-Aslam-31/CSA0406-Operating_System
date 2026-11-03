@@ -4,11 +4,19 @@ cd "$(dirname "$0")/.."
 mkdir -p evidence
 printf 'OS: '; . /etc/os-release; printf '%s %s\n' "$NAME" "$VERSION_ID"
 printf 'Compiler: '; gcc --version | head -n 1
-for task in Task06 Task07; do gcc -std=c11 -Wall -Wextra -pthread "$task"/*.c -o "$task/${task,,}"; done
-(cd Task06 && ./task06) 2>&1 | tee evidence/task06-output.txt
-(cd Task07 && ./task07) 2>&1 | tee evidence/task07-output.txt
-strace -c -e trace=read,write,openat,close ./Task06/task06 2> evidence/task06-strace-summary.txt
-/usr/bin/time -v ./Task06/task06 > evidence/task06-time-output.txt 2> evidence/task06-time.txt
+gcc -std=c11 -Wall -Wextra -pthread Task-06/copy_file.c -o Task-06/task06
+gcc -std=c11 -Wall -Wextra -pthread Task-06/test_copy_file.c -o Task-06/test_copy_file
+gcc -std=c11 -Wall -Wextra -pthread Task-07/shell_jobs.c -o Task-07/task07
+gcc -std=c11 -Wall -Wextra -pthread Task-07/flush_demo.c -o Task-07/flush_demo
+(cd Task-06 && ./task06) 2>&1 | tee evidence/task06-output.txt
+(cd Task-06 && ./test_copy_file) 2>&1 | tee evidence/task06-boundary-tests.txt
+(cd Task-07 && ./task07) 2>&1 | tee evidence/task07-output.txt
+(cd Task-07 && PATH=/nonexistent ./task07) > evidence/task07-exec-failure.txt 2>&1
+if ! grep -q 'job 1 exit status 127' evidence/task07-exec-failure.txt; then cat evidence/task07-exec-failure.txt; exit 1; fi
+(cd Task-07 && ./flush_demo) > evidence/task07-flush-duplication.txt
+if [ "$(grep -c '^shell: running job 2$' evidence/task07-flush-duplication.txt)" -ne 2 ]; then cat evidence/task07-flush-duplication.txt; exit 1; fi
+strace -c -e trace=read,write,openat,close ./Task-06/task06 2> evidence/task06-strace-summary.txt
+/usr/bin/time -v ./Task-06/task06 > evidence/task06-time-output.txt 2> evidence/task06-time.txt
 # Launch 1,000 short-lived child processes, then 1,000 joinable pthreads.
 gcc -std=c11 -Wall -Wextra -pthread -x c -o /tmp/assignment1_thread_bench - <<'C'
 #define _POSIX_C_SOURCE 200809L
