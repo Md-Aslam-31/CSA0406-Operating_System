@@ -1,0 +1,2 @@
+1000 fork+wait sequential seconds: 0.139150
+1000 pthread create+join seconds: 0.043700
