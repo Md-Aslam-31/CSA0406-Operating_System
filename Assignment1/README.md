@@ -27,4 +27,4 @@ Task-06 expected read counts are 10,001, 21 and 4 for buffers of 1, 512 and 4,09
 
 ## Verified Linux run
 
-GitHub Actions run [#41692084440](https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/41692084440) succeeded on Ubuntu 24.04.5 LTS with GCC 13.3.0. The retained evidence files are raw workflow outputs, including successful boundary and failure checks. Each Task folder has a task-scoped commit in the repository history. Timings are single-run samples and are not portable performance guarantees.
+The standalone repository GitHub Actions run [#41692640241](https://github.com/Md-Aslam-31/CSA04-192572147-Assignment1/actions/runs/41692640241) succeeded on Ubuntu 24.04.5 LTS with GCC 13.3.0. The retained evidence files are raw workflow outputs. Workflow run [#41692084440](https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/41692084440) also passed the boundary and failure checks used to populate the evidence folder. Each Task folder has a task-scoped commit in the repository history. Timings are single-run samples and are not portable performance guarantees.

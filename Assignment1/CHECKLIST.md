@@ -19,6 +19,6 @@
 | Terminal output and measurements | DONE | Raw captured outputs in `evidence/`; table in `Results/task_measurements.csv`. |
 | Genuine terminal screenshots | NOT AVAILABLE | No Linux desktop was available for screenshot capture; raw workflow logs are retained without claiming they are screenshots. |
 | DOCX/PDF report | DONE | Word-authored PDF; 8-page render visually checked page by page. |
-| Dedicated repository `CSA04-192572147-Assignment1` | USER ACTION | GitHub browser automation could read but not operate the logged-in Chrome window. Repository creation must occur in GitHub UI before pushing the standalone repository. |
-| Task-scoped commit history | IN PROGRESS | Each `Task-01` through `Task-12` folder has its own task-scoped commit. |
-| Push and remote verification | IN PROGRESS | Final Assignment 1 package pushed to the existing course repository at commit 3b13a4d; latest evidence and report updates are being pushed. Dedicated repository push requires its creation. |
+| Dedicated repository `CSA04-192572147-Assignment1` | DONE | Public standalone repository exists; `main` contains the isolated Assignment 1 tree and task-scoped commit history. |
+| Task-scoped commit history | DONE | Each `Task-01` through `Task-12` folder has its own task-scoped commit in the dedicated repository. |
+| Push and remote verification | DONE | Dedicated `main` verified at commit `af6b0942c1f25433bf006e7668b4c29d364c3e8f`; successful workflow run 1 verified. The existing course repository also has the Assignment1 folder. |
