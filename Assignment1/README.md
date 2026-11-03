@@ -27,3 +27,4 @@ Run from each task folder. Task06 expected read counts are 10001, 21, and 4 for 
 
 Task06 compiled with MSYS2 GCC 16.1.0 and ran successfully on Windows with the exact expected three counts. This is not a Linux or strace measurement. Task07 has not been executed because Linux is unavailable. Run `../scripts/run_linux_evidence.sh` from this folder's parent in a Linux shell.
 
+

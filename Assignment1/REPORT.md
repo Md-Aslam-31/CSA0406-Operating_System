@@ -2,6 +2,9 @@
 
 **Student:** Mohamed Aslam H  
 **Register number:** 192572147  
+**Department:** CSE (AI)  
+**Academic year:** 2025  
+**Faculty:** Dr. Jayasakthi Velmurugan K  
 **Course:** CSA0406 Operating Systems · CO1  
 **Repository:** https://github.com/Md-Aslam-31/CSA0406-Operating_System/tree/main/Assignment1  
 **Host used while preparing:** Windows 11; MSYS2 GCC 16.1.0. A Linux distribution was not installed in the available environment. Linux-only measurements are explicitly marked pending and must not be represented as measured results.
@@ -161,4 +164,5 @@ Virtualizing everything on two large servers may improve consolidation and snaps
 ## References / evidence boundary
 
 This report follows the assignment and evaluation-key criteria supplied with the prompt. Quantitative formulas (call counts, complexity, interrupt estimate) are derived explicitly in text. No vendor certification, price or Linux timing is asserted without a target system. Linux evidence commands are supplied but require execution on an actual Linux host before those rows can be marked complete.
+
 
