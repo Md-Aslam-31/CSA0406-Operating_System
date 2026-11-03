@@ -2,7 +2,7 @@
 
 This folder contains the standalone Assignment 1 submission: `REPORT.md`, Task06 and Task07 C programs, and reproducible Linux evidence scripts. Assignment 2 should be kept in a separate folder/repository as instructed by the course.
 
-Student name/register number were not present in the supplied materials; fill them in the report before final submission. The source PDFs specify Linux execution and strace/time evidence. The available machine is Windows with MSYS2 GCC 16.1.0 and no installed Linux distribution, so only Task06's output was run locally; do not treat the Linux evidence placeholders as measurements.
+Student: Mohamed Aslam H · Register number: 192572147. The source PDFs specify Linux execution and strace/time evidence. The available machine is Windows with MSYS2 GCC 16.1.0 and no installed Linux distribution, so only Task06's output was run locally; do not treat the Linux evidence placeholders as measurements.
 
 ## Files
 
@@ -26,3 +26,4 @@ Run from each task folder. Task06 expected read counts are 10001, 21, and 4 for 
 ## Verified local result
 
 Task06 compiled with MSYS2 GCC 16.1.0 and ran successfully on Windows with the exact expected three counts. This is not a Linux or strace measurement. Task07 has not been executed because Linux is unavailable. Run `../scripts/run_linux_evidence.sh` from this folder's parent in a Linux shell.
+
