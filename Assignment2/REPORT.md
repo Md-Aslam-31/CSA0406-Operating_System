@@ -1,0 +1,132 @@
+# CSA0406 Operating Systems - Assignment 2 (CO2)
+
+## Cover
+
+**Assignment:** Evaluate and Justify Process-Management and Deadlock-Handling Designs  
+**Student:** Mohamed Aslam H  
+**Register number:** 192572147  
+**Department:** CSE (AI)  
+**Academic year:** 2025  
+**Faculty:** Dr. Jayasakthi Velmurugan K  
+**Nature:** Individual  
+**Repository:** https://github.com/Md-Aslam-31/CSA0406-Operating_System/tree/main/Assignment2  
+**Execution:** Ubuntu 24.04 GitHub Actions runner, GCC 13.3.0. Raw output is in `evidence/`; `scripts/run_linux_evidence.sh` rebuilds all programs and verifies key expected results.
+
+## Executive summary
+
+Use a bounded worker pool for examination sessions, with asynchronous I/O and durable session state, rather than 2,000 heavyweight processes. For video encoding, use a multilevel feedback queue or a size-aware service with separate capacity for short jobs and long jobs; the measured single-CPU scheduling averages alone cannot describe a real multi-core service, so preserve fairness and throughput with admission control. Use a bounded POSIX thread pool for independent camera frames where shared read-only data makes threads efficient. Use pipes for simple streaming and EOF-based shutdown; use shared memory when repeated large transfers justify explicit synchronization. For ticketing, lock at train or coach granularity according to independent invariants, keeping the protected section short. For the lab cluster, Banker avoidance is appropriate only for a small, closed workload with credible maximum claims; otherwise use prevention for critical resource classes and detection/recovery for the remaining dynamic workload.
+
+## Q1 - Processes and process states (6 marks)
+
+### State model
+
+```text
+                 dispatch                 preemption
+  New --admit--> Ready ------------------> Running -------> Ready
+                   ^                         |  \
+                   | I/O/event complete       |   \ exit
+                   +------ Waiting <----------+    v
+                           ^   block               Terminated
+                           +--- I/O/event wait
+```
+
+The process control block (PCB) is the kernel's per-process record: PID and parent PID; process state; saved program counter and general registers; scheduling class, priority and CPU accounting; virtual-memory map/page tables; open-file table and current directory; signal mask/handlers; credentials; and pending wait/signal information. A context switch saves the outgoing register/PC state and restores the incoming state. Address-space changes may also disturb TLB/cache locality.
+
+`Task01/process_demo.c` creates three children with `fork`, prints PID/PPID, invokes `ps` to inspect their state, and waits for all exit statuses. Captured output is `evidence/task01-processes.txt`. The short children can appear as `R` (running/runnable) or `S` (interruptible sleep) in this snapshot; state is momentary. `/proc/<pid>/status` and `/proc/<pid>/stat` expose Linux process details while the process exists.
+
+### Evaluation and design decision
+
+At 2,000 mostly waiting sessions, each process has an independent address space and kernel bookkeeping. Actual physical memory is workload- and kernel-dependent: shared executable/library pages are not 2,000 private copies, while private heaps, stacks, page tables and descriptors do scale. Context-switch cost includes register/kernel scheduling work, possible address-space/TLB effects and cache disruption; I/O-bound tasks spend much of their elapsed time blocked, so adding processes does not increase storage/network capacity. A fork-per-session design is simple to isolate but can waste memory and scheduler time and cause expensive bursts during login.
+
+Decision: use a fixed, measured worker pool (processes where crash isolation matters) with an event-driven or asynchronous front end and bounded per-session state. Threads are lighter and share caches/address space, but a memory-corruption crash can terminate every session in that process and shared state needs synchronization. One process per session gives the strongest address-space boundary but highest memory and process management cost. A small process pool balances fault containment and resource bounds; avoid one worker permanently occupied by a slow socket by using nonblocking I/O or a separate I/O event loop.
+
+With a thread per session, stacks can be configured to a few hundred KiB or less rather than allocating a full private address space, and thread switches within one process typically avoid address-space switching. The question's “few KB” is a possible minimum committed stack, not a universal default reservation; virtual stack reservation and resident use differ. A thread crash from a fatal process signal can still kill the entire server; isolate untrusted components in processes and use per-session exception/error handling for ordinary failures. A bounded thread pool is preferable to 2,000 active threads.
+
+## Q2 - CPU scheduling (8 marks)
+
+### Dataset and metrics
+
+The supplied Round Robin program's workload is used consistently for algorithm comparisons: P1 (arrival 0, burst 8, priority 2), P2 (1, 4, 1), P3 (2, 9, 4), P4 (3, 5, 3). Lower priority number means higher priority. Completion time CT is finish time; turnaround TAT = CT - arrival; waiting WT = TAT - burst; response RT = first CPU start - arrival. `Task02/scheduling.c` prints Gantt segments, per-process values and means for FCFS, nonpreemptive SJF, SRTF, nonpreemptive priority and RR quantum 1, 3, 5 and 20. The exact TODO completion is separately kept in `Task02/round_robin_todo.c`; its output is checked against the handout's averages (TAT 20.00; WT 13.50).
+
+Use `evidence/task02-scheduling.txt` for the measured-by-calculation schedule and `evidence/task02-round-robin-todo.txt` for the handout test. Context switches in this small simulation count process-to-process dispatch changes, not timer interrupts or kernel overhead; the first dispatch is excluded. No wall-clock claims are inferred from these arithmetic schedules.
+
+### Evaluation
+
+FCFS is simple and has low scheduling overhead, but a long encoding job causes the convoy effect for 2-second thumbnail work. SJF minimizes average waiting for a known, fixed batch of nonpreemptive bursts, but long films can starve if short jobs continue to arrive. SRTF can reduce short-job response further by preempting a long job, at the cost of preemption and possible starvation. Priority has the same starvation risk for low priority jobs. Ageing periodically increases the effective priority of waiting jobs; a service can also enforce a maximum wait or reserve capacity for long jobs.
+
+RR quantum 1 is responsive but causes many dispatch changes. Quantum 20 approaches FCFS for this workload and can make short jobs wait behind a long time slice. Intermediate quanta trade latency against dispatch overhead. The measured table compares all four quanta on this fixed sample; there is no universally optimal quantum because real context-switch costs and job length distributions matter.
+
+Recommendation: use a multilevel feedback queue (MLFQ) or explicit size classes with short initial quanta, promotion for jobs that block/yield, demotion for jobs that consume full quanta, ageing, and reserved long-job capacity. This gives thumbnail-like jobs a fast path without permanently starving film jobs. A simple SJF queue has O(n) selection (or O(log n) with a heap) and needs burst estimates; a bucketed priority queue can offer O(1) selection with fixed levels, though maintenance and ageing still cost work. An MLFQ does not know true run time and adapts based on observed CPU use, but its fairness depends on promotion/ageing policy.
+
+## Q3 - POSIX threads (6 marks)
+
+`Task03/thread_pool.c` applies the same deterministic CPU workload to 64 camera frames using 1, 4, 8, 16 and 64 threads. Output in `evidence/task03-thread-pool.csv` includes wall time and speed-up relative to the one-thread run. Each thread has its own registers, stack, scheduling state and thread-local storage. Threads in the process share code, heap, global data, open file descriptors and address space. Per-frame results use separate array slots; no shared counter is updated without protection.
+
+User-level threads are scheduled by a runtime in user space: creation/switching may be cheap, but a blocking system call can block the whole process in a many-to-one mapping. Kernel-level threads are visible to the OS and can run on multiple cores; a one-to-one model is common on Linux, with higher kernel management cost. Many-to-many multiplexes user threads on a smaller or adjustable set of kernel threads, but adds runtime complexity. The familiar models are conceptual; implementation details vary by OS/runtime.
+
+Expected speed-up stops growing when available CPU cores are saturated, thread creation/synchronization overhead and memory bandwidth become significant, or workload imbalance leaves workers idle. If a machine has C effective cores, ideal speed-up is at most min(thread count, C) before overhead. A race on an ordinary shared counter is undefined behavior in C and can lose increments; use a mutex, atomic operation or per-thread counters reduced after joining. Process-based frame workers improve isolation but require process creation and IPC/result collection and generally duplicate/private-map more memory; threads make result collection trivial through shared memory.
+
+## Q4 - Inter-process communication (6 marks)
+
+The TODO program `Task04/pipe_todo.c` reads one integer at a time until `read` returns 0, then prints the expected six-reading summary. The parent closes its write descriptor after the final value; EOF occurs only after every open copy of that write end is closed and buffered bytes have been consumed. If the parent keeps the write end open, the child waits indefinitely for either more bytes or EOF. The exact output is in `evidence/task04-pipe.txt`.
+
+`Task04/ipc_benchmark.c` measures completion of a one-way transfer/scan of 1, 10 and 100 MiB. The pipe sends bytes through the kernel and the child drains them; shared memory maps a POSIX shared-memory object into both fork-related processes, the parent fills it, then a small pipe token synchronizes the child to scan it. Shared memory avoids copying the payload through a kernel pipe, but still incurs page faults/cache and memory-bandwidth costs, and requires explicit ownership/order synchronization. Pipe writes and reads copy data between user and kernel buffers and naturally provide blocking/backpressure and EOF semantics. Both methods have process synchronization; shared memory needs an additional protocol (semaphore, mutex/futex or event) to prevent reading partial/inconsistent data. Results in `evidence/task04-ipc.csv` are machine-specific, include process/mapping setup and are not a universal per-byte cost model.
+
+For a few small sensor readings, choose a pipe: simple lifecycle, reliable stream order, and clear EOF. For sustained large image/data exchange, shared memory can be faster if a robust ring-buffer protocol, sequence numbers and process-shared synchronization are worth the complexity. A message queue adds message boundaries and priority but normally copies messages and has queue-size limits.
+
+## Q5 - Synchronization (11 marks)
+
+The supplied critical-section requirements are mutual exclusion (one owner at a time), progress (if the section is free, non-contenders do not indefinitely delay the choice), and bounded waiting (a contender has a finite bound on overtakes). Peterson's two-process algorithm sets `flag[i]`, sets `turn=j`, and spins while the peer wants entry and has priority. Under sequentially consistent memory it provides mutual exclusion, progress and bounded waiting for two participants. Plain C loads/stores are data races, and modern compiler/CPU reordering can violate the assumed order; use specified atomic memory ordering or OS primitives instead. It does not scale naturally to many agents and wastes CPU while spinning.
+
+A binary semaphore is a 0/1 permit; a counting semaphore tracks multiple identical resources. `wait` atomically decrements when positive or blocks, and `signal` increments/wakes. For the seat inventory, guard the check-and-decrement transaction with a mutex or semaphore so availability test and booking are indivisible. In bounded buffer, `empty` starts at capacity and `full` at zero; producer waits on `empty`, locks to insert/update index, unlocks, then signals `full`. Consumer does the symmetric sequence. The monitor equivalent encapsulates buffer state and uses `notFull`/`notEmpty` condition variables in `while` loops around predicates; only one monitor operation runs at a time, making invariants clearer. Readers-writers uses a reader count protected by a mutex and a writer lock, with an explicit fairness policy to avoid starving writers or readers. Dining philosophers should acquire resources in a global order, use a waiter/semaphore admitting at most N-1 philosophers, or model forks as monitor conditions; breaking circular wait prevents deadlock.
+
+`Task05/bounded_buffer.c` verifies every one of 10,000 uniquely numbered items is consumed exactly once in 1P/1C and 4P/4C cases and repeats 4P/4C 100 times. It also benchmarks a contended global mutex, four per-train locks and 32 per-coach locks on 4 worker threads. `Task05/bounded_buffer_todo.c` completes the given 20-item code and uses an atomic sum update because multiple consumers may add concurrently. Outputs are in `evidence/task05-buffer.txt` and `evidence/task05-todo.txt`.
+
+The measured lock benchmark is a synthetic counter workload: real lock granularity should follow invariants. A global lock is easiest to prove correct but serializes independent trains. Per-train locks allow unrelated trains to book concurrently and are a sound default if seats are independent within each train. Per-coach locks increase parallelism but cross-coach transactions (adjacent-seat booking, coach reassignment, inventory totals) need ordered multi-lock acquisition or a separate transaction lock; otherwise races or deadlocks are possible. Choose coach-level locking only after defining those invariants. Atomic fetch-add is suitable for a single counter, not for a multi-step “check seat then claim it” invariant. A spin lock can be efficient for a tiny, nonblocking critical section under low contention; under oversubscription or long I/O-bound sections it wastes CPU. Blocking mutex/semaphore is generally preferable for a long critical section.
+
+## Q6 - Deadlock and Banker’s algorithm (13 marks)
+
+### A. Four necessary conditions (2 marks)
+
+Deadlock requires all four Coffman conditions: mutual exclusion (some resource is exclusive), hold-and-wait (a job holds one resource while requesting another), no preemption (resources are released voluntarily), and circular wait (a cycle of jobs/resources). For the lab: processes/jobs are circles and resource instances are squares; `job -> resource` denotes a request and `resource -> job` an allocation.
+
+```text
+[GPU] --> J0 --> [Licence] --> J1 --> [Storage] --> J2 --> [GPU]
+  ^         holds       request     holds       request     holds     request
+```
+
+This illustrative cycle is a single-instance cycle: J0 holds a GPU and requests a licence; J1 holds the licence and requests storage; J2 holds storage and requests the GPU (cycle J0 -> Licence -> J1 -> Storage -> J2 -> GPU -> J0). The cycle demonstrates circular wait; mutual exclusion, hold-and-wait and no-preemption are also present. With multiple instances, a graph cycle is necessary but may not alone prove deadlock.
+
+### B. Compare strategies (3 marks)
+
+| Strategy | Mechanism | Cluster trade-off |
+|---|---|---|
+| Prevention | Structurally break a Coffman condition, e.g. impose global resource order or reserve all required resources before start | Strong guarantee and little runtime checking; can reduce utilization and cause jobs to reserve scarce GPUs/licences while idle. Global ordering is often practical for heterogeneous resources. |
+| Avoidance | Banker grants only if the tentative state remains safe | Avoids deadlock while preserving some concurrency; requires maximum demand known and credible, plus per-request O(m n^2) worst-case safety work for n jobs and m resource types. Dynamic/interactive jobs make claims difficult. |
+| Detection and recovery | Allow allocation; periodically detect cycles/unsafe allocations and recover by abort, rollback or preemption | Fits uncertain dynamic demand and avoids checking every request; detection costs CPU, and aborting long simulations loses work. Check interval trades detection latency against overhead. |
+| Ignore (ostrich) | Accept rare deadlocks and manually restart | Low overhead, acceptable only when deadlocks are rare and recovery is cheap. Unacceptable as the sole plan for critical shared cluster service without monitoring and recovery. |
+
+### C. Banker implementation and requests (4 marks)
+
+`Task06/banker.c` implements `Need = Max - Allocation`, scans for a process whose need is no greater than `Work`, then releases its allocation into `Work`; the tentative request is applied only if the resulting state is safe, otherwise rolled back. For the given state it reports safe order P1, P3, P4, P0, P2. P1's `(1,0,2)` request is granted with that safe order. P4's `(3,3,0)` must wait because the request exceeds currently available resources. P0's `(0,2,0)` is within availability/need but is denied: after tentative allocation `Available=(3,1,0)`, no unfinished process can satisfy its remaining need, so no complete safe sequence exists. The exact output is `evidence/task06-banker.csv`.
+
+### D/E. Complexity prediction and measurement (2 marks)
+
+For each of up to n completion rounds, the safety scan examines n processes and compares up to m resource types: worst case O(m n^2); memory O(mn) for allocation/need plus O(n) work/finish/sequence. If many processes complete in one pass, actual runtime can be closer to O(mn). The included benchmark creates reverse-ordered safe states that expose repeated scans, uses a fixed three-resource-shaped model with one active resource, and averages repeated runs for n=10, 100 and 1,000. See `evidence/task06-banker.csv`. Wall-clock results should rise roughly quadratically in the constructed worst case, subject to timer noise, cache effects and compiler/runtime overhead; they are measurements, not a proof of complexity. The safety-check code and benchmark scenario are both provided so the result can be reproduced.
+
+### F. Final design (2 marks)
+
+For a research cluster with known, bounded job classes, use admission control and reservation/scheduling for exclusive GPUs and licences, plus Banker-style avoidance for the small set of jobs that can accurately declare maximum resource claims. For long, dynamic simulations whose future demand is unknowable, strict Banker avoidance can reject useful work; use a global resource acquisition order where possible and detection with checkpoint/rollback for remaining resources. Monitor wait-for graphs and set recovery policies before deployment. This hybrid limits deadlock risk without assuming every job can predict its maximum demand. The cost is lower utilization under conservative reservations, metadata/checking overhead, and operational cost for checkpointing and recovery.
+
+## Reproduction and evidence index
+
+| Question | Program / output |
+|---|---|
+| Q1 | `Task01/process_demo.c`; `evidence/task01-processes.txt` |
+| Q2 | `Task02/scheduling.c`, `Task02/round_robin_todo.c`; `evidence/task02-*` |
+| Q3 | `Task03/thread_pool.c`; `evidence/task03-thread-pool.csv` |
+| Q4 | `Task04/pipe_todo.c`, `Task04/ipc_benchmark.c`; `evidence/task04-*` |
+| Q5 | `Task05/bounded_buffer_todo.c`, `Task05/bounded_buffer.c`; `evidence/task05-*` |
+| Q6 | `Task06/banker.c`; `evidence/task06-banker.csv` |
+
+Run all with `bash scripts/run_linux_evidence.sh` from `Assignment2/`. The workflow uploads the raw logs as an Actions artifact. The process snapshot is intentionally transient, and all performance measurements depend on runner load/hardware. References: Silberschatz, Galvin and Gagne, *Operating System Concepts*, 10th ed.; Linux `fork(2)`, `pipe(2)`, `shm_open(3)`, `pthread(7)` and `proc(5)` manual pages.
