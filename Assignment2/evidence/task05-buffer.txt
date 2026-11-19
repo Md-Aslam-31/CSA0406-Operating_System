@@ -1,0 +1,7 @@
+P=1 C=1: consumed=10000 sum=49995000 expected=49995000 duplicate/missing=0
+P=4 C=4: consumed=10000 sum=49995000 expected=49995000 duplicate/missing=0
+100 repeated P=4/C=4 runs: PASS (each item exactly once)
+lock_scope,seconds,operations_per_second
+global,0.036336,22016639
+per_train,0.025355,31551737
+per_coach,0.013129,60935658

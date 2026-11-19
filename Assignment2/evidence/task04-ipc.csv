@@ -1,0 +1,7 @@
+method,MB,seconds,MiB_per_second
+pipe,1,0.000383,2612.28
+shared_memory,1,0.001020,980.18
+pipe,10,0.004161,2403.07
+shared_memory,10,0.008881,1126.03
+pipe,100,0.037252,2684.40
+shared_memory,100,0.087409,1144.05

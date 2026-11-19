@@ -1,0 +1,8 @@
+initial state safe: P1 P3 P4 P0 P2
+P1 request: granted, safe sequence P1 P3 P4 P0 P2
+P4 request: must wait (not available)
+P0 request: denied (unsafe)
+n_processes,mean_safety_scan_seconds
+10,0.000000049
+100,0.000004431
+1000,0.000379954

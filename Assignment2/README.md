@@ -27,6 +27,10 @@ bash scripts/run_linux_evidence.sh
 
 Run an individual binary after compiling it with the commands in its task README. Linux is required for `fork`, `/proc`, POSIX shared memory, pipes and POSIX semaphores. Timings are measurements of this runner, not portable guarantees. Process/thread creation overhead and CI CPU scheduling affect them.
 
+## Verified run
+
+The full Ubuntu run succeeded: [GitHub Actions run #44579401828](https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/44579401828). The raw outputs and measurement CSVs are committed in `evidence/` and also attached to the run as an artifact.
+
 ## Repository
 
 https://github.com/Md-Aslam-31/CSA0406-Operating_System/tree/main/Assignment2

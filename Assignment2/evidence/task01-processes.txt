@@ -1,0 +1,37 @@
+parent: creating three observable child processes
+child[0]: pid=2202 ppid=2201 entering short work
+parent: creating three observable child processes
+child[1]: pid=2203 ppid=2201 entering short work
+parent: creating three observable child processes
+child[2]: pid=2204 ppid=2201 entering short work
+    PID    PPID S COMMAND
+   2202    2201 S process_demo
+   2203    2201 S process_demo
+   2204    2201 S process_demo
+   2205    2201 S sh
+parent: creating three observable child processes
+process snapshot (ps):
+/proc snapshot for pid=2202:
+Name:	process_demo
+State:	S (sleeping)
+Pid:	2202
+PPid:	2201
+VmSize:	    2696 kB
+VmRSS:	     944 kB
+/proc snapshot for pid=2203:
+Name:	process_demo
+State:	S (sleeping)
+Pid:	2203
+PPid:	2201
+VmSize:	    2696 kB
+VmRSS:	     944 kB
+/proc snapshot for pid=2204:
+Name:	process_demo
+State:	S (sleeping)
+Pid:	2204
+PPid:	2201
+VmSize:	    2696 kB
+VmRSS:	     944 kB
+parent: reaped pid=2202 exit=10
+parent: reaped pid=2203 exit=11
+parent: reaped pid=2204 exit=12

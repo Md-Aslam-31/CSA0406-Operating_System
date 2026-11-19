@@ -9,7 +9,7 @@ from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
-from reportlab.platypus import (BaseDocTemplate, Frame, PageTemplate, Paragraph,
+from reportlab.platypus import (BaseDocTemplate, Frame, PageBreak, PageTemplate, Paragraph,
                                 Preformatted, Spacer, Table, TableStyle)
 
 BASE = Path(__file__).resolve().parent.parent
@@ -48,6 +48,8 @@ def flush_table():
             for i in range(width): c[i].text=row[i] if i<len(row) else ""
     table_lines=[]
 for line in lines:
+    if line.strip() == "<!-- pagebreak -->":
+        doc.add_page_break(); continue
     if line.startswith("```"):
         if in_code:
             p=doc.add_paragraph(); r=p.add_run("\n".join(code)); r.font.name="Consolas"; r.font.size=Pt(8); p.paragraph_format.left_indent=Inches(.18); code=[]; in_code=False
@@ -96,6 +98,8 @@ def flush_pdf_table():
         t.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,0),colors.HexColor("#eaf0f8")),("TEXTCOLOR",(0,0),(-1,0),colors.HexColor("#12345b")),("GRID",(0,0),(-1,-1),.35,colors.HexColor("#cbd5e1")),("VALIGN",(0,0),(-1,-1),"TOP"),("LEFTPADDING",(0,0),(-1,-1),5),("RIGHTPADDING",(0,0),(-1,-1),5),("TOPPADDING",(0,0),(-1,-1),4),("BOTTOMPADDING",(0,0),(-1,-1),4)])); story.extend([Spacer(1,3),t,Spacer(1,6)])
     table_lines=[]
 for line in lines:
+    if line.strip() == "<!-- pagebreak -->":
+        story.append(PageBreak()); continue
     if line.startswith("```"):
         if in_code: story.append(Preformatted("\n".join(code),ParagraphStyle("code",fontName="Courier",fontSize=7.2,leading=9,backColor=colors.HexColor("#f2f4f7"),borderPadding=5))); story.append(Spacer(1,5)); code=[]; in_code=False
         else: flush_pdf_table(); in_code=True
