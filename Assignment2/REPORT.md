@@ -32,7 +32,7 @@ Use a bounded worker pool for examination sessions, with asynchronous I/O and du
 
 The process control block (PCB) is the kernel's per-process record: PID and parent PID; process state; saved program counter and general registers; scheduling class, priority and CPU accounting; virtual-memory map/page tables; open-file table and current directory; signal mask/handlers; credentials; and pending wait/signal information. A context switch saves the outgoing register/PC state and restores the incoming state. Address-space changes may also disturb TLB/cache locality.
 
-`Task01/process_demo.c` creates three children with `fork`, prints PID/PPID, invokes `ps` to inspect their state, and waits for all exit statuses. Captured output is `evidence/task01-processes.txt`. The short children can appear as `R` (running/runnable) or `S` (interruptible sleep) in this snapshot; state is momentary. `/proc/<pid>/status` and `/proc/<pid>/stat` expose Linux process details while the process exists.
+`Task01/process_demo.c` creates three children with `fork`, prints PID/PPID, invokes `ps` to inspect their state, reads each child's `/proc/<pid>/status` fields (state and memory), and waits for all exit statuses. Captured output is `evidence/task01-processes.txt`. The short children can appear as `R` (running/runnable) or `S` (interruptible sleep) in this snapshot; state is momentary. `/proc/<pid>/status` and `/proc/<pid>/stat` expose Linux process details while the process exists.
 
 ### Evaluation and design decision
 

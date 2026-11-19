@@ -16,9 +16,9 @@ static void nonpreemptive(int mode,const char *label){
         if(pick<0){time++;k--;continue;}rt[pick]=time-jobs[pick].at; if(k)sw++;printf("%s(%d-%d) ",jobs[pick].name,time,time+jobs[pick].bt);time+=jobs[pick].bt;f[pick]=time;done[pick]=1;}
     puts("");report(label,f,rt,sw);
 }
-static void srtf(void){int left[N],f[N]={0},first[N],time=0,last=-1,sw=0,done=0;for(int i=0;i<N;i++)left[i]=jobs[i].bt,first[i]=-1;printf("SRTF Gantt: ");
-    while(done<N){int p=-1;for(int i=0;i<N;i++)if(left[i]>0&&jobs[i].at<=time&&(p<0||left[i]<left[p]))p=i;if(p<0){time++;continue;}if(first[p]<0)first[p]=time;if(last!=p){if(last>=0)sw++;printf("%s[%d] ",jobs[p].name,time);}left[p]--;time++;if(!left[p])f[p]=time,last=p,done++;else last=p;}
-    puts("");double rt[N];for(int i=0;i<N;i++)rt[i]=first[i]-jobs[i].at;report("SRTF",f,rt,sw);
+static void srtf(void){int left[N],f[N]={0},first[N],time=0,last=-1,segment_start=0,sw=0,done=0;for(int i=0;i<N;i++)left[i]=jobs[i].bt,first[i]=-1;printf("SRTF Gantt: ");
+    while(done<N){int p=-1;for(int i=0;i<N;i++)if(left[i]>0&&jobs[i].at<=time&&(p<0||left[i]<left[p]))p=i;if(p<0){time++;continue;}if(p!=last){if(last>=0){printf("%s(%d-%d) ",jobs[last].name,segment_start,time);sw++;}segment_start=time;}if(first[p]<0)first[p]=time;left[p]--;time++;if(!left[p])f[p]=time,done++;last=p;}
+    if(last>=0)printf("%s(%d-%d)\n",jobs[last].name,segment_start,time);double rt[N];for(int i=0;i<N;i++)rt[i]=first[i]-jobs[i].at;report("SRTF",f,rt,sw);
 }
 static void rr(int q){int left[N],f[N]={0},first[N],qbuf[256],head=0,tail=0,time=0,done=0,sw=0,last=-1;for(int i=0;i<N;i++)left[i]=jobs[i].bt,first[i]=-1;int added[N]={0};for(int i=0;i<N;i++)if(jobs[i].at==0)qbuf[tail++]=i,added[i]=1;printf("RR q=%d Gantt: ",q);
     while(done<N){if(head==tail){time++;for(int i=0;i<N;i++)if(!added[i]&&jobs[i].at<=time)qbuf[tail++]=i,added[i]=1;continue;}int p=qbuf[head++];if(last>=0&&last!=p)sw++;last=p;if(first[p]<0)first[p]=time;int d=left[p]<q?left[p]:q;printf("%s(%d-%d) ",jobs[p].name,time,time+d);time+=d;left[p]-=d;for(int i=0;i<N;i++)if(!added[i]&&jobs[i].at<=time)qbuf[tail++]=i,added[i]=1;if(left[p])qbuf[tail++]=p;else f[p]=time,done++;}

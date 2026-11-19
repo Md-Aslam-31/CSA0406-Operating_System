@@ -6,7 +6,7 @@
 #include <time.h>
 
 #define FRAMES 64
-#define WORK 1500000u
+#define WORK 250000u
 static uint64_t result[FRAMES];
 static double now(void){struct timespec t;clock_gettime(CLOCK_MONOTONIC,&t);return t.tv_sec+t.tv_nsec/1e9;}
 typedef struct{int id,stride;} Arg;

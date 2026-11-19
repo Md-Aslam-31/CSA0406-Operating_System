@@ -9,16 +9,17 @@ for spec in 'Task01/process_demo.c:Task01/process_demo' 'Task02/scheduling.c:Tas
   echo "gcc -std=c11 -Wall -Wextra -Wpedantic -pthread $src -o $bin"
   gcc -std=c11 -Wall -Wextra -Wpedantic -pthread "$src" -o "$bin"
 done
-Task01/process_demo > evidence/task01-processes.txt 2>&1
-Task02/scheduling > evidence/task02-scheduling.txt
-Task02/round_robin_todo > evidence/task02-round-robin-todo.txt
-Task03/thread_pool > evidence/task03-thread-pool.csv
-Task04/ipc_benchmark > evidence/task04-ipc.csv
-Task04/pipe_todo > evidence/task04-pipe.txt
-Task05/bounded_buffer > evidence/task05-buffer.txt
-Task05/bounded_buffer_todo > evidence/task05-todo.txt
-Task06/banker > evidence/task06-banker.csv
-Task06/banker_todo > evidence/task06-banker-todo.txt
+run_capture() { echo "Running $1"; timeout 120s "$1" > "$2" 2>&1; }
+run_capture Task01/process_demo evidence/task01-processes.txt
+run_capture Task02/scheduling evidence/task02-scheduling.txt
+run_capture Task02/round_robin_todo evidence/task02-round-robin-todo.txt
+run_capture Task03/thread_pool evidence/task03-thread-pool.csv
+run_capture Task04/ipc_benchmark evidence/task04-ipc.csv
+run_capture Task04/pipe_todo evidence/task04-pipe.txt
+run_capture Task05/bounded_buffer evidence/task05-buffer.txt
+run_capture Task05/bounded_buffer_todo evidence/task05-todo.txt
+run_capture Task06/banker evidence/task06-banker.csv
+run_capture Task06/banker_todo evidence/task06-banker-todo.txt
 grep -q 'Average TAT = 20.00, average WT = 13.50' evidence/task02-round-robin-todo.txt
 grep -q 'analyser: 6 readings, average 35.5, max 41' evidence/task04-pipe.txt
 grep -q 'sum = 210 (expected 210)' evidence/task05-todo.txt
