@@ -13,7 +13,7 @@ This is a separate Assignment 2 submission under the existing course repository.
 
 ## Build and run
 
-Environment used for the retained run: Ubuntu 24.04 GitHub Actions runner and GCC 13.3.0. Compile command for all programs:
+Environment used for the retained run: Ubuntu 24.04 GitHub Actions runner and GCC 13.3.0. The exact per-program compile commands are retained in `evidence/build-environment.txt`; they use:
 
 ```sh
 gcc -std=c11 -Wall -Wextra -Wpedantic -pthread source.c -o program
