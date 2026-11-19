@@ -1,0 +1,6 @@
+6 disks x 4 TB, assumed independent annual disk failure probability 2.0%
+RAID0 usable 24 TB, one-disk failure data-loss probability 0.114158
+RAID1 (three mirrored pairs) usable 12 TB, loss probability 0.001200
+RAID5 usable 20 TB, loss probability 0.005687
+RAID6 usable 16 TB, loss probability (>=3 failures) 0.00015291
+RAID10 usable 12 TB, loss probability 0.001200

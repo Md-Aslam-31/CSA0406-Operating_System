@@ -1,0 +1,15 @@
+page translation TODO is built separately; system page size=4096 bytes
+32-bit, 4KiB pages: 2^20 entries x 4 B = 4 MiB (flat table)
+48-bit, 4KiB pages: 2^36 entries x 8 B = 512 GiB (flat table; canonical user range may be smaller)
+TLB hit 80% EAT 140.00 ns
+TLB hit 95% EAT 125.00 ns
+TLB hit 99% EAT 121.00 ns
+100 deterministic process sizes, page=1024 B: total internal waste=57258 B, mean=572.6 B
+100 deterministic process sizes, page=4096 B: total internal waste=221754 B, mean=2217.5 B
+100 deterministic process sizes, page=2097152 B: total internal waste=107796554 B, mean=1077965.5 B
+boundary checks (page table has 8 entries, 4 KiB pages):
+address 0: page 0 offset 0 -> within table range
+address 4095: page 0 offset 4095 -> within table range
+address 4096: page 1 offset 0 -> within table range
+address 32767: page 7 offset 4095 -> within table range
+address 32768: page 8 offset 0 -> invalid

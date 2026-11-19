@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 base=Path(__file__).resolve().parent.parent
 rows=list(csv.DictReader((base/'evidence/task05-replacement.csv').open()))
 names=['FIFO','LRU','Optimal','Clock']
-fig,axes=plt.subplots(1,2,figsize=(11,4.2),sharey=False)
+fig,axes=plt.subplots(1,2,figsize=(9,4.2),sharey=False)
 for ax,work in zip(axes,['locality','random']):
     for alg in names:
         data=[r for r in rows if r['workload']==work and r['algorithm']==alg]

@@ -1,0 +1,10 @@
+page_size=4096,memlock_limit=8388608 bytes
+memory budget MiB: control 128 (locked reserve), ML 1536, logging 128, OS/services 256 = 2048; no swap
+time-critical requirement: no page faults in control loop; prefault and mlock the fixed 128 MiB working set, isolate CPU, measure deadline on target hardware
+memory_lock=0,working_set=16384,p50_ns=30,p99_ns=41,max_ns=130
+memory_lock=1,working_set=16384,p50_ns=30,p99_ns=41,max_ns=22402
+task working-set page replacement:
+pin_control=0 simulation_faults=20000 control_faults_after_warmup=4
+pin_control=1 simulation_faults=19996 control_faults_after_warmup=0
+control faults without pin=4, with pin=0
+4th 500MiB task: over 2GiB budget by 500MiB; cap/reduce ML model or move task off device, never reclaim RT reserve

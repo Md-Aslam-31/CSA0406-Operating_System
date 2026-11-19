@@ -88,9 +88,9 @@ styles.add(ParagraphStyle(name="Bodyx", parent=styles["BodyText"], fontName="Hel
 styles.add(ParagraphStyle(name="Smallx", parent=styles["BodyText"], fontName="Helvetica", fontSize=7.5, leading=9))
 def footer(canvas, doc):
     canvas.saveState(); canvas.setStrokeColor(colors.HexColor("#d0d5dd")); canvas.line(18*mm, 14*mm, 192*mm, 14*mm)
-    canvas.setFont("Helvetica", 8); canvas.setFillColor(colors.HexColor("#475467")); canvas.drawString(18*mm, 9*mm, "CSA0406 Operating Systems | Assignment 2 | Mohamed Aslam H")
+    canvas.setFont("Helvetica", 8); canvas.setFillColor(colors.HexColor("#475467")); canvas.drawString(18*mm, 9*mm, "CSA0406 Operating Systems | Assignment 3 | Mohamed Aslam H")
     canvas.drawRightString(192*mm, 9*mm, f"Page {doc.page}"); canvas.restoreState()
-pdf=BaseDocTemplate(str(BASE/"REPORT.pdf"),pagesize=A4,leftMargin=18*mm,rightMargin=18*mm,topMargin=17*mm,bottomMargin=20*mm,title="CSA0406 Assignment 2 - Mohamed Aslam H",author="Mohamed Aslam H")
+pdf=BaseDocTemplate(str(BASE/"REPORT.pdf"),pagesize=A4,leftMargin=18*mm,rightMargin=18*mm,topMargin=17*mm,bottomMargin=20*mm,title="CSA0406 Assignment 3 - Mohamed Aslam H",author="Mohamed Aslam H")
 pdf.addPageTemplates(PageTemplate(id="report",frames=[Frame(18*mm,20*mm,174*mm,260*mm,id="normal")],onPage=footer))
 story=[]; in_code=False; code=[]; table_lines=[]
 def flush_pdf_table():
@@ -109,7 +109,7 @@ for line in lines:
         story.append(PageBreak()); continue
     image_match=re.fullmatch(r"!\[([^]]*)\]\(([^)]+)\)",line.strip())
     if image_match:
-        im=RLImage(str(BASE/image_match.group(2)),width=174*mm)
+        im=RLImage(str(BASE/image_match.group(2)),width=160*mm)
         if im.drawHeight>86*mm: im.drawHeight=86*mm; im.drawWidth=86*mm*im.imageWidth/im.imageHeight
         story.extend([im,Paragraph(inline(image_match.group(1)),styles["Smallx"]),Spacer(1,5)])
         continue

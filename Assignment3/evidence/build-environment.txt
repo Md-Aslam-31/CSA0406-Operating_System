@@ -1,0 +1,11 @@
+Linux: Ubuntu 24.04.5 LTS
+Compiler: gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+System base page size: 4096
+gcc -std=c11 -Wall -Wextra -pthread Task02/paging_todo.c -o Task02/paging_todo
+gcc -std=c11 -Wall -Wextra -pthread Task02/paging_lab.c -o Task02/paging_lab
+gcc -std=c11 -Wall -Wextra -pthread Task03/segment_lab.c -o Task03/segment_lab
+gcc -std=c11 -Wall -Wextra -pthread Task04/virtual_memory.c -o Task04/virtual_memory
+gcc -std=c11 -Wall -Wextra -pthread Task05/lru_todo.c -o Task05/lru_todo
+gcc -std=c11 -Wall -Wextra -pthread Task05/replacement_lab.c -o Task05/replacement_lab
+gcc -std=c11 -Wall -Wextra -pthread Task06/disk_analysis.c -o Task06/disk_analysis -lm
+gcc -std=c11 -Wall -Wextra -pthread Task07/memory_plan.c -o Task07/memory_plan

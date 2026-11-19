@@ -17,3 +17,7 @@ This builds and executes all C programs, tests the provided TODO programs, recor
 ## Repository
 
 https://github.com/Md-Aslam-31/CSA0406-Operating_System/tree/main/Assignment3
+
+## Verified run
+
+All seven tasks passed on Ubuntu 24.04.5 LTS with GCC 13.3.0. [View GitHub Actions run #44586278245](https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/44586278245). The retained raw evidence and plots are included here; the report PDF and editable DOCX are in this folder.

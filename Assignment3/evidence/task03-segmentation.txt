@@ -1,0 +1,37 @@
+segment,offset,limit,result
+code,0,16384,physical-linear 0x10000
+code,16383,16384,physical-linear 0x13fff
+data,4100,32768,physical-linear 0x21004
+heap,8192,65536,physical-linear 0x32000
+stack,32,32768,physical-linear 0x70020
+data,32767,32768,physical-linear 0x27fff
+heap,65535,65536,physical-linear 0x3ffff
+stack,32768,32768,protection fault (offset >= limit)
+segmentation + paging: logical (segment,offset) -> segment base+offset -> page number/offset -> frame+offset -> physical address
+this process /proc maps:
+5616d3281000-5616d3282000 r--p 00000000 08:01 9438672                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task03/segment_lab
+5616d3282000-5616d3283000 r-xp 00001000 08:01 9438672                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task03/segment_lab
+5616d3283000-5616d3284000 r--p 00002000 08:01 9438672                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task03/segment_lab
+5616d3284000-5616d3285000 r--p 00002000 08:01 9438672                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task03/segment_lab
+5616d3285000-5616d3286000 rw-p 00003000 08:01 9438672                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task03/segment_lab
+5616e30ba000-5616e30db000 rw-p 00000000 00:00 0                          [heap]
+7f78be600000-7f78be628000 r--p 00000000 08:01 47984                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7f78be628000-7f78be7b1000 r-xp 00028000 08:01 47984                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7f78be7b1000-7f78be800000 r--p 001b1000 08:01 47984                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7f78be800000-7f78be804000 r--p 001ff000 08:01 47984                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7f78be804000-7f78be806000 rw-p 00203000 08:01 47984                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7f78be806000-7f78be813000 rw-p 00000000 00:00 0 
+7f78be88f000-7f78be892000 rw-p 00000000 00:00 0 
+7f78be89c000-7f78be89e000 rw-p 00000000 00:00 0 
+7f78be89e000-7f78be8a2000 r--p 00000000 00:00 0                          [vvar]
+7f78be8a2000-7f78be8a4000 r--p 00000000 00:00 0                          [vvar_vclock]
+7f78be8a4000-7f78be8a6000 r-xp 00000000 00:00 0                          [vdso]
+7f78be8a6000-7f78be8a7000 r--p 00000000 08:01 47980                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f78be8a7000-7f78be8d2000 r-xp 00001000 08:01 47980                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f78be8d2000-7f78be8dc000 r--p 0002c000 08:01 47980                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f78be8dc000-7f78be8de000 r--p 00036000 08:01 47980                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f78be8de000-7f78be8e0000 rw-p 00038000 08:01 47980                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ffeb7e80000-7ffeb7ea2000 rw-p 00000000 00:00 0                          [stack]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+protected-page access terminated child with signal 11 (Segmentation fault)
+20 segment simulation: arena=67108864 allocated=14102974 freed=7558222 total_free=60564112 largest_hole=53005890 external_fragmentation=7558222

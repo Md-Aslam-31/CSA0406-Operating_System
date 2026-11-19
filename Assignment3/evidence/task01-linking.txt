@@ -1,0 +1,66 @@
+gcc -std=c11 -Wall -Wextra -pthread -DVERSION="1.0" -fPIC -shared ../crypto.c -o lib/libbankcrypto.so
+gcc -std=c11 -Wall -Wextra -pthread -DVERSION="1.0" -c ../crypto.c -o crypto.o; ar rcs lib/libbankcrypto.a crypto.o
+gcc -std=c11 -Wall -Wextra -pthread ../linked_demo.c lib/libbankcrypto.a -o linked_static
+gcc -std=c11 -Wall -Wextra -pthread ../linked_demo.c -Llib -lbankcrypto -Wl,-rpath,$ORIGIN/lib -o linked_dynamic
+gcc -std=c11 -Wall -Wextra -pthread ../dlopen_demo.c -ldl -o dlopen_demo
+Build and linking
+-rwxr-xr-x 1 runner runner 79K Nov 19 18:18 lib/libbankcrypto.so
+-rwxr-xr-x 1 runner runner 17K Nov 19 18:18 linked_dynamic
+-rwxr-xr-x 1 runner runner 81K Nov 19 18:18 linked_static
+ldd static-library variant
+	linux-vdso.so.1 (0x00007f63b4b79000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f63b4800000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f63b4b7b000)
+ldd shared-library variant
+	linux-vdso.so.1 (0x00007f221d8dd000)
+	libbankcrypto.so => /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/./lib/libbankcrypto.so (0x00007f221d8bb000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f221d600000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f221d8df000)
+Startup batch (100 launches) and maximum RSS
+static 100 launches elapsed=0.09 s max_rss=3448 KiB
+dynamic 100 launches elapsed=0.10 s max_rss=3456 KiB
+Run-time dlopen/dlsym
+runtime-loaded version=1.0 checksum=-1791728787
+Initial dynamic program
+crypto library version=1.0 checksum=-1791728787
+program and library load addresses from /proc/self/maps:
+7fb518bf0000-7fb518bf1000 r--p 00000000 08:01 9438628                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+7fb518bf1000-7fb518bf2000 r-xp 00001000 08:01 9438628                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+7fb518bf2000-7fb518c03000 r--p 00002000 08:01 9438628                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+7fb518c03000-7fb518c04000 r--p 00012000 08:01 9438628                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+7fb518c04000-7fb518c05000 rw-p 00013000 08:01 9438628                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+Replace shared object only (no relink)
+crypto library version=2.0 checksum=-1791728787
+program and library load addresses from /proc/self/maps:
+7f18ddc9d000-7f18ddc9e000 r--p 00000000 08:01 9438646                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+7f18ddc9e000-7f18ddc9f000 r-xp 00001000 08:01 9438646                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+7f18ddc9f000-7f18ddcb0000 r--p 00002000 08:01 9438646                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+7f18ddcb0000-7f18ddcb1000 r--p 00012000 08:01 9438646                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+7f18ddcb1000-7f18ddcb2000 rw-p 00013000 08:01 9438646                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+Static executable remains at original version
+crypto library version=1.0 checksum=-1791728787
+program and library load addresses from /proc/self/maps:
+two processes: pid1=2679 pid2=2681; shared library mappings:
+PID 2679
+7fd6aa3c7000-7fd6aa3c8000 r--p 00000000 08:01 9438646                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+7fd6aa3c8000-7fd6aa3c9000 r-xp 00001000 08:01 9438646                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+7fd6aa3c9000-7fd6aa3da000 r--p 00002000 08:01 9438646                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+Shared_Clean:         64 kB
+PID 2681
+7f718489c000-7f718489d000 r--p 00000000 08:01 9438646                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+7f718489d000-7f718489e000 r-xp 00001000 08:01 9438646                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+Shared_Clean:          4 kB
+Private_Clean:         0 kB
+7f718489e000-7f71848af000 r--p 00002000 08:01 9438646                    /home/runner/work/CSA0406-Operating_System/CSA0406-Operating_System/Assignment3/Task01/build/lib/libbankcrypto.so
+Shared_Clean:         64 kB
+Missing shared-library failure test
+linked exit=127
+./linked_dynamic: error while loading shared libraries: libbankcrypto.so: cannot open shared object file: No such file or directory
+dlopen exit=2
+dlopen failed: libbankcrypto.so: cannot open shared object file: No such file or directory

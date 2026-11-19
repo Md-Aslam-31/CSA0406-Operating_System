@@ -1,0 +1,26 @@
+page size=4096; EAT with memory=100 ns and fault service=8 ms
+fault rate 0.00100000 EAT 8100.000 ns
+fault rate 0.00001000 EAT 180.000 ns
+fault rate 0.00000100 EAT 108.000 ns
+10% slowdown maximum page-fault rate=0.000001250 (about 1 per 800000 references)
+pattern,bytes,seconds,minor_fault_delta,major_fault_delta,checksum
+sequential,67108864,0.030469,16386,0,checksum=255
+random,67108864,0.030092,16383,0,checksum=171
+parent before fork: Rss:               67216 kB
+Pss:               65704 kB
+Private_Dirty:     65660 kB
+child before write: Rss:               66424 kB
+Pss:               32871 kB
+Private_Dirty:        44 kB
+child after COW writes: Rss:               66424 kB
+Pss:               65639 kB
+Private_Dirty:     65580 kB
+parent after child writes: Rss:               67344 kB
+Pss:               65708 kB
+Private_Dirty:     65660 kB
+limit=512MiB touched=64MiB seconds=0.029343 minor_faults=16386 major_faults=0
+limit=512MiB touched=128MiB seconds=0.066576 minor_faults=32770 major_faults=0
+limit=512MiB touched=256MiB seconds=0.113590 minor_faults=65538 major_faults=0
+limit=512MiB touched=384MiB seconds=0.175448 minor_faults=98306 major_faults=0
+limit=512MiB request=768MiB allocation=rejected (Cannot allocate memory)
+working-set reference simulation: see Q5 page-fault-vs-frames plot (FIFO/LRU/Optimal/Clock)
