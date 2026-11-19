@@ -3,4 +3,5 @@
 #define VERSION "1.0"
 #endif
 const char *crypto_version(void) { return VERSION; }
-int encrypt_demo(const char *input) { unsigned sum=0; for (const unsigned char *p=(const unsigned char *)input; *p; ++p) sum=(sum*33u)^*p; return (int)sum; }
+const unsigned char crypto_sbox[65536] = {1};
+int encrypt_demo(const char *input) { unsigned sum=0; for (const unsigned char *p=(const unsigned char *)input; *p; ++p) sum=(sum*33u)^*p; return (int)(sum + crypto_sbox[sum & 65535u]); }

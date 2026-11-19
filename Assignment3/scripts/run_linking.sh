@@ -18,8 +18,8 @@ gcc -std=c11 -Wall -Wextra -pthread ../dlopen_demo.c -ldl -o dlopen_demo
   echo 'Build and linking'; ls -lh linked_static linked_dynamic lib/libbankcrypto.so
   echo 'ldd static-library variant'; ldd linked_static
   echo 'ldd shared-library variant'; ldd linked_dynamic
-  echo 'Startup and maximum RSS'; /usr/bin/time -f 'static elapsed=%e s max_rss=%M KiB' ./linked_static >/dev/null
-  /usr/bin/time -f 'dynamic elapsed=%e s max_rss=%M KiB' ./linked_dynamic >/dev/null
+  echo 'Startup batch (100 launches) and maximum RSS'; /usr/bin/time -f 'static 100 launches elapsed=%e s max_rss=%M KiB' bash -c 'for i in {1..100}; do ./linked_static >/dev/null; done'
+  /usr/bin/time -f 'dynamic 100 launches elapsed=%e s max_rss=%M KiB' bash -c 'for i in {1..100}; do ./linked_dynamic >/dev/null; done'
   echo 'Run-time dlopen/dlsym'; LD_LIBRARY_PATH=lib ./dlopen_demo
   echo 'Initial dynamic program'; ./linked_dynamic
   echo 'Replace shared object only (no relink)'; gcc -std=c11 -Wall -Wextra -pthread -DVERSION='"2.0"' -fPIC -shared ../crypto.c -o lib/libbankcrypto.new.so; mv lib/libbankcrypto.new.so lib/libbankcrypto.so; ./linked_dynamic

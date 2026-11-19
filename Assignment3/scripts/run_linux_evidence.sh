@@ -29,7 +29,7 @@ run_capture Task06/disk_analysis evidence/task06-raid.txt
   echo 'Filesystem and swap:'; findmnt -T /tmp -o SOURCE,FSTYPE,TARGET; swapon --show
   tmpfile=$(mktemp /tmp/os-disk-read.XXXXXX); dd if=/dev/zero of="$tmpfile" bs=1M count=32 conv=fsync status=none
   echo 'Read speed of runner filesystem file (not classified as SSD/HDD unless lsblk identifies the device):'
-  /usr/bin/time -f 'elapsed=%e s max_rss=%M KiB' dd if="$tmpfile" of=/dev/null bs=1M status=none
+  /usr/bin/time -f 'elapsed=%e s max_rss=%M KiB' dd if="$tmpfile" of=/dev/null bs=1M
   rm -f "$tmpfile"
 } > evidence/task06-disk.txt 2>&1
 run_capture Task07/memory_plan evidence/task07-memory-plan.txt
