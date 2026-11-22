@@ -1,0 +1,4 @@
+The Linux block-device and scheduler inspection was executed in the successful Ubuntu Actions run; download its artifact from the run page below. The hosted runner is virtualized, so the results describe its guest device, not the student's laptop.
+
+Verified run: https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/45046223629
+Artifact section: https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/45046223629#artifacts

@@ -1,0 +1,10 @@
+Local verification: Windows 11 with MSYS2 UCRT64 GCC
+Compiler: 
+gcc.exe (Rev5, Built by MSYS2 project) 16.1.0
+Compile flags: gcc -std=c11 -O2 -Wall -Wextra -pthread
+gcc -std=c11 -O2 -Wall -Wextra -pthread C:\Users\moham\Documents\Codex\2026-11-03\com\work\CSA0406-Operating_System\Assignment4\Task02\allocation_todo.c -o C:\Users\moham\Documents\Codex\2026-11-03\com\work\CSA0406-Operating_System\Assignment4\Task02\allocation_todo.exe
+gcc -std=c11 -O2 -Wall -Wextra -pthread C:\Users\moham\Documents\Codex\2026-11-03\com\work\CSA0406-Operating_System\Assignment4\Task02\fragmentation_demo.c -o C:\Users\moham\Documents\Codex\2026-11-03\com\work\CSA0406-Operating_System\Assignment4\Task02\fragmentation_demo.exe
+gcc -std=c11 -O2 -Wall -Wextra -pthread C:\Users\moham\Documents\Codex\2026-11-03\com\work\CSA0406-Operating_System\Assignment4\Task02\allocation_lab.c -o C:\Users\moham\Documents\Codex\2026-11-03\com\work\CSA0406-Operating_System\Assignment4\Task02\allocation_lab.exe
+gcc -std=c11 -O2 -Wall -Wextra -pthread C:\Users\moham\Documents\Codex\2026-11-03\com\work\CSA0406-Operating_System\Assignment4\Task04\disk_todo.c -o C:\Users\moham\Documents\Codex\2026-11-03\com\work\CSA0406-Operating_System\Assignment4\Task04\disk_todo.exe
+gcc -std=c11 -O2 -Wall -Wextra -pthread C:\Users\moham\Documents\Codex\2026-11-03\com\work\CSA0406-Operating_System\Assignment4\Task04\scheduler_sim.c -o C:\Users\moham\Documents\Codex\2026-11-03\com\work\CSA0406-Operating_System\Assignment4\Task04\scheduler_sim.exe
+gcc -std=c11 -O2 -Wall -Wextra -pthread C:\Users\moham\Documents\Codex\2026-11-03\com\work\CSA0406-Operating_System\Assignment4\Task06\streaming_sim.c -o C:\Users\moham\Documents\Codex\2026-11-03\com\work\CSA0406-Operating_System\Assignment4\Task06\streaming_sim.exe -lm

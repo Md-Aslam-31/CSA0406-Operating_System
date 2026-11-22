@@ -1,0 +1,4 @@
+All six programs compiled and ran locally. Allocation, fragmentation, SSTF/C-SCAN expected outputs and the streaming cache ratio were checked. The complete Linux job also completed successfully on Ubuntu 24.04 in GitHub Actions.
+Local environment verification: Windows 11 + MSYS2 UCRT64 GCC.
+Linux workflow run: https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/45046223629
+Download the assignment4-linux-evidence artifact from the run's Artifacts section for Linux command output and verification log.

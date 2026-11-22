@@ -1,0 +1,3 @@
+fragmented layout: AAAAA.....CCCCC.....EEEEE.......
+free blocks=17, largest run=7, contiguous 10-block allocation start=-1
+indexed 10-block allocation succeeds: index block=5, data blocks 6 7 8 9 15 16 17 18 19 25

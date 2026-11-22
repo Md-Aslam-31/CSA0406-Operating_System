@@ -1,0 +1,5 @@
+Assignment 4 Linux verification is performed by the linked Ubuntu 24.04 GitHub Actions run. Download the workflow artifact from the run page to view findmnt, stat, df -i, ls -i, dumpe2fs, lsblk and /sys block-scheduler output.
+
+Verified run: https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/45046223629
+Workflow artifacts section: https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/45046223629#artifacts
+The CI job completed successfully (34 seconds). Local task program captures in this repository were generated with MSYS2 UCRT64 GCC on Windows 11 and are identified as local output; they are separate from the Ubuntu evidence.

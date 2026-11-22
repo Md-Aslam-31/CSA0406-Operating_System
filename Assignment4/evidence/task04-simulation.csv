@@ -1,0 +1,22 @@
+Synthetic online queue simulation: 10,000 seeded requests, cylinders 0-199, head=53
+Model: 0.08 ms per cylinder plus 2 ms per request; arrival intervals are assumptions, not hardware benchmarks.
+load,policy,arrival_ms,average_head_movement_cyl,average_wait_ms,max_wait_ms
+light,FCFS,30.0,66.443,0.000,0.000
+light,SSTF,30.0,66.443,0.000,0.000
+light,SCAN,30.0,132.179,2.634,15.440
+light,C-SCAN,30.0,199.435,11.228,39.520
+light,LOOK,30.0,66.443,0.000,0.000
+light,C-LOOK,30.0,66.443,2.658,15.760
+medium,FCFS,10.0,66.443,1.539,36.240
+medium,SSTF,10.0,66.023,1.328,30.720
+medium,SCAN,10.0,94.607,9.570,38.320
+medium,C-SCAN,10.0,98.343,18.409,57.040
+medium,LOOK,10.0,66.011,1.327,30.720
+medium,C-LOOK,10.0,66.378,4.109,36.320
+heavy,FCFS,3.0,66.443,21798.251,43151.880
+heavy,SSTF,3.0,12.551,31.693,203.360
+heavy,SCAN,3.0,12.540,31.035,106.440
+heavy,C-SCAN,3.0,12.575,46.169,111.760
+heavy,LOOK,3.0,12.557,29.563,98.920
+heavy,C-LOOK,3.0,12.568,43.990,118.240
+SSTF starvation illustration: while positioned at cylinder 60, 200 requests at cylinder 60 arrive every 1 ms; each read occupies 2 ms. A queued request at 183 remains behind the closer stream for at least 400 ms. If closer work continues without bound, SSTF has no finite wait bound.

@@ -1,9 +1,9 @@
 # Assignment 4 run evidence
 
-This folder is populated by the Ubuntu GitHub Actions workflow. The build environment, exact compiler commands, completed TODO outputs, filesystem/scheduler inspections, and seeded simulation outputs are retained here. The plots generated from those outputs are stored in ../plots/.
+The source programs were compiled and run locally with MSYS2 UCRT64 GCC on Windows 11. Those outputs and the derived plots are retained here. Linux-specific inspection commands (`findmnt`, `stat`, `df -i`, `ls -i`, `dumpe2fs`, `lsblk`, and `/sys` scheduler inspection) run in the successful Ubuntu 24.04 GitHub Actions job linked below; its artifact contains the Linux machine outputs, compiler flags, program results, plots, and verification log.
 
-The results are reproducible using:
+- [Successful Ubuntu workflow run](https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/45046223629)
+- [Open the run's artifacts](https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/45046223629#artifacts)
+- [Workflow definition](../.github/workflows/assignment4-linux.yml)
 
-    bash scripts/run_linux_evidence.sh
-
-Hardware timings and virtual filesystem details refer to the hosted Ubuntu runner. Disk and streaming queue timings are stated-assumption simulations, not physical hardware measurements.
+Reproduce the Linux run with `bash scripts/run_linux_evidence.sh` in Ubuntu 24.04. Disk and streaming queue timings are stated-assumption simulations, not physical benchmarks. Linux virtual-device values describe the hosted runner.

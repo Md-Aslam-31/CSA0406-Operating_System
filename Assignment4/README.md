@@ -2,15 +2,15 @@
 
 **Student:** Mohamed Aslam H | **Register:** 192572147 | **Department:** CSE (AI) | **Academic year:** 2025 | **Faculty:** Dr. Jayasakthi Velmurugan K
 
-Assignment 4 is in its own folder in the existing course repository. The complete report is available as REPORT.pdf, REPORT.docx and REPORT.md. Task01-Task06 contain the task work and source; evidence/ retains Linux command outputs and simulation data; plots/ has charts.
+Assignment 4 is in its own folder in the course repository. The complete report is available as `REPORT.pdf`, `REPORT.docx` and `REPORT.md`. `Task01`–`Task06` contain the task work and source. `evidence/` holds local program output and links to the Linux CI run; `plots/` holds charts generated from the local seeded simulation output.
 
 ## Build and run
 
-Verified in GitHub Actions on Ubuntu 24.04 LTS using GCC 13. Exact compiler commands are in evidence/build-environment.txt. To run the full suite in Linux:
+The full Linux suite completed successfully in GitHub Actions on Ubuntu 24.04. [View the successful run and download its Linux evidence artifact](https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/45046223629). Exact commands are in `evidence/build-environment.txt` for local C captures, and the Linux artifact includes its own environment/compiler record. To reproduce in Linux:
 
     bash scripts/run_linux_evidence.sh
 
-The runner builds all C programs, runs both completed TODO exercises, records filesystem and block-scheduler evidence, simulates disk and streaming workloads, generates figures, and checks expected outputs. Commands requiring Linux include /proc and /sys inspection, findmnt, dumpe2fs, lsblk and the Linux filesystem tools.
+The runner builds all C programs, runs both completed TODO exercises, records filesystem and block-scheduler evidence, simulates disk and streaming workloads, generates figures, and checks expected outputs. Commands requiring Linux include `/proc` and `/sys` inspection, `findmnt`, `dumpe2fs`, `lsblk` and Linux filesystem tools.
 
 ## Run individual programs
 
@@ -26,7 +26,7 @@ From this folder in Ubuntu:
 | Scheduling simulation / disk scheduler | gcc -std=c11 -O2 -Wall -Wextra -pthread Task04/scheduler_sim.c -o Task04/scheduler_sim && Task04/scheduler_sim, then bash Task04/inspect_scheduler.sh |
 | Streaming design simulation | gcc -std=c11 -O2 -Wall -Wextra -pthread Task06/streaming_sim.c -lm -o Task06/streaming_sim && Task06/streaming_sim |
 
-Task 1 and Task 5 are design/evaluation write-ups. Task 3 and 4 command captures and Task 2/4/6 program outputs are retained under evidence/.
+Task 1 and Task 5 are design/evaluation write-ups. The Linux CI artifact and local command captures are explained in `evidence/README.md`.
 
 | Task | Result |
 |---|---|

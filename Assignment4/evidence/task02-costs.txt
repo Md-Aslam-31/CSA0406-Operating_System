@@ -1,0 +1,7 @@
+4 GiB file / 4 KiB blocks: 1048576 data blocks
+Last-block access (inode/directory metadata excluded): contiguous=1 data read; linked=1048576 block reads; FAT-in-memory=1048575 RAM next-pointer lookups + 1 data read; two-level indexed=2 index reads + 1 data read
+4-byte inode pointers per 4 KiB block: 1024
+12 direct + single + double + triple indirect: 1074791436 blocks = 4402345721856 bytes = 4.00 TiB (theoretical pointer-address limit)
+4 TB decimal disk, 4 KiB blocks: 976562500 whole blocks
+free-space bitmap: 122070313 bytes = 116.42 MiB
+4-byte FAT for that many blocks: 3906250000 bytes = 3725.29 MiB

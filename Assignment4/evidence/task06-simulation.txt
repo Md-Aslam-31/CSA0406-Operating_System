@@ -1,0 +1,7 @@
+Assumed catalog: 10000 videos x 1.0 GiB = 9.8 TiB raw; 3 replicas = 29.3 TiB before overhead.
+Peak scenario: 20,000 viewers x 4 Mbit/s = 80 Gbit/s; CDN 95% cache ratio => 4.0 Gbit/s origin egress.
+Random-seek segment: 1.0 MiB. Model service: HDD 13.556 ms, SSD 0.706 ms; network edge RTT 20 ms.
+4 TB disk at 4 KiB allocation blocks: each 1.0 MiB segment spans 256 blocks; an offset lookup needs a few extent/index reads before the data run.
+Local HDD pool (4 disks, no edge cache): starts=100000 mean_start_latency=144452.222 ms p50=144458.000 ms p95=274458.000 ms p99=286013.556 ms max=288890.889 ms origin_reads=100000/100000
+SSD edge cache plus HDD origin (95% hits): starts=100000 mean_start_latency=21.362 ms p50=20.706 ms p95=33.556 ms p99=33.556 ms max=43.611 ms origin_reads=5057/100000
+Arrival burst is modeled at 2,000 starts/second. All latency values are a deterministic queueing simulation using stated assumptions, not a physical hardware or CDN benchmark. Playback start includes the modeled random segment lookup, not full-video transfer.
