@@ -4,5 +4,6 @@ Task02/allocation_lab
 Task04/disk_todo
 Task04/scheduler_sim
 Task06/streaming_sim
+*.exe
 __pycache__/
-*.exe`n/evidence/report-render/
+/evidence/report-render/
