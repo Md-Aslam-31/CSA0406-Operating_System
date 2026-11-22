@@ -1,0 +1,21 @@
+# Task 5 - Distributed and cloud storage
+
+| Option | Consistency and access | Availability and performance | Cost/control |
+|---|---|---|---|
+| NFS (HA pair or clustered appliance) | Shared POSIX namespace; close-to-open/cache semantics depend on NFS version and mount options. Convenient for home directories and ordinary shared files. | Simple LAN access, but metadata service and network can bottleneck; a single server is a failure point unless clustered. | One primary data copy plus RAID/backups is capacity-efficient. College operates patching, access control, capacity, backup and failover. |
+| HDFS or Ceph | HDFS is optimized for large streaming files and write-once/append workloads, not small-file random updates. CephFS provides a POSIX-like distributed filesystem; Ceph object/RADOS is key/object based. | Replicas on separate hosts/racks let reads use a nearby copy and allow recovery after a node failure. More nodes, network and metadata/control-plane design are required. | Three full replicas use about 3x raw logical capacity; erasure coding lowers this for cold data with a recovery/CPU tradeoff. College retains operational and data governance duties. |
+| Cloud object store | Objects are addressed by key and API, not POSIX paths. Amazon S3 provides strong read-after-write consistency for object PUT/DELETE; multi-key transactions and simultaneous writer conflict control remain application concerns. | Provider-managed multi-device/AZ redundancy and elastic request capacity; campus/home latency depends on network and region. CDN caches reduce distant reads. | Pay for stored versions, requests, retrieval and transfer. Less hardware operation, but costs and identity, region, retention, encryption, export and provider dependency must be governed. |
+
+## Replication and consistency
+
+With replication factor 3, each data block has three copies. A single disk/node loss can leave two readable copies and the controller can recreate the missing replica elsewhere. Rack-aware placement matters: three copies in one rack do not survive a rack outage. Replication raises storage and write-network use to roughly 3x payload, but allows parallel/nearby reads. Replication is not backup against a mistaken delete or compromised credentials; keep versioned/offline recovery copies.
+
+Strong consistency means a successful write is visible to subsequent reads according to the service's contract; it simplifies shared gradebooks and records but can add coordination cost. Eventual consistency allows replicas to converge later, which can improve availability/latency during partitions, but applications need conflict resolution and users may briefly see stale data. State the actual guarantee of the chosen product/protocol; do not assume every distributed filesystem or NFS cache behaves the same.
+
+## Storage device management by the OS
+
+The block-device interface exposes numbered blocks and request queues. Drivers translate kernel block requests into controller commands and report completions/errors. Buffering groups writes and absorbs speed differences; the page cache retains recently read/written file blocks; direct I/O can bypass some cache paths. The I/O scheduler merges/reorders requests to improve throughput/fairness where the device benefits. Spooling queues whole jobs for a single-use device (classically printers); storage servers instead queue block/object operations. Flush/barrier semantics and device write caches matter for durability.
+
+## Alternative: one large NFS server
+
+For N users each reading R bytes/s, the server and NIC bound aggregate throughput to B; ideal per-user throughput is at most B/N, and actual latency grows with queueing, metadata contention and cache misses. Writes to the server are one copy; RAID and backup copies add physical capacity but do not create independent read service unless replicas/failover are configured. A single server or its metadata/network path fails, interrupting all users; an NFS HA pair reduces but does not eliminate correlated/site failures. An illustrative 10 Gbit/s server link carries at most 1.25 GB/s before protocol overhead, so 1,000 simultaneous 2 MB/s readers already need 2 GB/s. With three replicas, raw data placement is about 3x, but load and fault tolerance improve. Benchmark with the campus client count and failover plan.
