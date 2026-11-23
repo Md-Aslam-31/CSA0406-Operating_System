@@ -1,0 +1,308 @@
+=== Environment ===
+Linux: Ubuntu 24.04.5 LTS
+Linux ip-10-0-133-26 7.0.0-1014-aws #14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Python 3.12.3
+Docker version 28.0.4, build b8034c0
+Docker Compose version v2.38.2
+Virtualization: KVM
+=== B1.1 Linux observations ===
+$ ps -eo pid,ppid,user,%cpu,%mem,rss,comm --sort=-%cpu | head -n 15
+    PID    PPID USER     %CPU %MEM   RSS COMMAND
+   2014    1994 runner    1.2  0.8 144452 Runner.Worker
+      1       0 root      0.6  0.0 13932 systemd
+   1994    1927 runner    0.4  0.6 99632 Runner.Listener
+   1967    1965 root      0.3  0.8 139160 provjobd1412192
+     15       2 root      0.3  0.0     0 pr/ttyS0
+   1124       1 root      0.0  0.2 44088 containerd
+    523       1 root      0.0  0.0  8436 systemd-udevd
+    998       1 root      0.0  0.2 43092 snapd
+     47       2 root      0.0  0.0     0 kworker/u16:1-ext4-rsv-conversion
+   1403       1 root      0.0  0.4 72608 dockerd
+    786       1 root      0.0  0.0  5108 haveged
+    464       1 root      0.0  0.1 17824 systemd-journal
+     12       2 root      0.0  0.0     0 kworker/u16:0-writeback
+    983       1 message+  0.0  0.0  5692 dbus-daemon
+$ top -b -n1 | head -n 15
+top - 16:38:51 up 4 min,  0 user,  load average: 0.35, 0.27, 0.13
+Tasks: 196 total,   1 running, 195 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni, 88.2 id, 11.8 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :  15701.6 total,  13218.2 free,    977.3 used,   1844.4 buff/cache     
+MiB Swap:   3072.0 total,   3072.0 free,      0.0 used.  14724.3 avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+      1 root      20   0   22704  13932   9516 S   0.0   0.1   0:01.74 systemd
+      2 root      20   0       0      0      0 S   0.0   0.0   0:00.00 kthreadd
+      3 root      20   0       0      0      0 S   0.0   0.0   0:00.00 pool_wo+
+      4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+      5 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+      6 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+      7 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+      8 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
+$ free -h
+               total        used        free      shared  buff/cache   available
+Mem:            15Gi       977Mi        12Gi        45Mi       1.8Gi        14Gi
+Swap:          3.0Gi          0B       3.0Gi
+$ vmstat 1 3
+procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu-------
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st gu
+ 1  0      0 13535228  80044 1808684    0    0  3268 12652  967    3  2  1 89  8  0  0
+ 0  0      0 13543396  80044 1808800    0    0     0     0  208  310  1  0 99  0  0  0
+ 0  0      0 13555520  80044 1808828    0    0     0     0  190  340  0  0 100  0  0  0
+$ iostat -xz 1 2
+Linux 7.0.0-1014-aws (ip-10-0-133-26) 	11/23/26 	_x86_64_	(4 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           1.73    0.24    0.87    8.13    0.02   89.01
+
+Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+dm-0           779.91   3119.62     0.00   0.00   10.81     4.00 3106.64  12426.44     0.00   0.00    1.35     4.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00   12.61  24.52
+loop0            0.22      3.71     0.00   0.00    4.88    16.91    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.07
+loop1            0.18      1.26     0.00   0.00    6.00     6.92    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.09
+loop2            0.04      0.05     0.00   0.00    0.00     1.27    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+nvme0n1         80.18   3229.11   710.02  89.85    6.16    40.27    0.09      0.62     0.10  52.73    0.77     6.98    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.49  23.68
+nvme1n1          0.48      8.38     0.00   0.00    0.08    17.33  161.62  12564.93  2979.64  94.85    0.56    77.74    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.09   0.44
+zram0            0.18      4.03     0.00   0.00    0.00    22.19    0.00      0.01     0.00   0.00    0.00     4.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.25    0.00    0.25    0.00    0.00   99.50
+
+Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+
+
+$ df -h
+Filesystem            Size  Used Avail Use% Mounted on
+tmpfs                 1.6G  1.2M  1.6G   1% /run
+efivarfs              128K  3.6K  120K   3% /sys/firmware/efi/efivars
+/dev/mapper/cow-root  145G   57G   88G  40% /
+tmpfs                 7.7G   84K  7.7G   1% /dev/shm
+tmpfs                 5.0M     0  5.0M   0% /run/lock
+/dev/nvme0n1p16       881M  115M  705M  14% /boot
+/dev/nvme0n1p15       105M  6.2M   99M   6% /boot/efi
+tmpfs                 1.6G   12K  1.6G   1% /run/user/1001
+tmpfs                 7.7G     0  7.7G   0% /run/qemu
+$ ss -tulpen
+Netid State  Recv-Q Send-Q       Local Address:Port Peer Address:PortProcess                                                                 
+udp   UNCONN 0      0               127.0.0.54:53        0.0.0.0:*    uid:991 ino:5048 sk:1 cgroup:/system.slice/systemd-resolved.service <->
+udp   UNCONN 0      0            127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:5046 sk:2 cgroup:/system.slice/systemd-resolved.service <->
+udp   UNCONN 0      0      10.0.133.26%enp39s0:68        0.0.0.0:*    uid:998 ino:7545 sk:3 cgroup:/system.slice/systemd-networkd.service <->
+udp   UNCONN 0      0                127.0.0.1:323       0.0.0.0:*    ino:9108 sk:4 cgroup:/system.slice/chrony.service <->                  
+udp   UNCONN 0      0                    [::1]:323          [::]:*    ino:9109 sk:5 cgroup:/system.slice/chrony.service v6only:1 <->         
+tcp   LISTEN 0      4096         127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:5047 sk:6 cgroup:/system.slice/systemd-resolved.service <->
+tcp   LISTEN 0      4096            127.0.0.54:53        0.0.0.0:*    uid:991 ino:5049 sk:7 cgroup:/system.slice/systemd-resolved.service <->
+tcp   LISTEN 0      4096               0.0.0.0:22        0.0.0.0:*    ino:8832 sk:8 cgroup:/system.slice/ssh.socket <->                      
+tcp   LISTEN 0      4096                  [::]:22           [::]:*    ino:8834 sk:9 cgroup:/system.slice/ssh.socket v6only:1 <->             
+$ uname -r
+7.0.0-1014-aws
+$ head /proc/meminfo
+MemTotal:       16078424 kB
+MemFree:        13564708 kB
+MemAvailable:   15108332 kB
+Buffers:           80044 kB
+Cached:          1730572 kB
+SwapCached:            0 kB
+Active:           807836 kB
+Inactive:        1231624 kB
+Active(anon):     284108 kB
+Inactive(anon):        0 kB
+$ cat /sys/devices/system/cpu/online
+0-3
+=== B1.2 log analysis, disk alert and cron ===
+Requests per status code:
+  200 4
+  302 1
+  403 1
+  404 1
+Busiest client:
+  10.0.0.5 4
+Total bytes sent: 43200
+Requests per status code:
+  200 4
+  302 1
+  403 1
+  404 1
+Busiest client:
+  10.0.0.5 4
+Total bytes sent: 43200
+ALERT filesystem=efivarfs used=3% mount=/sys/firmware/efi/efivars
+ALERT filesystem=/dev/mapper/cow-root used=40% mount=/
+ALERT filesystem=/dev/nvme0n1p16 used=14% mount=/boot
+ALERT filesystem=/dev/nvme0n1p15 used=6% mount=/boot/efi
+0 * * * * /usr/local/sbin/disk-alert.sh >> /var/log/disk-alert.log 2>&1
+=== B1.3 systemd, Nginx and firewall ===
+Collecting Flask==3.1.2 (from -r /opt/result-portal/requirements.txt (line 1))
+  Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+Collecting gunicorn==23.0.0 (from -r /opt/result-portal/requirements.txt (line 2))
+  Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+Collecting psycopg2-binary==2.9.10 (from -r /opt/result-portal/requirements.txt (line 3))
+  Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting blinker>=1.9.0 (from Flask==3.1.2->-r /opt/result-portal/requirements.txt (line 1))
+  Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+Collecting click>=8.1.3 (from Flask==3.1.2->-r /opt/result-portal/requirements.txt (line 1))
+  Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r /opt/result-portal/requirements.txt (line 1))
+  Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r /opt/result-portal/requirements.txt (line 1))
+  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r /opt/result-portal/requirements.txt (line 1))
+  Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r /opt/result-portal/requirements.txt (line 1))
+  Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+Collecting packaging (from gunicorn==23.0.0->-r /opt/result-portal/requirements.txt (line 2))
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Downloading flask-3.1.2-py3-none-any.whl (103 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.3/103.3 kB 32.4 MB/s eta 0:00:00
+Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.0/85.0 kB 63.6 MB/s eta 0:00:00
+Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 207.5 MB/s eta 0:00:00
+Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+Downloading click-8.5.1-py3-none-any.whl (126 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.2/126.2 kB 83.5 MB/s eta 0:00:00
+Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 83.5 MB/s eta 0:00:00
+Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 228.7/228.7 kB 154.2 MB/s eta 0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 99.7 MB/s eta 0:00:00
+Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
+Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.3 psycopg2-binary-2.9.10 werkzeug-3.1.9
+Created symlink /etc/systemd/system/multi-user.target.wants/result-portal.service → /etc/systemd/system/result-portal.service.
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+Synchronizing state of nginx.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable nginx
+Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service → /usr/lib/systemd/system/nginx.service.
+Synchronizing state of cron.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+Executing: /usr/lib/systemd/systemd-sysv-install enable cron
+# Hourly disk-space check for the non-login service account:
+# sudo crontab -u result-portal -e
+0 * * * * /usr/local/sbin/disk-alert.sh >> /var/log/disk-alert.log 2>&1
+Default incoming policy changed to 'deny'
+(be sure to update your rules accordingly)
+Default outgoing policy changed to 'allow'
+(be sure to update your rules accordingly)
+Rules updated
+Rules updated (v6)
+Rules updated
+Rules updated (v6)
+Rules updated
+Rules updated (v6)
+Firewall is active and enabled on system startup
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), deny (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    Anywhere                  
+80/tcp                     ALLOW IN    Anywhere                  
+443/tcp                    ALLOW IN    Anywhere                  
+22/tcp (v6)                ALLOW IN    Anywhere (v6)             
+80/tcp (v6)                ALLOW IN    Anywhere (v6)             
+443/tcp (v6)               ALLOW IN    Anywhere (v6)             
+
+● result-portal.service - University result portal sample web application
+     Loaded: loaded (/etc/systemd/system/result-portal.service; enabled; preset: enabled)
+     Active: active (running) since Mon 2026-11-23 16:38:58 UTC; 1s ago
+   Main PID: 4129 (gunicorn)
+      Tasks: 3 (limit: 16654)
+     Memory: 41.3M (peak: 41.4M)
+        CPU: 205ms
+     CGroup: /system.slice/result-portal.service
+             ├─4129 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             ├─4148 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             └─4194 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+
+Nov 23 16:38:58 ip-10-0-133-26 systemd[1]: Started result-portal.service - University result portal sample web application.
+Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4129]: [2026-11-23 16:38:58 +0000] [4129] [INFO] Starting gunicorn 23.0.0
+Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4129]: [2026-11-23 16:38:58 +0000] [4129] [INFO] Listening at: http://127.0.0.1:8000 (4129)
+Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4129]: [2026-11-23 16:38:58 +0000] [4129] [INFO] Using worker: sync
+Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4148]: [2026-11-23 16:38:58 +0000] [4148] [INFO] Booting worker with pid: 4148
+Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4194]: [2026-11-23 16:38:58 +0000] [4194] [INFO] Booting worker with pid: 4194
+
+● nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; preset: enabled)
+     Active: active (running) since Mon 2026-11-23 16:38:58 UTC; 1s ago
+       Docs: man:nginx(8)
+   Main PID: 4315 (nginx)
+      Tasks: 5 (limit: 16654)
+     Memory: 3.6M (peak: 4.6M)
+        CPU: 10ms
+     CGroup: /system.slice/nginx.service
+             ├─4315 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+             ├─4316 "nginx: worker process"
+             ├─4317 "nginx: worker process"
+             ├─4318 "nginx: worker process"
+             └─4319 "nginx: worker process"
+
+Nov 23 16:38:58 ip-10-0-133-26 systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
+Nov 23 16:38:58 ip-10-0-133-26 systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.
+{"service":"University Result Portal","status":"ok"}
+{"grade":"A","semester":"2025-odd","service":"University Result Portal","student_id":10001}
+Nov 23 16:38:58 ip-10-0-133-26 systemd[1]: Started result-portal.service - University result portal sample web application.
+Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4129]: [2026-11-23 16:38:58 +0000] [4129] [INFO] Starting gunicorn 23.0.0
+Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4129]: [2026-11-23 16:38:58 +0000] [4129] [INFO] Listening at: http://127.0.0.1:8000 (4129)
+Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4129]: [2026-11-23 16:38:58 +0000] [4129] [INFO] Using worker: sync
+Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4148]: [2026-11-23 16:38:58 +0000] [4148] [INFO] Booting worker with pid: 4148
+Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4194]: [2026-11-23 16:38:58 +0000] [4194] [INFO] Booting worker with pid: 4194
+Nov 23 16:39:00 ip-10-0-133-26 gunicorn[4194]: 127.0.0.1 - - [23/Nov/2026:16:39:00 +0000] "GET /health HTTP/1.0" 200 53 "-" "curl/8.5.0"
+Nov 23 16:39:00 ip-10-0-133-26 gunicorn[4194]: 127.0.0.1 - - [23/Nov/2026:16:39:00 +0000] "GET /results/10001 HTTP/1.0" 200 92 "-" "curl/8.5.0"
+=== B3.1 bare-metal deployment ===
+curl: (7) Failed to connect to 127.0.0.1 port 8100 after 0 ms: Couldn't connect to server
+{"service":"University Result Portal","status":"ok"}
+Completed 200 requests
+Completed 400 requests
+Completed 600 requests
+Completed 800 requests
+Completed 1000 requests
+Completed 1200 requests
+Completed 1400 requests
+Completed 1600 requests
+Completed 1800 requests
+Completed 2000 requests
+Finished 2000 requests
+=== B3.1 VM deployment ===
+Collecting Flask==3.1.2
+  Using cached flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+Collecting gunicorn==23.0.0
+  Using cached gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+Collecting blinker>=1.9.0 (from Flask==3.1.2)
+  Using cached blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+Collecting click>=8.1.3 (from Flask==3.1.2)
+  Using cached click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+Collecting itsdangerous>=2.2.0 (from Flask==3.1.2)
+  Using cached itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+Collecting jinja2>=3.1.2 (from Flask==3.1.2)
+  Using cached jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting markupsafe>=2.1.1 (from Flask==3.1.2)
+  Using cached markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting werkzeug>=3.1.0 (from Flask==3.1.2)
+  Using cached werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+Collecting packaging (from gunicorn==23.0.0)
+  Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Using cached flask-3.1.2-py3-none-any.whl (103 kB)
+Using cached gunicorn-23.0.0-py3-none-any.whl (85 kB)
+Using cached blinker-1.9.0-py3-none-any.whl (8.5 kB)
+Using cached click-8.5.1-py3-none-any.whl (126 kB)
+Using cached itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
+Using cached markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Using cached werkzeug-3.1.9-py3-none-any.whl (228 kB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Saved /tmp/tmp.yQfNLtROle/wheels/flask-3.1.2-py3-none-any.whl
+Saved /tmp/tmp.yQfNLtROle/wheels/gunicorn-23.0.0-py3-none-any.whl
+Saved /tmp/tmp.yQfNLtROle/wheels/blinker-1.9.0-py3-none-any.whl
+Saved /tmp/tmp.yQfNLtROle/wheels/click-8.5.1-py3-none-any.whl
+Saved /tmp/tmp.yQfNLtROle/wheels/itsdangerous-2.2.0-py3-none-any.whl
+Saved /tmp/tmp.yQfNLtROle/wheels/jinja2-3.1.6-py3-none-any.whl
+Saved /tmp/tmp.yQfNLtROle/wheels/markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+Saved /tmp/tmp.yQfNLtROle/wheels/werkzeug-3.1.9-py3-none-any.whl
+Saved /tmp/tmp.yQfNLtROle/wheels/packaging-26.3-py3-none-any.whl
+Successfully downloaded Flask gunicorn blinker click itsdangerous jinja2 markupsafe werkzeug packaging
+qemu-system-x86_64: Property 'pc-i440fx-noble-v2-machine.thread' not found
+run failed at line 95 (exit 1): bash scripts/run_vm_benchmark.sh

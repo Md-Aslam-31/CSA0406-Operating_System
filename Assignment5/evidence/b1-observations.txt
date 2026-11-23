@@ -1,29 +1,29 @@
 === B1.1 Linux observations ===
 $ ps -eo pid,ppid,user,%cpu,%mem,rss,comm --sort=-%cpu | head -n 15
     PID    PPID USER     %CPU %MEM   RSS COMMAND
-   2047    2032 runner    4.8  0.7 129012 Runner.Worker
-   2032    1980 runner    2.0  0.5 95136 Runner.Listener
-   1995    1993 root      1.2  0.8 137296 provjobd3000138
-      1       0 root      0.3  0.0 14428 systemd
-   1980       1 runner    0.1  0.1 17168 hosted-compute-
-   1304     867 root      0.0  0.2 37004 python3
-     15       2 root      0.0  0.0     0 pr/ttyS0
-   1882       2 root      0.0  0.0     0 kworker/u16:0-ext4-rsv-conversion
-    917       1 root      0.0  0.2 42760 containerd
-   2538       1 root      0.0  0.1 20956 packagekitd
-    161       1 root      0.0  0.1 18184 systemd-journal
-    867       1 root      0.0  0.1 31052 python3
-   1055       1 root      0.0  0.4 69404 dockerd
-    820       1 message+  0.0  0.0  5676 dbus-daemon
+   2014    1994 runner    1.2  0.8 144452 Runner.Worker
+      1       0 root      0.6  0.0 13932 systemd
+   1994    1927 runner    0.4  0.6 99632 Runner.Listener
+   1967    1965 root      0.3  0.8 139160 provjobd1412192
+     15       2 root      0.3  0.0     0 pr/ttyS0
+   1124       1 root      0.0  0.2 44088 containerd
+    523       1 root      0.0  0.0  8436 systemd-udevd
+    998       1 root      0.0  0.2 43092 snapd
+     47       2 root      0.0  0.0     0 kworker/u16:1-ext4-rsv-conversion
+   1403       1 root      0.0  0.4 72608 dockerd
+    786       1 root      0.0  0.0  5108 haveged
+    464       1 root      0.0  0.1 17824 systemd-journal
+     12       2 root      0.0  0.0     0 kworker/u16:0-writeback
+    983       1 message+  0.0  0.0  5692 dbus-daemon
 $ top -b -n1 | head -n 15
-top - 16:34:23 up 13 min,  0 user,  load average: 0.60, 0.23, 0.10
-Tasks: 157 total,   1 running, 156 sleeping,   0 stopped,   0 zombie
-%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
-MiB Mem :  15983.9 total,  13240.1 free,   1152.5 used,   1937.5 buff/cache     
-MiB Swap:   3072.0 total,   3072.0 free,      0.0 used.  14831.4 avail Mem 
+top - 16:38:51 up 4 min,  0 user,  load average: 0.35, 0.27, 0.13
+Tasks: 196 total,   1 running, 195 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni, 88.2 id, 11.8 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :  15701.6 total,  13218.2 free,    977.3 used,   1844.4 buff/cache     
+MiB Swap:   3072.0 total,   3072.0 free,      0.0 used.  14724.3 avail Mem 
 
     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-      1 root      20   0   22852  14428   9912 S   0.0   0.1   0:02.71 systemd
+      1 root      20   0   22704  13932   9516 S   0.0   0.1   0:01.74 systemd
       2 root      20   0       0      0      0 S   0.0   0.0   0:00.00 kthreadd
       3 root      20   0       0      0      0 S   0.0   0.0   0:00.00 pool_wo+
       4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
@@ -33,65 +33,70 @@ MiB Swap:   3072.0 total,   3072.0 free,      0.0 used.  14831.4 avail Mem
       8 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
 $ free -h
                total        used        free      shared  buff/cache   available
-Mem:            15Gi       1.1Gi        12Gi        44Mi       1.9Gi        14Gi
+Mem:            15Gi       977Mi        12Gi        45Mi       1.8Gi        14Gi
 Swap:          3.0Gi          0B       3.0Gi
 $ vmstat 1 3
 procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu-------
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st gu
- 2  0      0 13571788  86792 1897448    0    0  1189  3891  560    1  1  0 98  1  0  0
- 0  0      0 13605880  86792 1897488    0    0     0     0  465  372  0  0 100  0  0  0
- 0  0      0 13636108  86792 1897504    0    0     0    80  416  344  0  0 100  0  0  0
+ 1  0      0 13535228  80044 1808684    0    0  3268 12652  967    3  2  1 89  8  0  0
+ 0  0      0 13543396  80044 1808800    0    0     0     0  208  310  1  0 99  0  0  0
+ 0  0      0 13555520  80044 1808828    0    0     0     0  190  340  0  0 100  0  0  0
 $ iostat -xz 1 2
-Linux 7.0.0-1017-azure (runnervmeozm8) 	11/23/26 	_x86_64_	(4 CPU)
+Linux 7.0.0-1014-aws (ip-10-0-133-26) 	11/23/26 	_x86_64_	(4 CPU)
 
 avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-           0.60    0.06    0.38    0.78    0.00   98.18
+           1.73    0.24    0.87    8.13    0.02   89.01
 
 Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
-loop0            0.01      0.02     0.00   0.00    0.00     1.27    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
-nvme0n1         26.88   1186.72    10.17  27.45    0.87    44.15   25.96   3881.60    30.82  54.28    9.68   149.53    1.63    361.01     0.00   0.00    0.15   221.75    0.02    0.11    0.27   3.08
+dm-0           779.91   3119.62     0.00   0.00   10.81     4.00 3106.64  12426.44     0.00   0.00    1.35     4.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00   12.61  24.52
+loop0            0.22      3.71     0.00   0.00    4.88    16.91    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.07
+loop1            0.18      1.26     0.00   0.00    6.00     6.92    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.09
+loop2            0.04      0.05     0.00   0.00    0.00     1.27    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+nvme0n1         80.18   3229.11   710.02  89.85    6.16    40.27    0.09      0.62     0.10  52.73    0.77     6.98    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.49  23.68
+nvme1n1          0.48      8.38     0.00   0.00    0.08    17.33  161.62  12564.93  2979.64  94.85    0.56    77.74    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.09   0.44
+zram0            0.18      4.03     0.00   0.00    0.00    22.19    0.00      0.01     0.00   0.00    0.00     4.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
 
 
 avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-           0.00    0.00    0.25    2.26    0.00   97.49
+           0.25    0.00    0.25    0.00    0.00   99.50
 
 Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
-nvme0n1          0.00      0.00     0.00   0.00    0.00     0.00  125.00  23152.00   334.00  72.77   13.07   185.22    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    1.63   8.70
 
 
 $ df -h
-Filesystem       Size  Used Avail Use% Mounted on
-/dev/root        145G   60G   85G  42% /
-tmpfs            7.9G   84K  7.9G   1% /dev/shm
-tmpfs            3.2G  1.0M  3.2G   1% /run
-tmpfs            5.0M     0  5.0M   0% /run/lock
-/dev/nvme0n1p16  881M   85M  735M  11% /boot
-/dev/nvme0n1p15  105M  6.2M   99M   6% /boot/efi
-tmpfs            1.6G   12K  1.6G   1% /run/user/1001
-tmpfs            7.9G     0  7.9G   0% /run/qemu
+Filesystem            Size  Used Avail Use% Mounted on
+tmpfs                 1.6G  1.2M  1.6G   1% /run
+efivarfs              128K  3.6K  120K   3% /sys/firmware/efi/efivars
+/dev/mapper/cow-root  145G   57G   88G  40% /
+tmpfs                 7.7G   84K  7.7G   1% /dev/shm
+tmpfs                 5.0M     0  5.0M   0% /run/lock
+/dev/nvme0n1p16       881M  115M  705M  14% /boot
+/dev/nvme0n1p15       105M  6.2M   99M   6% /boot/efi
+tmpfs                 1.6G   12K  1.6G   1% /run/user/1001
+tmpfs                 7.7G     0  7.7G   0% /run/qemu
 $ ss -tulpen
-Netid State  Recv-Q Send-Q   Local Address:Port Peer Address:PortProcess                                                                 
-udp   UNCONN 0      0           127.0.0.54:53        0.0.0.0:*    uid:991 ino:4626 sk:1 cgroup:/system.slice/systemd-resolved.service <->
-udp   UNCONN 0      0        127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:4624 sk:2 cgroup:/system.slice/systemd-resolved.service <->
-udp   UNCONN 0      0      10.1.0.225%eth0:68        0.0.0.0:*    uid:998 ino:5735 sk:3 cgroup:/system.slice/systemd-networkd.service <->
-udp   UNCONN 0      0            127.0.0.1:323       0.0.0.0:*    ino:7092 sk:4 cgroup:/system.slice/chrony.service <->                  
-udp   UNCONN 0      0                [::1]:323          [::]:*    ino:7093 sk:5 cgroup:/system.slice/chrony.service v6only:1 <->         
-tcp   LISTEN 0      4096     127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:4625 sk:6 cgroup:/system.slice/systemd-resolved.service <->
-tcp   LISTEN 0      4096           0.0.0.0:22        0.0.0.0:*    ino:5877 sk:7 cgroup:/system.slice/ssh.socket <->                      
-tcp   LISTEN 0      4096        127.0.0.54:53        0.0.0.0:*    uid:991 ino:4627 sk:8 cgroup:/system.slice/systemd-resolved.service <->
-tcp   LISTEN 0      4096              [::]:22           [::]:*    ino:5879 sk:9 cgroup:/system.slice/ssh.socket v6only:1 <->             
+Netid State  Recv-Q Send-Q       Local Address:Port Peer Address:PortProcess                                                                 
+udp   UNCONN 0      0               127.0.0.54:53        0.0.0.0:*    uid:991 ino:5048 sk:1 cgroup:/system.slice/systemd-resolved.service <->
+udp   UNCONN 0      0            127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:5046 sk:2 cgroup:/system.slice/systemd-resolved.service <->
+udp   UNCONN 0      0      10.0.133.26%enp39s0:68        0.0.0.0:*    uid:998 ino:7545 sk:3 cgroup:/system.slice/systemd-networkd.service <->
+udp   UNCONN 0      0                127.0.0.1:323       0.0.0.0:*    ino:9108 sk:4 cgroup:/system.slice/chrony.service <->                  
+udp   UNCONN 0      0                    [::1]:323          [::]:*    ino:9109 sk:5 cgroup:/system.slice/chrony.service v6only:1 <->         
+tcp   LISTEN 0      4096         127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:5047 sk:6 cgroup:/system.slice/systemd-resolved.service <->
+tcp   LISTEN 0      4096            127.0.0.54:53        0.0.0.0:*    uid:991 ino:5049 sk:7 cgroup:/system.slice/systemd-resolved.service <->
+tcp   LISTEN 0      4096               0.0.0.0:22        0.0.0.0:*    ino:8832 sk:8 cgroup:/system.slice/ssh.socket <->                      
+tcp   LISTEN 0      4096                  [::]:22           [::]:*    ino:8834 sk:9 cgroup:/system.slice/ssh.socket v6only:1 <->             
 $ uname -r
-7.0.0-1017-azure
+7.0.0-1014-aws
 $ head /proc/meminfo
-MemTotal:       16367524 kB
-MemFree:        13657372 kB
-MemAvailable:   15288748 kB
-Buffers:           87128 kB
-Cached:          1819252 kB
+MemTotal:       16078424 kB
+MemFree:        13564708 kB
+MemAvailable:   15108332 kB
+Buffers:           80044 kB
+Cached:          1730572 kB
 SwapCached:            0 kB
-Active:           850400 kB
-Inactive:        1285216 kB
-Active(anon):     283268 kB
+Active:           807836 kB
+Inactive:        1231624 kB
+Active(anon):     284108 kB
 Inactive(anon):        0 kB
 $ cat /sys/devices/system/cpu/online
 0-3

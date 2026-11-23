@@ -1,1 +1,2 @@
 run failed at line 84 (exit 7): tee evidence/benchmark-host-health.json
+run failed at line 95 (exit 1): bash scripts/run_vm_benchmark.sh
