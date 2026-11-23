@@ -1,1 +1,1 @@
-run failed at line 219 (exit 1): python3 scripts/plot_results.py
+OK: B1 TODO output, Nginx/systemd/ufw health, Docker build/user/limits/DB volume, three deployment rates, pod replacement, six replicas during load, LMS limits, capacity model and charts.

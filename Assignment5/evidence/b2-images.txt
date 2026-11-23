@@ -1,12 +1,12 @@
 REPOSITORY      TAG          IMAGE ID       CREATED                  SIZE
-result-portal   ubuntu       40946e43198d   Less than a second ago   149MB
-result-portal   multistage   fc335129c8dd   11 seconds ago           134MB
-result-portal   compose      c78295d6debe   14 seconds ago           142MB
-result-portal   full         c7163cf2b876   18 seconds ago           1.13GB
-build_ms full_python=18404 slim_python=3881 multistage=2696 ubuntu_base=11012
+result-portal   ubuntu       1e1f0a1a0548   Less than a second ago   149MB
+result-portal   multistage   e2033276e2a8   11 seconds ago           134MB
+result-portal   compose      8db8a4505260   14 seconds ago           142MB
+result-portal   full         4481a8ef7b8c   18 seconds ago           1.13GB
+build_ms full_python=15768 slim_python=3948 multistage=2689 ubuntu_base=11365
 docker history result-portal:full
 IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
-c7163cf2b876   18 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--w…   0B        buildkit.dockerfile.v0
+4481a8ef7b8c   18 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--w…   0B        buildkit.dockerfile.v0
 <missing>      18 seconds ago   EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
 <missing>      18 seconds ago   USER portal                                     0B        buildkit.dockerfile.v0
 <missing>      18 seconds ago   RUN /bin/sh -c chown -R portal:portal /app #…   2.04kB    buildkit.dockerfile.v0
@@ -21,14 +21,14 @@ image=[result-portal:full] bytes=1132008443
 installed_deb_packages=469
 docker history result-portal:compose
 IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
-c78295d6debe   14 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--w…   0B        buildkit.dockerfile.v0
-<missing>      14 seconds ago   EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
-<missing>      14 seconds ago   USER portal                                     0B        buildkit.dockerfile.v0
-<missing>      14 seconds ago   RUN /bin/sh -c chown -R portal:portal /app #…   2.04kB    buildkit.dockerfile.v0
-<missing>      14 seconds ago   COPY webapp/app.py ./app.py # buildkit          1.99kB    buildkit.dockerfile.v0
-<missing>      14 seconds ago   RUN /bin/sh -c pip install --no-cache-dir -r…   22.2MB    buildkit.dockerfile.v0
-<missing>      16 seconds ago   COPY webapp/requirements.txt ./requirements.…   54B       buildkit.dockerfile.v0
-<missing>      16 seconds ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
+8db8a4505260   15 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--w…   0B        buildkit.dockerfile.v0
+<missing>      15 seconds ago   EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
+<missing>      15 seconds ago   USER portal                                     0B        buildkit.dockerfile.v0
+<missing>      15 seconds ago   RUN /bin/sh -c chown -R portal:portal /app #…   2.04kB    buildkit.dockerfile.v0
+<missing>      15 seconds ago   COPY webapp/app.py ./app.py # buildkit          1.99kB    buildkit.dockerfile.v0
+<missing>      15 seconds ago   RUN /bin/sh -c pip install --no-cache-dir -r…   22.2MB    buildkit.dockerfile.v0
+<missing>      17 seconds ago   COPY webapp/requirements.txt ./requirements.…   54B       buildkit.dockerfile.v0
+<missing>      17 seconds ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
 <missing>      2 weeks ago      CMD ["python3"]                                 0B        buildkit.dockerfile.v0
 <missing>      2 weeks ago      RUN /bin/sh -c set -eux;  for src in idle3 p…   36B       buildkit.dockerfile.v0
 <missing>      2 weeks ago      RUN /bin/sh -c set -eux;   savedAptMark="$(a…   36.8MB    buildkit.dockerfile.v0
@@ -36,7 +36,7 @@ image=[result-portal:compose] bytes=141698981
 installed_deb_packages=87
 docker history result-portal:multistage
 IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
-fc335129c8dd   12 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--w…   0B        buildkit.dockerfile.v0
+e2033276e2a8   12 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--w…   0B        buildkit.dockerfile.v0
 <missing>      12 seconds ago   EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
 <missing>      12 seconds ago   USER portal                                     0B        buildkit.dockerfile.v0
 <missing>      12 seconds ago   RUN /bin/sh -c chown -R portal:portal /app #…   1.99kB    buildkit.dockerfile.v0
@@ -51,16 +51,16 @@ image=[result-portal:multistage] bytes=133593043
 installed_deb_packages=87
 docker history result-portal:ubuntu
 IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
-40946e43198d   1 second ago     CMD ["/opt/venv/bin/gunicorn" "--bind" "0.0.…   0B        buildkit.dockerfile.v0
+1e1f0a1a0548   1 second ago     CMD ["/opt/venv/bin/gunicorn" "--bind" "0.0.…   0B        buildkit.dockerfile.v0
 <missing>      1 second ago     EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
 <missing>      1 second ago     USER portal                                     0B        buildkit.dockerfile.v0
 <missing>      1 second ago     RUN /bin/sh -c chown -R portal:portal /app #…   2.04kB    buildkit.dockerfile.v0
-<missing>      2 seconds ago    COPY webapp/app.py ./app.py # buildkit          1.99kB    buildkit.dockerfile.v0
-<missing>      2 seconds ago    RUN /bin/sh -c /opt/venv/bin/pip install --n…   14.1MB    buildkit.dockerfile.v0
-<missing>      3 seconds ago    COPY webapp/requirements.txt ./requirements.…   54B       buildkit.dockerfile.v0
-<missing>      3 seconds ago    RUN /bin/sh -c apt-get update     && apt-get…   56.4MB    buildkit.dockerfile.v0
-<missing>      11 seconds ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
-<missing>      11 seconds ago   ENV DEBIAN_FRONTEND=noninteractive              0B        buildkit.dockerfile.v0
-<missing>      12 days ago      /bin/sh -c #(nop)  CMD ["/bin/bash"]            0B        
-image=[result-portal:ubuntu] bytes=148726314
+<missing>      1 second ago     COPY webapp/app.py ./app.py # buildkit          1.99kB    buildkit.dockerfile.v0
+<missing>      1 second ago     RUN /bin/sh -c /opt/venv/bin/pip install --n…   14.1MB    buildkit.dockerfile.v0
+<missing>      2 seconds ago    COPY webapp/requirements.txt ./requirements.…   54B       buildkit.dockerfile.v0
+<missing>      2 seconds ago    RUN /bin/sh -c apt-get update     && apt-get…   56.4MB    buildkit.dockerfile.v0
+<missing>      10 seconds ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
+<missing>      10 seconds ago   ENV DEBIAN_FRONTEND=noninteractive              0B        buildkit.dockerfile.v0
+<missing>      13 days ago      /bin/sh -c #(nop)  CMD ["/bin/bash"]            0B        
+image=[result-portal:ubuntu] bytes=148726310
 installed_deb_packages=112

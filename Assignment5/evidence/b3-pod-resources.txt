@@ -1,26 +1,26 @@
-Name:             result-portal-55744f64c4-44skn
+Name:             result-portal-55744f64c4-hdslb
 Namespace:        default
 Priority:         0
 Service Account:  default
-Node:             assignment5-worker2/172.18.0.2
-Start Time:       Mon, 23 Nov 2026 17:34:27 +0000
+Node:             assignment5-worker/172.18.0.3
+Start Time:       Mon, 23 Nov 2026 18:26:47 +0000
 Labels:           app=result-portal
                   pod-template-hash=55744f64c4
 Annotations:      <none>
 Status:           Running
-IP:               10.244.1.2
+IP:               10.244.1.4
 IPs:
-  IP:           10.244.1.2
+  IP:           10.244.1.4
 Controlled By:  ReplicaSet/result-portal-55744f64c4
 Containers:
   portal:
-    Container ID:   containerd://1200dce9bb1b24c7b14f788d9cc24e9fa361b511a513ce075e5d0e6baef82af8
+    Container ID:   containerd://021981818e68fb64ee3bec15745cddada14a87172b3fd1f6b403cc6231afbce8
     Image:          result-portal:compose
-    Image ID:       docker.io/library/import-2026-11-23@sha256:515ccc172dfae90a68909703ee782425309b7d0dcaa3639880a45cf0727c3ac8
+    Image ID:       docker.io/library/import-2026-11-23@sha256:9ff63205ef793c6e5511f509649bd6211c1c0feeb53f339fce643358bb9d0b55
     Port:           8000/TCP
     Host Port:      0/TCP
     State:          Running
-      Started:      Mon, 23 Nov 2026 17:34:28 +0000
+      Started:      Mon, 23 Nov 2026 18:26:48 +0000
     Ready:          True
     Restart Count:  0
     Limits:
@@ -32,7 +32,7 @@ Containers:
     Readiness:    http-get http://:8000/health delay=2s timeout=1s period=5s successThreshold=1 failureThreshold=3
     Environment:  <none>
     Mounts:
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-2d2st (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-82n2n (ro)
 Conditions:
   Type                        Status
   PodReadyToStartContainers   True 
@@ -41,7 +41,7 @@ Conditions:
   ContainersReady             True 
   PodScheduled                True 
 Volumes:
-  kube-api-access-2d2st:
+  kube-api-access-82n2n:
     Type:                    Projected (a volume that contains injected data from multiple sources)
     TokenExpirationSeconds:  3607
     ConfigMapName:           kube-root-ca.crt
@@ -54,7 +54,7 @@ Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists fo
 Events:
   Type    Reason     Age   From               Message
   ----    ------     ----  ----               -------
-  Normal  Scheduled  6s    default-scheduler  Successfully assigned default/result-portal-55744f64c4-44skn to assignment5-worker2
+  Normal  Scheduled  7s    default-scheduler  Successfully assigned default/result-portal-55744f64c4-hdslb to assignment5-worker
   Normal  Pulled     6s    kubelet            spec.containers{portal}: Container image "result-portal:compose" already present on machine and can be accessed by the pod
   Normal  Created    6s    kubelet            spec.containers{portal}: Container created
-  Normal  Started    5s    kubelet            spec.containers{portal}: Container started
+  Normal  Started    6s    kubelet            spec.containers{portal}: Container started
