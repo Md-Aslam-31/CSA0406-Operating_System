@@ -68,6 +68,9 @@ sudo systemctl status --no-pager result-portal nginx | tee evidence/b1-services.
 curl --retry 12 --retry-connrefused --retry-delay 2 -fsS http://127.0.0.1/health | tee evidence/b1-service-health.json
 curl -fsS http://127.0.0.1/results/10001 | tee evidence/b1-service-result.json
 sudo journalctl -u result-portal -n 15 --no-pager | tee evidence/b1-journal.txt
+# The system service used host port 8000; stop it after preserving B1 evidence so
+# the separately managed Compose deployment can publish that port in B2.
+sudo systemctl stop result-portal nginx
 
 echo '=== B3.1 bare-metal deployment ==='
 python3 -m venv .venv
@@ -113,7 +116,7 @@ ubuntu_e=$(date +%s%3N)
   printf 'build_ms full_python=%s slim_python=%s multistage=%s ubuntu_base=%s\n' "$((full_e-full_s))" "$((slim_e-slim_s))" "$((multi_e-multi_s))" "$((ubuntu_e-ubuntu_s))"
   for tag in full compose multistage ubuntu; do
     echo "docker history result-portal:$tag"
-    docker history --no-trunc result-portal:"$tag" | sed -n '1,12p'
+    docker history result-portal:"$tag" | sed -n '1,12p'
     docker image inspect result-portal:"$tag" --format 'image={{.RepoTags}} bytes={{.Size}}'
     docker run --rm --entrypoint sh result-portal:"$tag" -c 'printf "installed_deb_packages="; dpkg-query -W -f="\${binary:Package}\n" | wc -l' 2>/dev/null || true
   done

@@ -109,7 +109,7 @@ done
 end=$(date +%s%3N)
 if [[ $ready -ne 1 ]]; then
   echo "VM result: UNAVAILABLE; QEMU mode=$accel; guest did not become healthy within 360s." | tee evidence/vm-benchmark.txt
-  tail -n 60 evidence/vm-console.log >> evidence/vm-benchmark.txt || true
+  grep -E 'Started vm-portal|Failed to start|cloud-init.*finished|login:' evidence/vm-console.log | tail -n 12 >> evidence/vm-benchmark.txt || true
   exit 0
 fi
 startup=$(awk -v s="$start" -v e="$end" 'BEGIN {printf "%.3f",(e-s)/1000}')
