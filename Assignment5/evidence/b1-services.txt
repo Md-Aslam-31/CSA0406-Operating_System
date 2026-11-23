@@ -1,36 +1,36 @@
 ● result-portal.service - University result portal sample web application
      Loaded: loaded (/etc/systemd/system/result-portal.service; enabled; preset: enabled)
-     Active: active (running) since Mon 2026-11-23 16:47:45 UTC; 1s ago
-   Main PID: 4227 (gunicorn)
-      Tasks: 3 (limit: 16654)
-     Memory: 41.3M (peak: 41.4M)
-        CPU: 212ms
+     Active: active (running) since Mon 2026-11-23 16:57:54 UTC; 2s ago
+   Main PID: 4159 (gunicorn)
+      Tasks: 3 (limit: 17436)
+     Memory: 41.2M (peak: 41.4M)
+        CPU: 217ms
      CGroup: /system.slice/result-portal.service
-             ├─4227 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
-             ├─4256 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
-             └─4292 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             ├─4159 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             ├─4189 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             └─4192 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
 
-Nov 23 16:47:45 ip-10-0-143-248 systemd[1]: Started result-portal.service - University result portal sample web application.
-Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4227]: [2026-11-23 16:47:45 +0000] [4227] [INFO] Starting gunicorn 23.0.0
-Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4227]: [2026-11-23 16:47:45 +0000] [4227] [INFO] Listening at: http://127.0.0.1:8000 (4227)
-Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4227]: [2026-11-23 16:47:45 +0000] [4227] [INFO] Using worker: sync
-Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4256]: [2026-11-23 16:47:45 +0000] [4256] [INFO] Booting worker with pid: 4256
-Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4292]: [2026-11-23 16:47:45 +0000] [4292] [INFO] Booting worker with pid: 4292
+Nov 23 16:57:54 runnervmeozm8 systemd[1]: Started result-portal.service - University result portal sample web application.
+Nov 23 16:57:55 runnervmeozm8 gunicorn[4159]: [2026-11-23 16:57:55 +0000] [4159] [INFO] Starting gunicorn 23.0.0
+Nov 23 16:57:55 runnervmeozm8 gunicorn[4159]: [2026-11-23 16:57:55 +0000] [4159] [INFO] Listening at: http://127.0.0.1:8000 (4159)
+Nov 23 16:57:55 runnervmeozm8 gunicorn[4159]: [2026-11-23 16:57:55 +0000] [4159] [INFO] Using worker: sync
+Nov 23 16:57:55 runnervmeozm8 gunicorn[4189]: [2026-11-23 16:57:55 +0000] [4189] [INFO] Booting worker with pid: 4189
+Nov 23 16:57:55 runnervmeozm8 gunicorn[4192]: [2026-11-23 16:57:55 +0000] [4192] [INFO] Booting worker with pid: 4192
 
 ● nginx.service - A high performance web server and a reverse proxy server
      Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; preset: enabled)
-     Active: active (running) since Mon 2026-11-23 16:47:45 UTC; 1s ago
+     Active: active (running) since Mon 2026-11-23 16:57:55 UTC; 1s ago
        Docs: man:nginx(8)
-   Main PID: 4417 (nginx)
-      Tasks: 5 (limit: 16654)
-     Memory: 3.7M (peak: 4.0M)
-        CPU: 10ms
+   Main PID: 4349 (nginx)
+      Tasks: 5 (limit: 17436)
+     Memory: 3.9M (peak: 4.1M)
+        CPU: 16ms
      CGroup: /system.slice/nginx.service
-             ├─4417 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
-             ├─4418 "nginx: worker process"
-             ├─4419 "nginx: worker process"
-             ├─4420 "nginx: worker process"
-             └─4422 "nginx: worker process"
+             ├─4349 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+             ├─4350 "nginx: worker process"
+             ├─4351 "nginx: worker process"
+             ├─4352 "nginx: worker process"
+             └─4353 "nginx: worker process"
 
-Nov 23 16:47:45 ip-10-0-143-248 systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
-Nov 23 16:47:45 ip-10-0-143-248 systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.
+Nov 23 16:57:55 runnervmeozm8 systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
+Nov 23 16:57:55 runnervmeozm8 systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.

@@ -1,4 +1,1 @@
-run failed at line 84 (exit 7): tee evidence/benchmark-host-health.json
-run failed at line 95 (exit 1): bash scripts/run_vm_benchmark.sh
-run failed at line 115 (exit 141): head -n 12
-run failed at line 119 (exit 141): tee evidence/b2-images.txt
+run failed at line 121 (exit 1): tee evidence/b2-compose-up.txt

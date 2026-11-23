@@ -1,2 +1,2 @@
 deployment,startup_seconds,rss_mib,size_mib,requests_per_second,mean_latency_ms,notes
-bare-metal,0.304,83.4,1,853.27,29.299,Linux host
+bare-metal,0.269,83.6,1,914.42,27.340,Linux host

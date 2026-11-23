@@ -1,5 +1,4 @@
 VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
-[[0;32m  OK  [0m] Listening on [0;1;39mdbus.socket[0m - D-Bus System Message Bus Socket.
 [[0;32m  OK  [0m] Listening on [0;1;39miscsid.socket[0m - Open-iSCSI iscsid Socket.
          Starting [0;1;39mlxd-installer.socket[0m - He…er to install lxd snap on demand...
          Starting [0;1;39msnapd.socket[0m - Socket activation for snappy daemon...
@@ -33,29 +32,30 @@ VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
 [[0;32m  OK  [0m] Finished [0;1;39me2scrub_reap.service[0m - Re…line ext4 Metadata Check Snapshots.
 [[0;32m  OK  [0m] Finished [0;1;39msysstat.service[0m - Resets System Activity Logs.
 [[0;32m  OK  [0m] Finished [0;1;39msystemd-user-sessions.service[0m - Permit User Sessions.
+[[0;32m  OK  [0m] Finished [0;1;39mapport.service[0m - automatic crash report generation.
          Starting [0;1;39mplymouth-quit-wait.servic…[0md until boot process finishes up...
          Starting [0;1;39mplymouth-quit.service[0m - Terminate Plymouth Boot Screen...
-[[0;32m  OK  [0m] Finished [0;1;39mapport.service[0m - automatic crash report generation.
 [[0;32m  OK  [0m] Started [0;1;39msystemd-logind.service[0m - User Login Management.
+[[0;32m  OK  [0m] Started [0;1;39munattended-upgrades.service[0m - Unattended Upgrades Shutdown.
 
 Ubuntu 24.04.5 LTS result-portal-vm ttyS0
 
-result-portal-vm login: [  129.327647] cloud-init[978]: Cloud-init v. 26.1-0ubuntu1~24.04.1 running 'modules:config' at Mon, 23 Nov 2026 16:50:01 +0000. Up 116.80 seconds.
-[  150.894643] cloud-init[1007]: Cloud-init v. 26.1-0ubuntu1~24.04.1 running 'modules:final' at Mon, 23 Nov 2026 16:50:23 +0000. Up 138.63 seconds.
-[  151.581706] cloud-init[1007]: Created symlink /etc/systemd/system/multi-user.target.wants/vm-portal.service → /etc/systemd/system/vm-portal.service.
+result-portal-vm login: [  130.711556] cloud-init[976]: Cloud-init v. 26.1-0ubuntu1~24.04.1 running 'modules:config' at Mon, 23 Nov 2026 17:00:09 +0000. Up 117.46 seconds.
+[  153.697217] cloud-init[1005]: Cloud-init v. 26.1-0ubuntu1~24.04.1 running 'modules:final' at Mon, 23 Nov 2026 17:00:32 +0000. Up 140.33 seconds.
+[  154.372765] cloud-init[1005]: Created symlink /etc/systemd/system/multi-user.target.wants/vm-portal.service → /etc/systemd/system/vm-portal.service.
 [[0;32m  OK  [0m] Started [0;1;39mvm-portal.service[0m - Result portal VM benchmark.
-<14>Nov 23 16:50:39 cloud-init: #############################################################
-<14>Nov 23 16:50:39 cloud-init: -----BEGIN SSH HOST KEY FINGERPRINTS-----
-<14>Nov 23 16:50:40 cloud-init: 256 SHA256:90yxjG2y8+QcKtp47QbdQISjrqF1f0TeMdQfS0PATo8 root@result-portal-vm (ECDSA)
-<14>Nov 23 16:50:40 cloud-init: 256 SHA256:gIY1oS+9+6guUNwAkxK6OjyBB1hS53LkmRT4vGArT1I root@result-portal-vm (ED25519)
-<14>Nov 23 16:50:40 cloud-init: 3072 SHA256:X/czioV4atcpj/6G5udAEq73l9iRRJ9xIgCinZS79qk root@result-portal-vm (RSA)
-<14>Nov 23 16:50:40 cloud-init: -----END SSH HOST KEY FINGERPRINTS-----
-<14>Nov 23 16:50:40 cloud-init: #############################################################
+<14>Nov 23 17:00:48 cloud-init: #############################################################
+<14>Nov 23 17:00:48 cloud-init: -----BEGIN SSH HOST KEY FINGERPRINTS-----
+<14>Nov 23 17:00:48 cloud-init: 256 SHA256:ocPwppTfDG3HqYwUZrrlouzz7M6JiqCKYvZ0tcq5D6Y root@result-portal-vm (ECDSA)
+<14>Nov 23 17:00:49 cloud-init: 256 SHA256:z9BJRBI90gIx3E+fVyLBDOBRTvY5q6aMIxOJ5xM8B68 root@result-portal-vm (ED25519)
+<14>Nov 23 17:00:49 cloud-init: 3072 SHA256:KknJgJRmK5jk2YhPDhnFunAtIcnenw1haYyLqLw/ylA root@result-portal-vm (RSA)
+<14>Nov 23 17:00:49 cloud-init: -----END SSH HOST KEY FINGERPRINTS-----
+<14>Nov 23 17:00:49 cloud-init: #############################################################
 -----BEGIN SSH HOST KEY KEYS-----
-ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBOloX+KAI5fCDFwpGeku4H+RpE6oucwnaC6AiTGbNsUv+WjRyUwkKOZDjtlnHOOzhzWO9S2bgYm/A9rv2NOUM4c= root@result-portal-vm
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPZJSLGtkGP6xq2FxVPV93pi4/41XKKtUxuf2D4EB9sb root@result-portal-vm
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDH4yWNZESDS3JQbZw049SjGdTbnj8JE/KUyYFMPag/noRE8zFut3SJeM+bZ7AXaRYlzmF1MSejNxIc/siiAFDOppDgovAdo6/yr/BcaBP/O2ci4J/92wbeVPQKCf+JBNPix3l+qvBQGjsTCSvMz7qAgeNwNEz9C/mjlxgOjNslagbUYX0UnV4JNA/XqeubPk4ohfCCOGtM26kCLpsTfd9uCpP8Vy1YyBAMiQLshu/fuIMt79Tf400Kvhs0fFFwU09Ny+Zy1MnuZACkE8j1uCrm0hvzYu6Oqy82CJ4/qjExFEHKxb4hWOougYVosgMzctQ39BuBRCXW1UTEmhQWUsqlCPdF6IJ5cJY1dNy+TTLgBXJ5g4ehWYv371bIBragFx0LKoypxicbnRtQzhfBQ1gZgue3bOF5ayYs96QelX3eSxkwoMKWCADof2COWucFe65MR/XB8XAqpQx1TPfJNCq/eg+GHJSfAuU+yeHNon0g/V/L/PJpaAoSM5jK4FClw5s= root@result-portal-vm
+ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHcqlUDD9ZQEIYv8ZXjLoehHBRbbbbUyBC0uJsi+epmSPui3MaGobYCzs8HDGB6ymaZFHQm8sTx5j1j/oeUeVVM= root@result-portal-vm
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINjAbebWVETS8DksN5ilJ619l9Kye9JJuVTJbVwA/pHq root@result-portal-vm
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDOWO52mrHOz8w5Vur7XfPMVMcOZl4QcvsCP5n7Nz5eZslPiqICpOAEUgUp7iJiB6gMrzyNCfneWyFrcXE933fLbz8RotfGxRA9UEYey+maARHsGuw39alUsrNOUov04uupePAu8UdUNthRGV3SfSQ9sgWRGks9crXsMFUCkuskDjvkQzdOcV/8p6NjI87DiwjtkEt6enPhge6AR71/i2S3b9NoK10ex7TBROOuNI1ZR0iJImzfrHLYM49eIa0lcEWag8c0qMkEIfCb7mB9C3yjIMx6KeEIylNghMhDeqXnnsjXYZ4ev+9w6Hi3ToOXbTT794cx/F+jenXFX8TMr/olcubOEzz5hOVU0Jw8zQm1NFNeDD/vll8rAXm29+wAHg+pgtcvvvssldCYXo8FA5p4crPWksgS6Cl4Dte5ZiA2CSfAqzA1qb+heJuYQ+3uZ4nrsrL8dIzXiVlvKLuFVTbzax29iAMNrRQqyQzgbg0ZIp6LH7Ofo1i7BddHH/bjhc8= root@result-portal-vm
 -----END SSH HOST KEY KEYS-----
-[  155.939921] cloud-init[1007]: Cloud-init v. 26.1-0ubuntu1~24.04.1 finished at Mon, 23 Nov 2026 16:50:40 +0000. Datasource DataSourceNoCloud [seed=/dev/vdb].  Up 155.88 seconds
+[  157.553567] cloud-init[1005]: Cloud-init v. 26.1-0ubuntu1~24.04.1 finished at Mon, 23 Nov 2026 17:00:49 +0000. Datasource DataSourceNoCloud [seed=/dev/vdb].  Up 157.50 seconds
 [[0;32m  OK  [0m] Finished [0;1;39mcloud-final.service[0m - Cloud-init: Final Stage.
 [[0;32m  OK  [0m] Reached target [0;1;39mcloud-init.target[0m - Cloud-init target.
