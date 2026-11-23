@@ -167,11 +167,13 @@ PY
 docker rm -f portal-bench >/dev/null
 
 echo '=== B3.3 kind three-pod cluster, deletion recovery, load and scale ==='
-curl -fsSLo /usr/local/bin/kind https://kind.sigs.k8s.io/dl/v0.33.0/kind-linux-amd64
-chmod +x /usr/local/bin/kind
+mkdir -p "$RUNNER_TEMP/assignment5-bin"
+curl -fsSLo "$RUNNER_TEMP/assignment5-bin/kind" https://kind.sigs.k8s.io/dl/v0.33.0/kind-linux-amd64
+chmod +x "$RUNNER_TEMP/assignment5-bin/kind"
+export PATH="$RUNNER_TEMP/assignment5-bin:$PATH"
 if ! command -v kubectl >/dev/null; then
-  curl -fsSLo /usr/local/bin/kubectl https://dl.k8s.io/release/v1.37.0/bin/linux/amd64/kubectl
-  chmod +x /usr/local/bin/kubectl
+  curl -fsSLo "$RUNNER_TEMP/assignment5-bin/kubectl" https://dl.k8s.io/release/v1.37.0/bin/linux/amd64/kubectl
+  chmod +x "$RUNNER_TEMP/assignment5-bin/kubectl"
 fi
 kind create cluster --name assignment5 --config TaskB3/kind-config.yaml --wait 180s | tee evidence/b3-kind-create.txt
 kind load docker-image result-portal:compose --name assignment5 | tee evidence/b3-kind-load.txt
