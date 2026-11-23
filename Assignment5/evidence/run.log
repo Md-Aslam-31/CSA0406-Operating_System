@@ -1,6 +1,6 @@
 === Environment ===
 Linux: Ubuntu 24.04.5 LTS
-Linux ip-10-0-133-26 7.0.0-1014-aws #14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Linux ip-10-0-143-248 7.0.0-1014-aws #14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
 gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
 Python 3.12.3
 Docker version 28.0.4, build b8034c0
@@ -9,29 +9,29 @@ Virtualization: KVM
 === B1.1 Linux observations ===
 $ ps -eo pid,ppid,user,%cpu,%mem,rss,comm --sort=-%cpu | head -n 15
     PID    PPID USER     %CPU %MEM   RSS COMMAND
-   2014    1994 runner    1.2  0.8 144452 Runner.Worker
-      1       0 root      0.6  0.0 13932 systemd
-   1994    1927 runner    0.4  0.6 99632 Runner.Listener
-   1967    1965 root      0.3  0.8 139160 provjobd1412192
-     15       2 root      0.3  0.0     0 pr/ttyS0
-   1124       1 root      0.0  0.2 44088 containerd
-    523       1 root      0.0  0.0  8436 systemd-udevd
-    998       1 root      0.0  0.2 43092 snapd
-     47       2 root      0.0  0.0     0 kworker/u16:1-ext4-rsv-conversion
-   1403       1 root      0.0  0.4 72608 dockerd
-    786       1 root      0.0  0.0  5108 haveged
-    464       1 root      0.0  0.1 17824 systemd-journal
-     12       2 root      0.0  0.0     0 kworker/u16:0-writeback
-    983       1 message+  0.0  0.0  5692 dbus-daemon
+   2070    2051 runner    0.6  0.9 148328 Runner.Worker
+   1966    1964 root      0.3  0.8 139780 provjobd2251728
+      1       0 root      0.3  0.0 13992 systemd
+   2051    1924 runner    0.2  0.6 100840 Runner.Listener
+     15       2 root      0.1  0.0     0 pr/ttyS0
+   1118       1 root      0.0  0.2 44548 containerd
+    997       1 root      0.0  0.2 42692 snapd
+    465       1 root      0.0  0.1 17912 systemd-journal
+   1401       1 root      0.0  0.4 71576 dockerd
+    524       1 root      0.0  0.0  8440 systemd-udevd
+   1924       1 runner    0.0  0.0 15964 hosted-compute-
+    982       1 message+  0.0  0.0  5704 dbus-daemon
+    787       1 root      0.0  0.0  5112 haveged
+   2712       2 root      0.0  0.0     0 kworker/0:0-events
 $ top -b -n1 | head -n 15
-top - 16:38:51 up 4 min,  0 user,  load average: 0.35, 0.27, 0.13
-Tasks: 196 total,   1 running, 195 sleeping,   0 stopped,   0 zombie
-%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni, 88.2 id, 11.8 wa,  0.0 hi,  0.0 si,  0.0 st 
-MiB Mem :  15701.6 total,  13218.2 free,    977.3 used,   1844.4 buff/cache     
-MiB Swap:   3072.0 total,   3072.0 free,      0.0 used.  14724.3 avail Mem 
+top - 16:47:38 up 9 min,  0 user,  load average: 0.33, 0.22, 0.16
+Tasks: 190 total,   1 running, 189 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni, 97.7 id,  2.3 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :  15701.6 total,  13178.9 free,   1022.1 used,   1839.3 buff/cache     
+MiB Swap:   3072.0 total,   3072.0 free,      0.0 used.  14679.5 avail Mem 
 
     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-      1 root      20   0   22704  13932   9516 S   0.0   0.1   0:01.74 systemd
+      1 root      20   0   22692  13992   9572 S   0.0   0.1   0:01.85 systemd
       2 root      20   0       0      0      0 S   0.0   0.0   0:00.00 kthreadd
       3 root      20   0       0      0      0 S   0.0   0.0   0:00.00 pool_wo+
       4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
@@ -41,32 +41,32 @@ MiB Swap:   3072.0 total,   3072.0 free,      0.0 used.  14724.3 avail Mem
       8 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
 $ free -h
                total        used        free      shared  buff/cache   available
-Mem:            15Gi       977Mi        12Gi        45Mi       1.8Gi        14Gi
+Mem:            15Gi       1.0Gi        12Gi        46Mi       1.8Gi        14Gi
 Swap:          3.0Gi          0B       3.0Gi
 $ vmstat 1 3
 procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu-------
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st gu
- 1  0      0 13535228  80044 1808684    0    0  3268 12652  967    3  2  1 89  8  0  0
- 0  0      0 13543396  80044 1808800    0    0     0     0  208  310  1  0 99  0  0  0
- 0  0      0 13555520  80044 1808828    0    0     0     0  190  340  0  0 100  0  0  0
+ 0  0      0 13495208  79432 1804316    0    0  1595  6238  580    2  1  1 94  4  0  0
+ 0  0      0 13503272  79432 1804368    0    0     0     0  254  638  1  0 100  0  0  0
+ 0  0      0 13512860  79432 1804400    0    0     0     0  176  351  0  0 100  0  0  0
 $ iostat -xz 1 2
-Linux 7.0.0-1014-aws (ip-10-0-133-26) 	11/23/26 	_x86_64_	(4 CPU)
+Linux 7.0.0-1014-aws (ip-10-0-143-248) 	11/23/26 	_x86_64_	(4 CPU)
 
 avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-           1.73    0.24    0.87    8.13    0.02   89.01
+           0.89    0.10    0.50    4.11    0.01   94.39
 
 Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
-dm-0           779.91   3119.62     0.00   0.00   10.81     4.00 3106.64  12426.44     0.00   0.00    1.35     4.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00   12.61  24.52
-loop0            0.22      3.71     0.00   0.00    4.88    16.91    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.07
-loop1            0.18      1.26     0.00   0.00    6.00     6.92    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.09
-loop2            0.04      0.05     0.00   0.00    0.00     1.27    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
-nvme0n1         80.18   3229.11   710.02  89.85    6.16    40.27    0.09      0.62     0.10  52.73    0.77     6.98    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.49  23.68
-nvme1n1          0.48      8.38     0.00   0.00    0.08    17.33  161.62  12564.93  2979.64  94.85    0.56    77.74    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.09   0.44
-zram0            0.18      4.03     0.00   0.00    0.00    22.19    0.00      0.01     0.00   0.00    0.00     4.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+dm-0           382.18   1528.69     0.00   0.00   11.50     4.00 1537.10   6148.33     0.00   0.00    1.39     4.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    6.53  12.85
+loop0            0.11      1.83     0.00   0.00    5.34    16.91    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.04
+loop1            0.09      0.62     0.00   0.00    6.09     6.92    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.04
+loop2            0.02      0.02     0.00   0.00    0.27     1.27    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+nvme0n1         39.42   1581.25   345.01  89.75    6.52    40.12    0.04      0.31     0.05  52.73    0.81     6.98    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.26  12.46
+nvme1n1          0.23      4.10     0.00   0.00    0.09    17.72   77.37   6217.47  1477.01  95.02    0.65    80.36    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.05   0.23
+zram0            0.09      1.99     0.00   0.00    0.00    22.19    0.00      0.01     0.00   0.00    0.00     4.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
 
 
 avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-           0.25    0.00    0.25    0.00    0.00   99.50
+           0.25    0.00    0.00    0.00    0.00   99.75
 
 Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
 
@@ -83,28 +83,28 @@ tmpfs                 5.0M     0  5.0M   0% /run/lock
 tmpfs                 1.6G   12K  1.6G   1% /run/user/1001
 tmpfs                 7.7G     0  7.7G   0% /run/qemu
 $ ss -tulpen
-Netid State  Recv-Q Send-Q       Local Address:Port Peer Address:PortProcess                                                                 
-udp   UNCONN 0      0               127.0.0.54:53        0.0.0.0:*    uid:991 ino:5048 sk:1 cgroup:/system.slice/systemd-resolved.service <->
-udp   UNCONN 0      0            127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:5046 sk:2 cgroup:/system.slice/systemd-resolved.service <->
-udp   UNCONN 0      0      10.0.133.26%enp39s0:68        0.0.0.0:*    uid:998 ino:7545 sk:3 cgroup:/system.slice/systemd-networkd.service <->
-udp   UNCONN 0      0                127.0.0.1:323       0.0.0.0:*    ino:9108 sk:4 cgroup:/system.slice/chrony.service <->                  
-udp   UNCONN 0      0                    [::1]:323          [::]:*    ino:9109 sk:5 cgroup:/system.slice/chrony.service v6only:1 <->         
-tcp   LISTEN 0      4096         127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:5047 sk:6 cgroup:/system.slice/systemd-resolved.service <->
-tcp   LISTEN 0      4096            127.0.0.54:53        0.0.0.0:*    uid:991 ino:5049 sk:7 cgroup:/system.slice/systemd-resolved.service <->
-tcp   LISTEN 0      4096               0.0.0.0:22        0.0.0.0:*    ino:8832 sk:8 cgroup:/system.slice/ssh.socket <->                      
-tcp   LISTEN 0      4096                  [::]:22           [::]:*    ino:8834 sk:9 cgroup:/system.slice/ssh.socket v6only:1 <->             
+Netid State  Recv-Q Send-Q        Local Address:Port Peer Address:PortProcess                                                                 
+udp   UNCONN 0      0                127.0.0.54:53        0.0.0.0:*    uid:991 ino:5848 sk:1 cgroup:/system.slice/systemd-resolved.service <->
+udp   UNCONN 0      0             127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:5846 sk:2 cgroup:/system.slice/systemd-resolved.service <->
+udp   UNCONN 0      0      10.0.143.248%enp39s0:68        0.0.0.0:*    uid:998 ino:8941 sk:3 cgroup:/system.slice/systemd-networkd.service <->
+udp   UNCONN 0      0                 127.0.0.1:323       0.0.0.0:*    ino:11393 sk:4 cgroup:/system.slice/chrony.service <->                 
+udp   UNCONN 0      0                     [::1]:323          [::]:*    ino:11394 sk:5 cgroup:/system.slice/chrony.service v6only:1 <->        
+tcp   LISTEN 0      4096             127.0.0.54:53        0.0.0.0:*    uid:991 ino:5849 sk:6 cgroup:/system.slice/systemd-resolved.service <->
+tcp   LISTEN 0      4096          127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:5847 sk:7 cgroup:/system.slice/systemd-resolved.service <->
+tcp   LISTEN 0      4096                0.0.0.0:22        0.0.0.0:*    ino:9011 sk:8 cgroup:/system.slice/ssh.socket <->                      
+tcp   LISTEN 0      4096                   [::]:22           [::]:*    ino:9013 sk:9 cgroup:/system.slice/ssh.socket v6only:1 <->             
 $ uname -r
 7.0.0-1014-aws
 $ head /proc/meminfo
 MemTotal:       16078424 kB
-MemFree:        13564708 kB
-MemAvailable:   15108332 kB
-Buffers:           80044 kB
-Cached:          1730572 kB
+MemFree:        13527552 kB
+MemAvailable:   15066388 kB
+Buffers:           80264 kB
+Cached:          1726372 kB
 SwapCached:            0 kB
-Active:           807836 kB
-Inactive:        1231624 kB
-Active(anon):     284108 kB
+Active:           803092 kB
+Inactive:        1232188 kB
+Active(anon):     284608 kB
 Inactive(anon):        0 kB
 $ cat /sys/devices/system/cpu/online
 0-3
@@ -152,22 +152,22 @@ Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r /opt/result-portal/requirement
 Collecting packaging (from gunicorn==23.0.0->-r /opt/result-portal/requirements.txt (line 2))
   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.3/103.3 kB 32.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.3/103.3 kB 10.7 MB/s eta 0:00:00
 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.0/85.0 kB 63.6 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.0/85.0 kB 55.5 MB/s eta 0:00:00
 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 207.5 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 95.7 MB/s eta 0:00:00
 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
 Downloading click-8.5.1-py3-none-any.whl (126 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.2/126.2 kB 83.5 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.2/126.2 kB 95.0 MB/s eta 0:00:00
 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 83.5 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 99.0 MB/s eta 0:00:00
 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 228.7/228.7 kB 154.2 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 228.7/228.7 kB 123.9 MB/s eta 0:00:00
 Downloading packaging-26.3-py3-none-any.whl (129 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 99.7 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 82.9 MB/s eta 0:00:00
 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.3 psycopg2-binary-2.9.10 werkzeug-3.1.9
 Created symlink /etc/systemd/system/multi-user.target.wants/result-portal.service → /etc/systemd/system/result-portal.service.
@@ -208,50 +208,50 @@ To                         Action      From
 
 ● result-portal.service - University result portal sample web application
      Loaded: loaded (/etc/systemd/system/result-portal.service; enabled; preset: enabled)
-     Active: active (running) since Mon 2026-11-23 16:38:58 UTC; 1s ago
-   Main PID: 4129 (gunicorn)
+     Active: active (running) since Mon 2026-11-23 16:47:45 UTC; 1s ago
+   Main PID: 4227 (gunicorn)
       Tasks: 3 (limit: 16654)
      Memory: 41.3M (peak: 41.4M)
-        CPU: 205ms
+        CPU: 212ms
      CGroup: /system.slice/result-portal.service
-             ├─4129 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
-             ├─4148 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
-             └─4194 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             ├─4227 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             ├─4256 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             └─4292 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
 
-Nov 23 16:38:58 ip-10-0-133-26 systemd[1]: Started result-portal.service - University result portal sample web application.
-Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4129]: [2026-11-23 16:38:58 +0000] [4129] [INFO] Starting gunicorn 23.0.0
-Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4129]: [2026-11-23 16:38:58 +0000] [4129] [INFO] Listening at: http://127.0.0.1:8000 (4129)
-Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4129]: [2026-11-23 16:38:58 +0000] [4129] [INFO] Using worker: sync
-Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4148]: [2026-11-23 16:38:58 +0000] [4148] [INFO] Booting worker with pid: 4148
-Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4194]: [2026-11-23 16:38:58 +0000] [4194] [INFO] Booting worker with pid: 4194
+Nov 23 16:47:45 ip-10-0-143-248 systemd[1]: Started result-portal.service - University result portal sample web application.
+Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4227]: [2026-11-23 16:47:45 +0000] [4227] [INFO] Starting gunicorn 23.0.0
+Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4227]: [2026-11-23 16:47:45 +0000] [4227] [INFO] Listening at: http://127.0.0.1:8000 (4227)
+Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4227]: [2026-11-23 16:47:45 +0000] [4227] [INFO] Using worker: sync
+Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4256]: [2026-11-23 16:47:45 +0000] [4256] [INFO] Booting worker with pid: 4256
+Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4292]: [2026-11-23 16:47:45 +0000] [4292] [INFO] Booting worker with pid: 4292
 
 ● nginx.service - A high performance web server and a reverse proxy server
      Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; preset: enabled)
-     Active: active (running) since Mon 2026-11-23 16:38:58 UTC; 1s ago
+     Active: active (running) since Mon 2026-11-23 16:47:45 UTC; 1s ago
        Docs: man:nginx(8)
-   Main PID: 4315 (nginx)
+   Main PID: 4417 (nginx)
       Tasks: 5 (limit: 16654)
-     Memory: 3.6M (peak: 4.6M)
+     Memory: 3.7M (peak: 4.0M)
         CPU: 10ms
      CGroup: /system.slice/nginx.service
-             ├─4315 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
-             ├─4316 "nginx: worker process"
-             ├─4317 "nginx: worker process"
-             ├─4318 "nginx: worker process"
-             └─4319 "nginx: worker process"
+             ├─4417 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+             ├─4418 "nginx: worker process"
+             ├─4419 "nginx: worker process"
+             ├─4420 "nginx: worker process"
+             └─4422 "nginx: worker process"
 
-Nov 23 16:38:58 ip-10-0-133-26 systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
-Nov 23 16:38:58 ip-10-0-133-26 systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.
+Nov 23 16:47:45 ip-10-0-143-248 systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
+Nov 23 16:47:45 ip-10-0-143-248 systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.
 {"service":"University Result Portal","status":"ok"}
 {"grade":"A","semester":"2025-odd","service":"University Result Portal","student_id":10001}
-Nov 23 16:38:58 ip-10-0-133-26 systemd[1]: Started result-portal.service - University result portal sample web application.
-Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4129]: [2026-11-23 16:38:58 +0000] [4129] [INFO] Starting gunicorn 23.0.0
-Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4129]: [2026-11-23 16:38:58 +0000] [4129] [INFO] Listening at: http://127.0.0.1:8000 (4129)
-Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4129]: [2026-11-23 16:38:58 +0000] [4129] [INFO] Using worker: sync
-Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4148]: [2026-11-23 16:38:58 +0000] [4148] [INFO] Booting worker with pid: 4148
-Nov 23 16:38:58 ip-10-0-133-26 gunicorn[4194]: [2026-11-23 16:38:58 +0000] [4194] [INFO] Booting worker with pid: 4194
-Nov 23 16:39:00 ip-10-0-133-26 gunicorn[4194]: 127.0.0.1 - - [23/Nov/2026:16:39:00 +0000] "GET /health HTTP/1.0" 200 53 "-" "curl/8.5.0"
-Nov 23 16:39:00 ip-10-0-133-26 gunicorn[4194]: 127.0.0.1 - - [23/Nov/2026:16:39:00 +0000] "GET /results/10001 HTTP/1.0" 200 92 "-" "curl/8.5.0"
+Nov 23 16:47:45 ip-10-0-143-248 systemd[1]: Started result-portal.service - University result portal sample web application.
+Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4227]: [2026-11-23 16:47:45 +0000] [4227] [INFO] Starting gunicorn 23.0.0
+Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4227]: [2026-11-23 16:47:45 +0000] [4227] [INFO] Listening at: http://127.0.0.1:8000 (4227)
+Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4227]: [2026-11-23 16:47:45 +0000] [4227] [INFO] Using worker: sync
+Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4256]: [2026-11-23 16:47:45 +0000] [4256] [INFO] Booting worker with pid: 4256
+Nov 23 16:47:45 ip-10-0-143-248 gunicorn[4292]: [2026-11-23 16:47:45 +0000] [4292] [INFO] Booting worker with pid: 4292
+Nov 23 16:47:46 ip-10-0-143-248 gunicorn[4292]: 127.0.0.1 - - [23/Nov/2026:16:47:46 +0000] "GET /health HTTP/1.0" 200 53 "-" "curl/8.5.0"
+Nov 23 16:47:46 ip-10-0-143-248 gunicorn[4292]: 127.0.0.1 - - [23/Nov/2026:16:47:46 +0000] "GET /results/10001 HTTP/1.0" 200 92 "-" "curl/8.5.0"
 === B3.1 bare-metal deployment ===
 curl: (7) Failed to connect to 127.0.0.1 port 8100 after 0 ms: Couldn't connect to server
 {"service":"University Result Portal","status":"ok"}
@@ -294,15 +294,779 @@ Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
 Using cached markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
 Using cached werkzeug-3.1.9-py3-none-any.whl (228 kB)
 Using cached packaging-26.3-py3-none-any.whl (129 kB)
-Saved /tmp/tmp.yQfNLtROle/wheels/flask-3.1.2-py3-none-any.whl
-Saved /tmp/tmp.yQfNLtROle/wheels/gunicorn-23.0.0-py3-none-any.whl
-Saved /tmp/tmp.yQfNLtROle/wheels/blinker-1.9.0-py3-none-any.whl
-Saved /tmp/tmp.yQfNLtROle/wheels/click-8.5.1-py3-none-any.whl
-Saved /tmp/tmp.yQfNLtROle/wheels/itsdangerous-2.2.0-py3-none-any.whl
-Saved /tmp/tmp.yQfNLtROle/wheels/jinja2-3.1.6-py3-none-any.whl
-Saved /tmp/tmp.yQfNLtROle/wheels/markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
-Saved /tmp/tmp.yQfNLtROle/wheels/werkzeug-3.1.9-py3-none-any.whl
-Saved /tmp/tmp.yQfNLtROle/wheels/packaging-26.3-py3-none-any.whl
+Saved /tmp/tmp.TKyD01Y1Fh/wheels/flask-3.1.2-py3-none-any.whl
+Saved /tmp/tmp.TKyD01Y1Fh/wheels/gunicorn-23.0.0-py3-none-any.whl
+Saved /tmp/tmp.TKyD01Y1Fh/wheels/blinker-1.9.0-py3-none-any.whl
+Saved /tmp/tmp.TKyD01Y1Fh/wheels/click-8.5.1-py3-none-any.whl
+Saved /tmp/tmp.TKyD01Y1Fh/wheels/itsdangerous-2.2.0-py3-none-any.whl
+Saved /tmp/tmp.TKyD01Y1Fh/wheels/jinja2-3.1.6-py3-none-any.whl
+Saved /tmp/tmp.TKyD01Y1Fh/wheels/markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+Saved /tmp/tmp.TKyD01Y1Fh/wheels/werkzeug-3.1.9-py3-none-any.whl
+Saved /tmp/tmp.TKyD01Y1Fh/wheels/packaging-26.3-py3-none-any.whl
 Successfully downloaded Flask gunicorn blinker click itsdangerous jinja2 markupsafe werkzeug packaging
-qemu-system-x86_64: Property 'pc-i440fx-noble-v2-machine.thread' not found
-run failed at line 95 (exit 1): bash scripts/run_vm_benchmark.sh
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+curl: (56) Recv failure: Connection reset by peer
+VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
+=== B2 image comparison and Compose deployment ===
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.full
+#1 transferring dockerfile: 500B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12
+#2 ...
+
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12
+#2 DONE 0.8s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 102B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 2.17kB done
+#5 DONE 0.0s
+
+#6 [1/6] FROM docker.io/library/python:3.12@sha256:5411fa1b302c43f510324381162b5f5d0d93b9ee2af538f09d944f0d290ee3cb
+#6 resolve docker.io/library/python:3.12@sha256:5411fa1b302c43f510324381162b5f5d0d93b9ee2af538f09d944f0d290ee3cb done
+#6 sha256:97dc788c1887c44354e700c624e7d0a7b61c6f5baf6e2ae4d767abfedc442435 2.32kB / 2.32kB done
+#6 sha256:37662cc6e5410e27e5e3b3c92b7fd7c3afd7f69faa430623a1f822f3f59c6ccd 6.53kB / 6.53kB done
+#6 sha256:a6dd1c05fbba4f9028078a11f143cbb625d2408921eb8207bfa1dd1ad301276f 0B / 49.41MB 0.1s
+#6 sha256:5411fa1b302c43f510324381162b5f5d0d93b9ee2af538f09d944f0d290ee3cb 10.32kB / 10.32kB done
+#6 sha256:e8a88afca2bd37d4058d4b33d9d4d29b0557f8b811bb8c106942b5b51e1e4aad 0B / 25.63MB 0.1s
+#6 sha256:411d2dc8717dbb4bb0d3cfa27e6e0275fca455c5220029d7a14dc7a75fbe8665 0B / 67.82MB 0.1s
+#6 sha256:a6dd1c05fbba4f9028078a11f143cbb625d2408921eb8207bfa1dd1ad301276f 35.65MB / 49.41MB 0.2s
+#6 sha256:e8a88afca2bd37d4058d4b33d9d4d29b0557f8b811bb8c106942b5b51e1e4aad 5.24MB / 25.63MB 0.2s
+#6 sha256:a6dd1c05fbba4f9028078a11f143cbb625d2408921eb8207bfa1dd1ad301276f 49.41MB / 49.41MB 0.3s done
+#6 sha256:e8a88afca2bd37d4058d4b33d9d4d29b0557f8b811bb8c106942b5b51e1e4aad 25.63MB / 25.63MB 0.3s done
+#6 sha256:411d2dc8717dbb4bb0d3cfa27e6e0275fca455c5220029d7a14dc7a75fbe8665 10.49MB / 67.82MB 0.3s
+#6 extracting sha256:a6dd1c05fbba4f9028078a11f143cbb625d2408921eb8207bfa1dd1ad301276f 0.1s
+#6 sha256:696c1fe91c64662be9b13aa92628d62d6685ab94c0b55d185258a8f762133deb 0B / 237.23MB 0.3s
+#6 sha256:5ac0faf5954b65dead8505b22e45fab58d546b801db37d7b94fc6eeb4f453a87 0B / 6.09MB 0.3s
+#6 sha256:411d2dc8717dbb4bb0d3cfa27e6e0275fca455c5220029d7a14dc7a75fbe8665 50.33MB / 67.82MB 0.5s
+#6 sha256:696c1fe91c64662be9b13aa92628d62d6685ab94c0b55d185258a8f762133deb 12.58MB / 237.23MB 0.4s
+#6 sha256:5ac0faf5954b65dead8505b22e45fab58d546b801db37d7b94fc6eeb4f453a87 6.09MB / 6.09MB 0.4s done
+#6 sha256:4ed680595f4b68f3c08c2ca8a5bc07d4df1b9034aca038855dfa730147309c80 20.97MB / 25.75MB 0.5s
+#6 sha256:411d2dc8717dbb4bb0d3cfa27e6e0275fca455c5220029d7a14dc7a75fbe8665 67.82MB / 67.82MB 0.6s
+#6 sha256:696c1fe91c64662be9b13aa92628d62d6685ab94c0b55d185258a8f762133deb 72.35MB / 237.23MB 0.6s
+#6 sha256:4ed680595f4b68f3c08c2ca8a5bc07d4df1b9034aca038855dfa730147309c80 25.75MB / 25.75MB 0.5s done
+#6 sha256:685e2037ccfc56ac319cf8aa33027e54511544cd48a588992514e9a76e2d38ae 249B / 249B 0.6s
+#6 sha256:411d2dc8717dbb4bb0d3cfa27e6e0275fca455c5220029d7a14dc7a75fbe8665 67.82MB / 67.82MB 0.6s done
+#6 sha256:696c1fe91c64662be9b13aa92628d62d6685ab94c0b55d185258a8f762133deb 96.47MB / 237.23MB 0.7s
+#6 sha256:685e2037ccfc56ac319cf8aa33027e54511544cd48a588992514e9a76e2d38ae 249B / 249B 0.6s done
+#6 sha256:696c1fe91c64662be9b13aa92628d62d6685ab94c0b55d185258a8f762133deb 125.83MB / 237.23MB 0.8s
+#6 sha256:696c1fe91c64662be9b13aa92628d62d6685ab94c0b55d185258a8f762133deb 157.29MB / 237.23MB 0.9s
+#6 sha256:696c1fe91c64662be9b13aa92628d62d6685ab94c0b55d185258a8f762133deb 193.99MB / 237.23MB 1.0s
+#6 sha256:696c1fe91c64662be9b13aa92628d62d6685ab94c0b55d185258a8f762133deb 237.23MB / 237.23MB 1.2s done
+#6 extracting sha256:a6dd1c05fbba4f9028078a11f143cbb625d2408921eb8207bfa1dd1ad301276f 1.0s done
+#6 extracting sha256:e8a88afca2bd37d4058d4b33d9d4d29b0557f8b811bb8c106942b5b51e1e4aad
+#6 extracting sha256:e8a88afca2bd37d4058d4b33d9d4d29b0557f8b811bb8c106942b5b51e1e4aad 0.3s done
+#6 extracting sha256:411d2dc8717dbb4bb0d3cfa27e6e0275fca455c5220029d7a14dc7a75fbe8665 0.1s
+#6 extracting sha256:411d2dc8717dbb4bb0d3cfa27e6e0275fca455c5220029d7a14dc7a75fbe8665 1.2s done
+#6 extracting sha256:696c1fe91c64662be9b13aa92628d62d6685ab94c0b55d185258a8f762133deb 0.1s
+#6 extracting sha256:696c1fe91c64662be9b13aa92628d62d6685ab94c0b55d185258a8f762133deb 3.5s done
+#6 extracting sha256:5ac0faf5954b65dead8505b22e45fab58d546b801db37d7b94fc6eeb4f453a87 0.1s
+#6 extracting sha256:5ac0faf5954b65dead8505b22e45fab58d546b801db37d7b94fc6eeb4f453a87 0.1s done
+#6 extracting sha256:4ed680595f4b68f3c08c2ca8a5bc07d4df1b9034aca038855dfa730147309c80 0.1s
+#6 extracting sha256:4ed680595f4b68f3c08c2ca8a5bc07d4df1b9034aca038855dfa730147309c80 0.4s done
+#6 extracting sha256:685e2037ccfc56ac319cf8aa33027e54511544cd48a588992514e9a76e2d38ae done
+#6 DONE 7.1s
+
+#7 [2/6] WORKDIR /app
+#7 DONE 4.2s
+
+#8 [3/6] COPY webapp/requirements.txt ./requirements.txt
+#8 DONE 0.0s
+
+#9 [4/6] RUN pip install --no-cache-dir -r requirements.txt     && groupadd --system portal     && useradd --system --gid portal --home-dir /app --shell /usr/sbin/nologin portal
+#9 1.122 Collecting Flask==3.1.2 (from -r requirements.txt (line 1))
+#9 1.152   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+#9 1.169 Collecting gunicorn==23.0.0 (from -r requirements.txt (line 2))
+#9 1.177   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+#9 1.227 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 3))
+#9 1.235   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#9 1.246 Collecting blinker>=1.9.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.253   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#9 1.268 Collecting click>=8.1.3 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.275   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+#9 1.286 Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.294   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#9 1.306 Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.314   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#9 1.347 Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.354   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#9 1.371 Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.378   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+#9 1.392 Collecting packaging (from gunicorn==23.0.0->-r requirements.txt (line 2))
+#9 1.400   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+#9 1.412 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
+#9 1.428 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+#9 1.436 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+#9 1.465    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 136.3 MB/s eta 0:00:00
+#9 1.473 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#9 1.481 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+#9 1.488 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#9 1.496 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#9 1.505 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#9 1.513 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+#9 1.521 Downloading packaging-26.3-py3-none-any.whl (129 kB)
+#9 1.540 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
+#9 1.938 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.3 psycopg2-binary-2.9.10 werkzeug-3.1.9
+#9 1.938 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#9 1.993 
+#9 1.993 [notice] A new release of pip is available: 25.0.1 -> 26.3
+#9 1.993 [notice] To update, run: pip install --upgrade pip
+#9 DONE 2.1s
+
+#10 [5/6] COPY webapp/app.py ./app.py
+#10 DONE 0.0s
+
+#11 [6/6] RUN chown -R portal:portal /app
+#11 DONE 0.1s
+
+#12 exporting to image
+#12 exporting layers 0.1s done
+#12 writing image sha256:a1ce39c8b964fed8c0c86665fbcc5ee779f19b28ebeef7839d4b1a2c464b4132 done
+#12 naming to docker.io/library/result-portal:full done
+#12 DONE 0.1s
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 658B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12-slim
+#2 DONE 0.5s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 102B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 103B done
+#4 DONE 0.0s
+
+#5 [1/6] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#5 resolve docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b done
+#5 sha256:78976a69c067520ef8be34cde307ef9f6fea6dcefa50edb57039773d241ca0db 5.66kB / 5.66kB done
+#5 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 9.44MB / 29.86MB 0.1s
+#5 sha256:68bced9e0afa4479df17c3646e27c7c7e9ce9ba70c0e6c73b6826487b89037d9 1.29MB / 1.29MB 0.1s done
+#5 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 0B / 12.12MB 0.1s
+#5 sha256:05e0eee5572e9c9f50408a2132590133b830a668a1cf2ff2b150f19c57707e2b 0B / 248B 0.1s
+#5 sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b 10.37kB / 10.37kB done
+#5 sha256:05a994d2344eb364cc186910f4fc8786a38215f39f00d0acc25bff33a08f4177 1.75kB / 1.75kB done
+#5 sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 29.86MB / 29.86MB 0.2s done
+#5 sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 12.12MB / 12.12MB 0.2s done
+#5 sha256:05e0eee5572e9c9f50408a2132590133b830a668a1cf2ff2b150f19c57707e2b 248B / 248B 0.2s done
+#5 extracting sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 0.1s
+#5 extracting sha256:37fb86c2a767b88d500c6872195f88078f64765fe0d2f9cc375cc2efbd4c0a41 0.5s done
+#5 extracting sha256:68bced9e0afa4479df17c3646e27c7c7e9ce9ba70c0e6c73b6826487b89037d9 0.0s done
+#5 extracting sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 0.1s
+#5 extracting sha256:2dc99d2d0a39fce31e37615eb4c932e16dcc4c2b0ce9993714280081b5dbe085 0.3s done
+#5 extracting sha256:05e0eee5572e9c9f50408a2132590133b830a668a1cf2ff2b150f19c57707e2b done
+#5 DONE 1.1s
+
+#6 [2/6] WORKDIR /app
+#6 DONE 0.1s
+
+#7 [3/6] COPY webapp/requirements.txt ./requirements.txt
+#7 DONE 0.0s
+
+#8 [4/6] RUN pip install --no-cache-dir -r requirements.txt     && groupadd --system portal     && useradd --system --gid portal --home-dir /app --shell /usr/sbin/nologin portal
+#8 1.028 Collecting Flask==3.1.2 (from -r requirements.txt (line 1))
+#8 1.057   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+#8 1.074 Collecting gunicorn==23.0.0 (from -r requirements.txt (line 2))
+#8 1.082   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+#8 1.130 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 3))
+#8 1.137   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#8 1.148 Collecting blinker>=1.9.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#8 1.156   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#8 1.170 Collecting click>=8.1.3 (from Flask==3.1.2->-r requirements.txt (line 1))
+#8 1.178   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+#8 1.189 Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#8 1.197   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#8 1.209 Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r requirements.txt (line 1))
+#8 1.217   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#8 1.251 Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r requirements.txt (line 1))
+#8 1.259   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#8 1.276 Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#8 1.283   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+#8 1.298 Collecting packaging (from gunicorn==23.0.0->-r requirements.txt (line 2))
+#8 1.306   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+#8 1.318 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
+#8 1.335 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+#8 1.343 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+#8 1.370    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 148.8 MB/s eta 0:00:00
+#8 1.379 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#8 1.386 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+#8 1.394 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#8 1.401 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#8 1.420 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#8 1.428 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+#8 1.436 Downloading packaging-26.3-py3-none-any.whl (129 kB)
+#8 1.454 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
+#8 1.841 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.3 psycopg2-binary-2.9.10 werkzeug-3.1.9
+#8 1.842 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#8 1.913 
+#8 1.913 [notice] A new release of pip is available: 25.0.1 -> 26.3
+#8 1.913 [notice] To update, run: pip install --upgrade pip
+#8 DONE 2.0s
+
+#9 [5/6] COPY webapp/app.py ./app.py
+#9 DONE 0.0s
+
+#10 [6/6] RUN chown -R portal:portal /app
+#10 DONE 0.1s
+
+#11 exporting to image
+#11 exporting layers 0.1s done
+#11 writing image sha256:e71298bdcdde30a0a34e39cba993519fd605823b94087207368c70b0b23338fd done
+#11 naming to docker.io/library/result-portal:compose done
+#11 DONE 0.1s
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.multistage
+#1 transferring dockerfile: 624B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12-slim
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 102B done
+#3 DONE 0.0s
+
+#4 [builder 1/4] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#4 CACHED
+
+#5 [runtime 2/6] WORKDIR /app
+#5 CACHED
+
+#6 [internal] load build context
+#6 transferring context: 103B done
+#6 DONE 0.0s
+
+#7 [builder 2/4] WORKDIR /build
+#7 DONE 0.0s
+
+#8 [builder 3/4] COPY webapp/requirements.txt ./requirements.txt
+#8 DONE 0.0s
+
+#9 [builder 4/4] RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+#9 1.026 Collecting Flask==3.1.2 (from -r requirements.txt (line 1))
+#9 1.056   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+#9 1.073 Collecting gunicorn==23.0.0 (from -r requirements.txt (line 2))
+#9 1.082   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+#9 1.133 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 3))
+#9 1.141   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#9 1.153 Collecting blinker>=1.9.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.161   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#9 1.175 Collecting click>=8.1.3 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.183   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+#9 1.194 Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.201   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#9 1.214 Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.222   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#9 1.255 Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.263   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#9 1.280 Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.288   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+#9 1.302 Collecting packaging (from gunicorn==23.0.0->-r requirements.txt (line 2))
+#9 1.310   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+#9 1.322 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
+#9 1.348 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+#9 1.360 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+#9 1.391    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 149.6 MB/s eta 0:00:00
+#9 1.398 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#9 1.407 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+#9 1.415 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#9 1.423 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#9 1.432 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#9 1.442 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+#9 1.451 Downloading packaging-26.3-py3-none-any.whl (129 kB)
+#9 1.468 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
+#9 1.858 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.3 psycopg2-binary-2.9.10 werkzeug-3.1.9
+#9 1.858 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#9 1.927 
+#9 1.927 [notice] A new release of pip is available: 25.0.1 -> 26.3
+#9 1.927 [notice] To update, run: pip install --upgrade pip
+#9 DONE 2.0s
+
+#10 [runtime 3/6] COPY --from=builder /install /usr/local
+#10 DONE 0.0s
+
+#11 [runtime 4/6] RUN groupadd --system portal     && useradd --system --gid portal --home-dir /app --shell /usr/sbin/nologin portal
+#11 DONE 0.1s
+
+#12 [runtime 5/6] COPY webapp/app.py ./app.py
+#12 DONE 0.0s
+
+#13 [runtime 6/6] RUN chown -R portal:portal /app
+#13 DONE 0.1s
+
+#14 exporting to image
+#14 exporting layers 0.1s done
+#14 writing image sha256:9fe5cdc8f846450307f222813bc6cd0d32beae44a0276c735c1ab87770ec558d done
+#14 naming to docker.io/library/result-portal:multistage done
+#14 DONE 0.1s
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.ubuntu
+#1 transferring dockerfile: 746B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:24.04
+#2 ...
+
+#3 [auth] library/ubuntu:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/ubuntu:24.04
+#2 DONE 0.8s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 102B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 103B done
+#5 DONE 0.0s
+
+#6 [1/7] FROM docker.io/library/ubuntu:24.04@sha256:9c7f200c07e3d4a03e7249d2c16bf66a51120fb876aa2242cf31451412543289
+#6 resolve docker.io/library/ubuntu:24.04@sha256:9c7f200c07e3d4a03e7249d2c16bf66a51120fb876aa2242cf31451412543289 done
+#6 sha256:2b147973fd863c93ced60f325461fe0e262b91317b008e6a2d961f13e81af0e4 2.05kB / 2.05kB done
+#6 sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050 0B / 29.79MB 0.1s
+#6 sha256:9c7f200c07e3d4a03e7249d2c16bf66a51120fb876aa2242cf31451412543289 6.69kB / 6.69kB done
+#6 sha256:9a04f13b3f80ef056361e30868593b1cfd2279fe19e4081cb93a90bf56819d6a 424B / 424B done
+#6 sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050 28.31MB / 29.79MB 0.2s
+#6 extracting sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050
+#6 sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050 29.79MB / 29.79MB 0.2s done
+#6 extracting sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050 0.5s done
+#6 DONE 0.8s
+
+#7 [2/7] WORKDIR /app
+#7 DONE 0.0s
+
+#8 [3/7] RUN apt-get update     && apt-get install -y --no-install-recommends python3 python3-venv ca-certificates     && rm -rf /var/lib/apt/lists/*     && python3 -m venv /opt/venv     && groupadd --system portal     && useradd --system --gid portal --home-dir /app --shell /usr/sbin/nologin portal
+#8 0.189 Get:1 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+#8 0.190 Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+#8 0.292 Get:3 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1562 kB]
+#8 0.317 Get:4 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+#8 0.331 Get:5 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2216 kB]
+#8 0.349 Get:6 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [55.6 kB]
+#8 0.356 Get:7 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1475 kB]
+#8 0.479 Get:8 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+#8 0.521 Get:9 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1808 kB]
+#8 0.559 Get:10 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [331 kB]
+#8 0.569 Get:11 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [19.3 MB]
+#8 0.805 Get:12 http://archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [117 kB]
+#8 0.816 Get:13 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2371 kB]
+#8 0.832 Get:14 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [61.7 kB]
+#8 0.838 Get:15 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1822 kB]
+#8 0.851 Get:16 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [2184 kB]
+#8 0.870 Get:17 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [49.0 kB]
+#8 0.875 Get:18 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [36.0 kB]
+#8 0.886 Get:19 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [669 B]
+#8 1.517 Fetched 34.0 MB in 1s (23.7 MB/s)
+#8 1.517 Reading package lists...
+#8 2.138 Reading package lists...
+#8 2.756 Building dependency tree...
+#8 2.874 Reading state information...
+#8 3.020 The following additional packages will be installed:
+#8 3.020   libexpat1 libpython3-stdlib libpython3.12-minimal libpython3.12-stdlib
+#8 3.020   libreadline8t64 libsqlite3-0 media-types netbase openssl python3-minimal
+#8 3.021   python3-pip-whl python3-setuptools-whl python3.12 python3.12-minimal
+#8 3.021   python3.12-venv readline-common tzdata
+#8 3.021 Suggested packages:
+#8 3.021   python3-doc python3-tk python3.12-doc binutils binfmt-support readline-doc
+#8 3.069 The following NEW packages will be installed:
+#8 3.069   ca-certificates libexpat1 libpython3-stdlib libpython3.12-minimal
+#8 3.070   libpython3.12-stdlib libreadline8t64 libsqlite3-0 media-types netbase
+#8 3.070   openssl python3 python3-minimal python3-pip-whl python3-setuptools-whl
+#8 3.070   python3-venv python3.12 python3.12-minimal python3.12-venv readline-common
+#8 3.070   tzdata
+#8 3.108 0 upgraded, 20 newly installed, 0 to remove and 4 not upgraded.
+#8 3.108 Need to get 10.9 MB of archives.
+#8 3.108 After this operation, 33.0 MB of additional disk space will be used.
+#8 3.108 Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-minimal amd64 3.12.3-1ubuntu0.17 [839 kB]
+#8 3.162 Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libexpat1 amd64 2.6.1-2ubuntu0.6 [98.9 kB]
+#8 3.174 Get:3 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12-minimal amd64 3.12.3-1ubuntu0.17 [2335 kB]
+#8 3.199 Get:4 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3-minimal amd64 3.12.3-0ubuntu2.1 [27.4 kB]
+#8 3.211 Get:5 http://archive.ubuntu.com/ubuntu noble/main amd64 media-types all 10.1.0 [27.5 kB]
+#8 3.226 Get:6 http://archive.ubuntu.com/ubuntu noble/main amd64 netbase all 6.4 [13.1 kB]
+#8 3.234 Get:7 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 tzdata all 2026f-0ubuntu0.24.04.1 [283 kB]
+#8 3.246 Get:8 http://archive.ubuntu.com/ubuntu noble/main amd64 readline-common all 8.2-4build1 [56.5 kB]
+#8 3.259 Get:9 http://archive.ubuntu.com/ubuntu noble/main amd64 libreadline8t64 amd64 8.2-4build1 [153 kB]
+#8 3.270 Get:10 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libsqlite3-0 amd64 3.45.1-1ubuntu2.9 [702 kB]
+#8 3.296 Get:11 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-stdlib amd64 3.12.3-1ubuntu0.17 [2071 kB]
+#8 3.317 Get:12 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12 amd64 3.12.3-1ubuntu0.17 [651 kB]
+#8 3.331 Get:13 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3-stdlib amd64 3.12.3-0ubuntu2.1 [10.1 kB]
+#8 3.341 Get:14 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3 amd64 3.12.3-0ubuntu2.1 [23.0 kB]
+#8 3.353 Get:15 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 openssl amd64 3.0.13-0ubuntu3.16 [1004 kB]
+#8 3.375 Get:16 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 ca-certificates all 20260816ubuntu0.24.04.2 [140 kB]
+#8 3.385 Get:17 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-pip-whl all 24.0+dfsg-1ubuntu1.3 [1707 kB]
+#8 3.408 Get:18 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-setuptools-whl all 68.1.2-2ubuntu1.2 [716 kB]
+#8 3.423 Get:19 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3.12-venv amd64 3.12.3-1ubuntu0.17 [5684 B]
+#8 3.438 Get:20 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-venv amd64 3.12.3-0ubuntu2.1 [1032 B]
+#8 3.511 debconf: delaying package configuration, since apt-utils is not installed
+#8 3.528 Fetched 10.9 MB in 0s (30.2 MB/s)
+#8 3.536 Selecting previously unselected package libpython3.12-minimal:amd64.
+#8 3.536 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4381 files and directories currently installed.)
+#8 3.538 Preparing to unpack .../libpython3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
+#8 3.539 Unpacking libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
+#8 3.569 Selecting previously unselected package libexpat1:amd64.
+#8 3.570 Preparing to unpack .../libexpat1_2.6.1-2ubuntu0.6_amd64.deb ...
+#8 3.571 Unpacking libexpat1:amd64 (2.6.1-2ubuntu0.6) ...
+#8 3.579 Selecting previously unselected package python3.12-minimal.
+#8 3.579 Preparing to unpack .../python3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
+#8 3.581 Unpacking python3.12-minimal (3.12.3-1ubuntu0.17) ...
+#8 3.614 Setting up libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
+#8 3.617 Setting up libexpat1:amd64 (2.6.1-2ubuntu0.6) ...
+#8 3.618 Setting up python3.12-minimal (3.12.3-1ubuntu0.17) ...
+#8 4.116 Selecting previously unselected package python3-minimal.
+#8 4.116 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4700 files and directories currently installed.)
+#8 4.118 Preparing to unpack .../0-python3-minimal_3.12.3-0ubuntu2.1_amd64.deb ...
+#8 4.119 Unpacking python3-minimal (3.12.3-0ubuntu2.1) ...
+#8 4.127 Selecting previously unselected package media-types.
+#8 4.127 Preparing to unpack .../1-media-types_10.1.0_all.deb ...
+#8 4.128 Unpacking media-types (10.1.0) ...
+#8 4.135 Selecting previously unselected package netbase.
+#8 4.135 Preparing to unpack .../2-netbase_6.4_all.deb ...
+#8 4.136 Unpacking netbase (6.4) ...
+#8 4.143 Selecting previously unselected package tzdata.
+#8 4.143 Preparing to unpack .../3-tzdata_2026f-0ubuntu0.24.04.1_all.deb ...
+#8 4.144 Unpacking tzdata (2026f-0ubuntu0.24.04.1) ...
+#8 4.172 Selecting previously unselected package readline-common.
+#8 4.172 Preparing to unpack .../4-readline-common_8.2-4build1_all.deb ...
+#8 4.173 Unpacking readline-common (8.2-4build1) ...
+#8 4.180 Selecting previously unselected package libreadline8t64:amd64.
+#8 4.181 Preparing to unpack .../5-libreadline8t64_8.2-4build1_amd64.deb ...
+#8 4.183 Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8 to /lib/x86_64-linux-gnu/libhistory.so.8.usr-is-merged by libreadline8t64'
+#8 4.186 Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8.2 to /lib/x86_64-linux-gnu/libhistory.so.8.2.usr-is-merged by libreadline8t64'
+#8 4.188 Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8 to /lib/x86_64-linux-gnu/libreadline.so.8.usr-is-merged by libreadline8t64'
+#8 4.190 Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8.2 to /lib/x86_64-linux-gnu/libreadline.so.8.2.usr-is-merged by libreadline8t64'
+#8 4.191 Unpacking libreadline8t64:amd64 (8.2-4build1) ...
+#8 4.199 Selecting previously unselected package libsqlite3-0:amd64.
+#8 4.200 Preparing to unpack .../6-libsqlite3-0_3.45.1-1ubuntu2.9_amd64.deb ...
+#8 4.200 Unpacking libsqlite3-0:amd64 (3.45.1-1ubuntu2.9) ...
+#8 4.211 Selecting previously unselected package libpython3.12-stdlib:amd64.
+#8 4.212 Preparing to unpack .../7-libpython3.12-stdlib_3.12.3-1ubuntu0.17_amd64.deb ...
+#8 4.212 Unpacking libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
+#8 4.257 Selecting previously unselected package python3.12.
+#8 4.257 Preparing to unpack .../8-python3.12_3.12.3-1ubuntu0.17_amd64.deb ...
+#8 4.258 Unpacking python3.12 (3.12.3-1ubuntu0.17) ...
+#8 4.266 Selecting previously unselected package libpython3-stdlib:amd64.
+#8 4.267 Preparing to unpack .../9-libpython3-stdlib_3.12.3-0ubuntu2.1_amd64.deb ...
+#8 4.267 Unpacking libpython3-stdlib:amd64 (3.12.3-0ubuntu2.1) ...
+#8 4.276 Setting up python3-minimal (3.12.3-0ubuntu2.1) ...
+#8 4.363 Selecting previously unselected package python3.
+#8 4.363 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5706 files and directories currently installed.)
+#8 4.365 Preparing to unpack .../0-python3_3.12.3-0ubuntu2.1_amd64.deb ...
+#8 4.368 Unpacking python3 (3.12.3-0ubuntu2.1) ...
+#8 4.375 Selecting previously unselected package openssl.
+#8 4.375 Preparing to unpack .../1-openssl_3.0.13-0ubuntu3.16_amd64.deb ...
+#8 4.376 Unpacking openssl (3.0.13-0ubuntu3.16) ...
+#8 4.391 Selecting previously unselected package ca-certificates.
+#8 4.391 Preparing to unpack .../2-ca-certificates_20260816ubuntu0.24.04.2_all.deb ...
+#8 4.392 Unpacking ca-certificates (20260816ubuntu0.24.04.2) ...
+#8 4.405 Selecting previously unselected package python3-pip-whl.
+#8 4.405 Preparing to unpack .../3-python3-pip-whl_24.0+dfsg-1ubuntu1.3_all.deb ...
+#8 4.406 Unpacking python3-pip-whl (24.0+dfsg-1ubuntu1.3) ...
+#8 4.416 Selecting previously unselected package python3-setuptools-whl.
+#8 4.417 Preparing to unpack .../4-python3-setuptools-whl_68.1.2-2ubuntu1.2_all.deb ...
+#8 4.417 Unpacking python3-setuptools-whl (68.1.2-2ubuntu1.2) ...
+#8 4.425 Selecting previously unselected package python3.12-venv.
+#8 4.426 Preparing to unpack .../5-python3.12-venv_3.12.3-1ubuntu0.17_amd64.deb ...
+#8 4.426 Unpacking python3.12-venv (3.12.3-1ubuntu0.17) ...
+#8 4.433 Selecting previously unselected package python3-venv.
+#8 4.433 Preparing to unpack .../6-python3-venv_3.12.3-0ubuntu2.1_amd64.deb ...
+#8 4.434 Unpacking python3-venv (3.12.3-0ubuntu2.1) ...
+#8 4.442 Setting up media-types (10.1.0) ...
+#8 4.443 Setting up python3-setuptools-whl (68.1.2-2ubuntu1.2) ...
+#8 4.444 Setting up libsqlite3-0:amd64 (3.45.1-1ubuntu2.9) ...
+#8 4.445 Setting up tzdata (2026f-0ubuntu0.24.04.1) ...
+#8 4.491 
+#8 4.491 Current default time zone: 'Etc/UTC'
+#8 4.492 Local time is now:      Mon Nov 23 16:55:38 UTC 2026.
+#8 4.492 Universal Time is now:  Mon Nov 23 16:55:38 UTC 2026.
+#8 4.492 Run 'dpkg-reconfigure tzdata' if you wish to change it.
+#8 4.492 
+#8 4.497 Setting up netbase (6.4) ...
+#8 4.500 Setting up openssl (3.0.13-0ubuntu3.16) ...
+#8 4.502 Setting up readline-common (8.2-4build1) ...
+#8 4.505 Setting up ca-certificates (20260816ubuntu0.24.04.2) ...
+#8 4.732 Updating certificates in /etc/ssl/certs...
+#8 5.007 120 added, 0 removed; done.
+#8 5.007 Running hooks in /etc/ca-certificates/update.d...
+#8 5.008 done.
+#8 5.015 Setting up libreadline8t64:amd64 (8.2-4build1) ...
+#8 5.016 Setting up libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
+#8 5.017 Setting up python3-pip-whl (24.0+dfsg-1ubuntu1.3) ...
+#8 5.018 Setting up python3.12 (3.12.3-1ubuntu0.17) ...
+#8 5.592 Setting up libpython3-stdlib:amd64 (3.12.3-0ubuntu2.1) ...
+#8 5.593 Setting up python3.12-venv (3.12.3-1ubuntu0.17) ...
+#8 5.624 Setting up python3 (3.12.3-0ubuntu2.1) ...
+#8 5.681 Setting up python3-venv (3.12.3-0ubuntu2.1) ...
+#8 5.682 Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+#8 DONE 7.7s
+
+#9 [4/7] COPY webapp/requirements.txt ./requirements.txt
+#9 DONE 0.0s
+
+#10 [5/7] RUN /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+#10 0.339 Collecting Flask==3.1.2 (from -r requirements.txt (line 1))
+#10 0.377   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+#10 0.412 Collecting gunicorn==23.0.0 (from -r requirements.txt (line 2))
+#10 0.420   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+#10 0.481 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 3))
+#10 0.489   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#10 0.507 Collecting blinker>=1.9.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#10 0.515   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#10 0.535 Collecting click>=8.1.3 (from Flask==3.1.2->-r requirements.txt (line 1))
+#10 0.543   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+#10 0.558 Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#10 0.567   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#10 0.585 Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r requirements.txt (line 1))
+#10 0.593   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#10 0.639 Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r requirements.txt (line 1))
+#10 0.648   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#10 0.674 Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#10 0.683   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+#10 0.708 Collecting packaging (from gunicorn==23.0.0->-r requirements.txt (line 2))
+#10 0.716   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+#10 0.734 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
+#10 0.744    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.3/103.3 kB 11.4 MB/s eta 0:00:00
+#10 0.752 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+#10 0.753    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.0/85.0 kB 582.6 MB/s eta 0:00:00
+#10 0.765 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+#10 0.790    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 124.8 MB/s eta 0:00:00
+#10 0.798 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#10 0.806 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+#10 0.808    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.2/126.2 kB 676.5 MB/s eta 0:00:00
+#10 0.816 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#10 0.827 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#10 0.828    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 631.1 MB/s eta 0:00:00
+#10 0.839 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#10 0.846 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+#10 0.848    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 228.7/228.7 kB 718.6 MB/s eta 0:00:00
+#10 0.857 Downloading packaging-26.3-py3-none-any.whl (129 kB)
+#10 0.858    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 680.6 MB/s eta 0:00:00
+#10 0.882 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
+#10 1.282 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.3 psycopg2-binary-2.9.10 werkzeug-3.1.9
+#10 DONE 1.4s
+
+#11 [6/7] COPY webapp/app.py ./app.py
+#11 DONE 0.0s
+
+#12 [7/7] RUN chown -R portal:portal /app
+#12 DONE 0.1s
+
+#13 exporting to image
+#13 exporting layers
+#13 exporting layers 0.2s done
+#13 writing image sha256:6f572134c0ce125d16e4ef590117555dc569a102ec411855be4d3ef7070df19e done
+#13 naming to docker.io/library/result-portal:ubuntu done
+#13 DONE 0.2s
+REPOSITORY      TAG          IMAGE ID       CREATED                  SIZE
+result-portal   ubuntu       6f572134c0ce   Less than a second ago   149MB
+result-portal   multistage   9fe5cdc8f846   11 seconds ago           134MB
+result-portal   compose      e71298bdcdde   14 seconds ago           142MB
+result-portal   full         a1ce39c8b964   18 seconds ago           1.13GB
+build_ms full_python=18010 slim_python=3868 multistage=2583 ubuntu_base=11128
+docker history result-portal:full
+IMAGE                                                                     CREATED          CREATED BY                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               SIZE      COMMENT
+sha256:a1ce39c8b964fed8c0c86665fbcc5ee779f19b28ebeef7839d4b1a2c464b4132   18 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--workers" "2" "--access-logfile" "-" "--error-logfile" "-" "app:app"]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          0B        buildkit.dockerfile.v0
+<missing>                                                                 18 seconds ago   EXPOSE map[8000/tcp:{}]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  0B        buildkit.dockerfile.v0
+<missing>                                                                 18 seconds ago   USER portal                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              0B        buildkit.dockerfile.v0
+<missing>                                                                 18 seconds ago   RUN /bin/sh -c chown -R portal:portal /app # buildkit                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    2.04kB    buildkit.dockerfile.v0
+<missing>                                                                 18 seconds ago   COPY webapp/app.py ./app.py # buildkit                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   1.99kB    buildkit.dockerfile.v0
+<missing>                                                                 18 seconds ago   RUN /bin/sh -c pip install --no-cache-dir -r requirements.txt     && groupadd --system portal     && useradd --system --gid portal --home-dir /app --shell /usr/sbin/nologin portal # buildkit                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           22.2MB    buildkit.dockerfile.v0
+<missing>                                                                 20 seconds ago   COPY webapp/requirements.txt ./requirements.txt # buildkit                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               54B       buildkit.dockerfile.v0
+<missing>                                                                 20 seconds ago   WORKDIR /app                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             0B        buildkit.dockerfile.v0
+<missing>                                                                 2 weeks ago      CMD ["python3"]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          0B        buildkit.dockerfile.v0
+<missing>                                                                 2 weeks ago      RUN /bin/sh -c set -eux;  for src in idle3 pip3 pydoc3 python3 python3-config; do   dst="$(echo "$src" | tr -d 3)";   [ -s "/usr/local/bin/$src" ];   [ ! -e "/usr/local/bin/$dst" ];   ln -svT "$src" "/usr/local/bin/$dst";  done # buildkit                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           36B       buildkit.dockerfile.v0
+<missing>                                                                 2 weeks ago      RUN /bin/sh -c set -eux;   wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz";  echo "$PYTHON_SHA256 *python.tar.xz" | sha256sum -c -;  wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc";  GNUPGHOME="$(mktemp -d)"; export GNUPGHOME;  gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$GPG_KEY";  gpg --batch --verify python.tar.xz.asc python.tar.xz;  gpgconf --kill all;  rm -rf "$GNUPGHOME" python.tar.xz.asc;  mkdir -p /usr/src/python;  tar --extract --directory /usr/src/python --strip-components=1 --file python.tar.xz;  rm python.tar.xz;   cd /usr/src/python;  gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)";  ./configure   --build="$gnuArch"   --enable-loadable-sqlite-extensions   --enable-optimizations   --enable-option-checking=fatal   --enable-shared   $(test "${gnuArch%%-*}" != 'riscv64' && echo '--with-lto')   --with-ensurepip  ;  nproc="$(nproc)";  EXTRA_CFLAGS="$(dpkg-buildflags --get CFLAGS)";  LDFLAGS="$(dpkg-buildflags --get LDFLAGS)";  arch="$(dpkg --print-architecture)"; arch="${arch##*-}";  case "$arch" in   amd64|arm64)    EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer";    ;;   i386)    ;;   *)    EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer";    ;;  esac;  make -j "$nproc"   "EXTRA_CFLAGS=${EXTRA_CFLAGS:-}"   "LDFLAGS=${LDFLAGS:-}"  ;  rm python;  make -j "$nproc"   "EXTRA_CFLAGS=${EXTRA_CFLAGS:-}"   "LDFLAGS=${LDFLAGS:-} -Wl,-rpath='\$\$ORIGIN/../lib'"   python  ;  make install;   bin="$(readlink -ve /usr/local/bin/python3)";  dir="$(dirname "$bin")";  mkdir -p "/usr/share/gdb/auto-load/$dir";  cp -vL Tools/gdb/libpython.py "/usr/share/gdb/auto-load/$bin-gdb.py";   cd /;  rm -rf /usr/src/python;   find /usr/local -depth   \(    \( -type d -a \( -name test -o -name tests -o -name idle_test \) \)    -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' -o -name 'libpython*.a' \) \)   \) -exec rm -rf '{}' +  ;   ldconfig;   export PYTHONDONTWRITEBYTECODE=1;  python3 --version;  pip3 --version # buildkit   68.5MB    buildkit.dockerfile.v0
+run failed at line 115 (exit 141): head -n 12
+run failed at line 119 (exit 141): tee evidence/b2-images.txt
