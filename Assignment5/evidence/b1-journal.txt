@@ -1,8 +1,8 @@
-Nov 23 18:17:30 ip-10-0-131-161 systemd[1]: Started result-portal.service - University result portal sample web application.
-Nov 23 18:17:30 ip-10-0-131-161 gunicorn[4118]: [2026-11-23 18:17:30 +0000] [4118] [INFO] Starting gunicorn 23.0.0
-Nov 23 18:17:30 ip-10-0-131-161 gunicorn[4118]: [2026-11-23 18:17:30 +0000] [4118] [INFO] Listening at: http://127.0.0.1:8000 (4118)
-Nov 23 18:17:30 ip-10-0-131-161 gunicorn[4118]: [2026-11-23 18:17:30 +0000] [4118] [INFO] Using worker: sync
-Nov 23 18:17:30 ip-10-0-131-161 gunicorn[4148]: [2026-11-23 18:17:30 +0000] [4148] [INFO] Booting worker with pid: 4148
-Nov 23 18:17:30 ip-10-0-131-161 gunicorn[4183]: [2026-11-23 18:17:30 +0000] [4183] [INFO] Booting worker with pid: 4183
-Nov 23 18:17:32 ip-10-0-131-161 gunicorn[4183]: 127.0.0.1 - - [23/Nov/2026:18:17:32 +0000] "GET /health HTTP/1.0" 200 53 "-" "curl/8.5.0"
-Nov 23 18:17:32 ip-10-0-131-161 gunicorn[4183]: 127.0.0.1 - - [23/Nov/2026:18:17:32 +0000] "GET /results/10001 HTTP/1.0" 200 92 "-" "curl/8.5.0"
+Nov 23 19:00:24 runnervmeozm8 systemd[1]: Started result-portal.service - University result portal sample web application.
+Nov 23 19:00:24 runnervmeozm8 gunicorn[4156]: [2026-11-23 19:00:24 +0000] [4156] [INFO] Starting gunicorn 23.0.0
+Nov 23 19:00:24 runnervmeozm8 gunicorn[4156]: [2026-11-23 19:00:24 +0000] [4156] [INFO] Listening at: http://127.0.0.1:8000 (4156)
+Nov 23 19:00:24 runnervmeozm8 gunicorn[4156]: [2026-11-23 19:00:24 +0000] [4156] [INFO] Using worker: sync
+Nov 23 19:00:24 runnervmeozm8 gunicorn[4221]: [2026-11-23 19:00:24 +0000] [4221] [INFO] Booting worker with pid: 4221
+Nov 23 19:00:25 runnervmeozm8 gunicorn[4222]: [2026-11-23 19:00:25 +0000] [4222] [INFO] Booting worker with pid: 4222
+Nov 23 19:00:26 runnervmeozm8 gunicorn[4222]: 127.0.0.1 - - [23/Nov/2026:19:00:26 +0000] "GET /health HTTP/1.0" 200 53 "-" "curl/8.5.0"
+Nov 23 19:00:26 runnervmeozm8 gunicorn[4222]: 127.0.0.1 - - [23/Nov/2026:19:00:26 +0000] "GET /results/10001 HTTP/1.0" 200 92 "-" "curl/8.5.0"

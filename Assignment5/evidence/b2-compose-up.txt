@@ -2,48 +2,48 @@
 #1 reading from stdin 857B done
 #1 DONE 0.0s
 
-#2 [portal internal] load build definition from Dockerfile
+#2 [lms internal] load build definition from Dockerfile
 #2 transferring dockerfile: 658B done
 #2 DONE 0.0s
 
 #3 [lms internal] load metadata for docker.io/library/python:3.12-slim
-#3 DONE 0.2s
+#3 DONE 0.1s
 
-#4 [lms internal] load .dockerignore
+#4 [portal internal] load .dockerignore
 #4 transferring context: 102B done
 #4 DONE 0.0s
 
-#5 [lms 1/6] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+#5 [portal 1/6] FROM docker.io/library/python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
 #5 DONE 0.0s
 
-#6 [lms internal] load build context
+#6 [portal internal] load build context
 #6 transferring context: 103B done
 #6 DONE 0.0s
 
-#7 [portal 2/6] WORKDIR /app
+#7 [portal 3/6] COPY webapp/requirements.txt ./requirements.txt
 #7 CACHED
 
-#8 [portal 3/6] COPY webapp/requirements.txt ./requirements.txt
+#8 [portal 5/6] COPY webapp/app.py ./app.py
 #8 CACHED
 
-#9 [portal 4/6] RUN pip install --no-cache-dir -r requirements.txt     && groupadd --system portal     && useradd --system --gid portal --home-dir /app --shell /usr/sbin/nologin portal
+#9 [portal 2/6] WORKDIR /app
 #9 CACHED
 
-#10 [portal 5/6] COPY webapp/app.py ./app.py
+#10 [portal 4/6] RUN pip install --no-cache-dir -r requirements.txt     && groupadd --system portal     && useradd --system --gid portal --home-dir /app --shell /usr/sbin/nologin portal
 #10 CACHED
 
 #11 [portal 6/6] RUN chown -R portal:portal /app
 #11 CACHED
 
-#12 [portal] exporting to image
+#12 [lms] exporting to image
 #12 exporting layers done
-#12 writing image sha256:8db8a4505260fdda92ea6421c7ebe2c346aae78180b8070b567cfd94c008d4f6 done
+#12 writing image sha256:a8f56de0df7b0feb84f4e55339092387c9dc158d971db33b4e1a8b2d4bb45ec0 done
 #12 naming to docker.io/library/result-portal:compose done
 #12 DONE 0.0s
 
-#13 [lms] exporting to image
+#13 [portal] exporting to image
 #13 exporting layers done
-#13 writing image sha256:8db8a4505260fdda92ea6421c7ebe2c346aae78180b8070b567cfd94c008d4f6 done
+#13 writing image sha256:a8f56de0df7b0feb84f4e55339092387c9dc158d971db33b4e1a8b2d4bb45ec0 done
 #13 naming to docker.io/library/result-portal:compose done
 #13 DONE 0.0s
 
