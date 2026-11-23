@@ -88,9 +88,15 @@ instance-id: assignment5-vm-01
 local-hostname: result-portal-vm
 EOF
 cloud-localds "$seed" "$work/user-data" "$work/meta-data"
-if [[ -e /dev/kvm && -r /dev/kvm && -w /dev/kvm ]]; then accel=kvm; else accel='tcg,thread=multi'; fi
+if [[ -e /dev/kvm && -r /dev/kvm && -w /dev/kvm ]]; then
+  accel=kvm
+  accel_args=(-accel kvm)
+else
+  accel=tcg
+  accel_args=(-accel tcg,thread=multi)
+fi
 start=$(date +%s%3N)
-qemu-system-x86_64 -machine "accel=$accel" -cpu max -m 1536 -smp 2 \
+qemu-system-x86_64 "${accel_args[@]}" -cpu max -m 1536 -smp 2 \
   -display none -serial "file:$PWD/evidence/vm-console.log" -daemonize -pidfile "$pidfile" \
   -drive "file=$overlay,if=virtio,format=qcow2" \
   -drive "file=$seed,if=virtio,media=cdrom,readonly=on" \
