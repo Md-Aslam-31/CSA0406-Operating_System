@@ -1,3 +1,4 @@
-ALERT filesystem=/dev/root used=42% mount=/
-ALERT filesystem=/dev/nvme0n1p16 used=11% mount=/boot
+ALERT filesystem=efivarfs used=3% mount=/sys/firmware/efi/efivars
+ALERT filesystem=/dev/mapper/cow-root used=40% mount=/
+ALERT filesystem=/dev/nvme0n1p16 used=14% mount=/boot
 ALERT filesystem=/dev/nvme0n1p15 used=6% mount=/boot/efi

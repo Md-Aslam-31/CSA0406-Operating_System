@@ -1,0 +1,2 @@
+CONTAINER ID   NAME           CPU %     MEM USAGE / LIMIT   MEM %     NET I/O          BLOCK I/O   PIDS
+bb14681d8b48   portal-bench   0.01%     47.16MiB / 512MiB   9.21%     1.05MB / 1.2MB   0B / 0B     3

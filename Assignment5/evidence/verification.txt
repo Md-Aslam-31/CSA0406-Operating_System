@@ -1,1 +1,1 @@
-run failed at line 121 (exit 1): tee evidence/b2-compose-up.txt
+run failed at line 171 (exit 1): chmod +x /usr/local/bin/kind
