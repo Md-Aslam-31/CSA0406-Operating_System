@@ -73,7 +73,7 @@ python3 -m venv .venv
 .venv/bin/pip install --disable-pip-version-check -q -r webapp/requirements.txt
 printf 'deployment,startup_seconds,rss_mib,size_mib,requests_per_second,mean_latency_ms,notes\n' > evidence/benchmark.csv
 host_start=$(date +%s%3N)
-APP_NAME='University Result Portal' .venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8100 --access-logfile evidence/host-access.log --error-logfile evidence/host-error.log app:app >/dev/null 2>&1 &
+APP_NAME='University Result Portal' .venv/bin/gunicorn --chdir "$PWD/webapp" --workers 2 --bind 127.0.0.1:8100 --access-logfile "$PWD/evidence/host-access.log" --error-logfile "$PWD/evidence/host-error.log" app:app >/dev/null 2>&1 &
 host_pid=$!
 for _ in $(seq 1 40); do
   if curl -fsS http://127.0.0.1:8100/health >/dev/null; then break; fi
