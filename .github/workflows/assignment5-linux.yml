@@ -23,6 +23,7 @@ jobs:
       - name: Run Linux design and deployment lab
         run: bash Assignment5/scripts/run_linux_evidence.sh
       - name: Commit generated command outputs and charts
+        if: always()
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'

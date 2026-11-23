@@ -3,7 +3,7 @@ set -Eeuo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p evidence plots
 exec > >(tee evidence/run.log) 2>&1
-trap 'code=$?; echo "run failed at line $LINENO (exit $code)" | tee -a evidence/verification.txt; exit "$code"' ERR
+trap 'code=$?; echo "run failed at line $LINENO (exit $code): $BASH_COMMAND" | tee -a evidence/verification.txt; exit "$code"' ERR
 
 echo '=== Environment ==='
 {
