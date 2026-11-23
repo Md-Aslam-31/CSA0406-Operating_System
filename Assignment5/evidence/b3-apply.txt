@@ -1,0 +1,2 @@
+deployment.apps/result-portal created
+service/result-portal created

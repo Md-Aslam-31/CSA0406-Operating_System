@@ -1,0 +1,2 @@
+Deleting pod result-portal-55744f64c4-44skn
+pod "result-portal-55744f64c4-44skn" deleted from default namespace

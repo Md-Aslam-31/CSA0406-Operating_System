@@ -1,0 +1,2 @@
+deployment.apps/lms created
+service/lms created

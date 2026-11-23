@@ -1,4 +1,4 @@
 NAME                IMAGE                   COMMAND                  SERVICE    CREATED         STATUS                   PORTS
-taskb2-database-1   postgres:16-alpine      "docker-entrypoint.s…"   database   7 seconds ago   Up 7 seconds (healthy)   5432/tcp
-taskb2-lms-1        result-portal:compose   "gunicorn --bind 0.0…"   lms        7 seconds ago   Up 7 seconds             0.0.0.0:8001->8000/tcp, [::]:8001->8000/tcp
-taskb2-portal-1     result-portal:compose   "gunicorn --bind 0.0…"   portal     7 seconds ago   Up 2 seconds             0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+taskb2-database-1   postgres:16-alpine      "docker-entrypoint.s…"   database   8 seconds ago   Up 7 seconds (healthy)   5432/tcp
+taskb2-lms-1        result-portal:compose   "gunicorn --bind 0.0…"   lms        8 seconds ago   Up 7 seconds             0.0.0.0:8001->8000/tcp, [::]:8001->8000/tcp
+taskb2-portal-1     result-portal:compose   "gunicorn --bind 0.0…"   portal     8 seconds ago   Up 2 seconds             0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp

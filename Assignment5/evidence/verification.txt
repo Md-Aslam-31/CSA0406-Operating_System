@@ -1,1 +1,1 @@
-run failed at line 171 (exit 1): chmod +x /usr/local/bin/kind
+run failed at line 219 (exit 1): python3 scripts/plot_results.py

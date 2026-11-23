@@ -1,3 +1,3 @@
 VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
-result-portal-vm login: [  126.537488] cloud-init[975]: Cloud-init v. 26.1-0ubuntu1~24.04.1 running 'modules:config' at Mon, 23 Nov 2026 17:13:49 +0000. Up 113.92 seconds.
-[  153.321524] cloud-init[1004]: Cloud-init v. 26.1-0ubuntu1~24.04.1 finished at Mon, 23 Nov 2026 17:14:29 +0000. Datasource DataSourceNoCloud [seed=/dev/vdb].  Up 153.26 seconds
+result-portal-vm login: [  128.943177] cloud-init[973]: Cloud-init v. 26.1-0ubuntu1~24.04.1 running 'modules:config' at Mon, 23 Nov 2026 17:27:20 +0000. Up 115.55 seconds.
+[  156.461898] cloud-init[1002]: Cloud-init v. 26.1-0ubuntu1~24.04.1 finished at Mon, 23 Nov 2026 17:28:01 +0000. Datasource DataSourceNoCloud [seed=/dev/vdb].  Up 156.41 seconds
