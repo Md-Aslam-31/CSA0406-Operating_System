@@ -2,6 +2,7 @@
 set -Eeuo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p evidence plots
+: > evidence/verification.txt
 exec > >(tee evidence/run.log) 2>&1
 trap 'code=$?; echo "run failed at line $LINENO (exit $code): $BASH_COMMAND" | tee -a evidence/verification.txt; exit "$code"' ERR
 
@@ -112,7 +113,7 @@ ubuntu_e=$(date +%s%3N)
   printf 'build_ms full_python=%s slim_python=%s multistage=%s ubuntu_base=%s\n' "$((full_e-full_s))" "$((slim_e-slim_s))" "$((multi_e-multi_s))" "$((ubuntu_e-ubuntu_s))"
   for tag in full compose multistage ubuntu; do
     echo "docker history result-portal:$tag"
-    docker history --no-trunc result-portal:"$tag" | head -n 12
+    docker history --no-trunc result-portal:"$tag" | sed -n '1,12p'
     docker image inspect result-portal:"$tag" --format 'image={{.RepoTags}} bytes={{.Size}}'
     docker run --rm --entrypoint sh result-portal:"$tag" -c 'printf "installed_deb_packages="; dpkg-query -W -f="\${binary:Package}\n" | wc -l' 2>/dev/null || true
   done
