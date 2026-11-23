@@ -1,0 +1,4 @@
+0 * * * * /usr/local/sbin/disk-alert.sh >> /var/log/disk-alert.log 2>&1
+# Hourly disk-space check for the non-login service account:
+# sudo crontab -u result-portal -e
+0 * * * * /usr/local/sbin/disk-alert.sh >> /var/log/disk-alert.log 2>&1

@@ -1,0 +1,36 @@
+● result-portal.service - University result portal sample web application
+     Loaded: loaded (/etc/systemd/system/result-portal.service; enabled; preset: enabled)
+     Active: active (running) since Mon 2026-11-23 16:34:29 UTC; 2s ago
+   Main PID: 4211 (gunicorn)
+      Tasks: 3 (limit: 17436)
+     Memory: 41.2M (peak: 41.4M)
+        CPU: 163ms
+     CGroup: /system.slice/result-portal.service
+             ├─4211 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             ├─4213 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             └─4277 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+
+Nov 23 16:34:29 runnervmeozm8 systemd[1]: Started result-portal.service - University result portal sample web application.
+Nov 23 16:34:29 runnervmeozm8 gunicorn[4211]: [2026-11-23 16:34:29 +0000] [4211] [INFO] Starting gunicorn 23.0.0
+Nov 23 16:34:29 runnervmeozm8 gunicorn[4211]: [2026-11-23 16:34:29 +0000] [4211] [INFO] Listening at: http://127.0.0.1:8000 (4211)
+Nov 23 16:34:29 runnervmeozm8 gunicorn[4211]: [2026-11-23 16:34:29 +0000] [4211] [INFO] Using worker: sync
+Nov 23 16:34:29 runnervmeozm8 gunicorn[4213]: [2026-11-23 16:34:29 +0000] [4213] [INFO] Booting worker with pid: 4213
+Nov 23 16:34:29 runnervmeozm8 gunicorn[4277]: [2026-11-23 16:34:29 +0000] [4277] [INFO] Booting worker with pid: 4277
+
+● nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; preset: enabled)
+     Active: active (running) since Mon 2026-11-23 16:34:30 UTC; 1s ago
+       Docs: man:nginx(8)
+   Main PID: 4402 (nginx)
+      Tasks: 5 (limit: 17436)
+     Memory: 4.0M (peak: 4.3M)
+        CPU: 13ms
+     CGroup: /system.slice/nginx.service
+             ├─4402 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+             ├─4403 "nginx: worker process"
+             ├─4404 "nginx: worker process"
+             ├─4405 "nginx: worker process"
+             └─4406 "nginx: worker process"
+
+Nov 23 16:34:30 runnervmeozm8 systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
+Nov 23 16:34:30 runnervmeozm8 systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.
