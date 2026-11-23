@@ -72,6 +72,7 @@ for line in lines:
         p=doc.add_paragraph(style="Title" if len(doc.paragraphs)==0 else "Heading 1"); p.add_run(line[2:].replace("`", ""))
     elif line.startswith("## "): doc.add_heading(line[3:], level=1)
     elif line.startswith("### "): doc.add_heading(line[4:], level=2)
+    elif line.startswith("#### "): doc.add_heading(line[5:], level=3)
     elif line.startswith("- "):
         p=doc.add_paragraph(style="List Bullet"); p.add_run(line[2:].replace("`", ""))
     elif line.startswith("| "): pass
@@ -84,6 +85,7 @@ styles=getSampleStyleSheet()
 styles.add(ParagraphStyle(name="CoverTitle", parent=styles["Title"], fontName="Helvetica-Bold", fontSize=21, leading=26, textColor=colors.HexColor("#12345b"), alignment=TA_CENTER, spaceAfter=14))
 styles.add(ParagraphStyle(name="H1x", parent=styles["Heading1"], fontSize=16, leading=20, textColor=colors.HexColor("#12345b"), spaceBefore=10, spaceAfter=7, keepWithNext=True))
 styles.add(ParagraphStyle(name="H2x", parent=styles["Heading2"], fontSize=12.5, leading=16, textColor=colors.HexColor("#175cd3"), spaceBefore=8, spaceAfter=5, keepWithNext=True))
+styles.add(ParagraphStyle(name="H3x", parent=styles["Heading3"], fontSize=10, leading=12, textColor=colors.HexColor("#175cd3"), spaceBefore=5, spaceAfter=3, keepWithNext=True))
 styles.add(ParagraphStyle(name="Bodyx", parent=styles["BodyText"], fontName="Helvetica", fontSize=8.6, leading=11.2, spaceAfter=3.5))
 styles.add(ParagraphStyle(name="Smallx", parent=styles["BodyText"], fontName="Helvetica", fontSize=7.5, leading=9))
 def footer(canvas, doc):
@@ -92,7 +94,7 @@ def footer(canvas, doc):
     canvas.drawRightString(192*mm, 9*mm, f"Page {doc.page}"); canvas.restoreState()
 pdf=BaseDocTemplate(str(BASE/"REPORT.pdf"),pagesize=A4,leftMargin=18*mm,rightMargin=18*mm,topMargin=17*mm,bottomMargin=20*mm,title="CSA0406 Assignment 5 - Mohamed Aslam H",author="Mohamed Aslam H")
 pdf.addPageTemplates(PageTemplate(id="report",frames=[Frame(18*mm,20*mm,174*mm,260*mm,id="normal")],onPage=footer))
-story=[]; in_code=False; code=[]; table_lines=[]
+story=[]; in_code=False; code=[]; table_lines=[]; in_references=False
 def flush_pdf_table():
     global table_lines
     rows=[]
@@ -121,11 +123,13 @@ for line in lines:
     if line.startswith("|"): table_lines.append(line); continue
     flush_pdf_table()
     if not line.strip(): story.append(Spacer(1,2)); continue
+    if line.strip() == "## References": in_references=True
     if line.startswith("# "):
         story.append(Paragraph(inline(line[2:]),styles["CoverTitle"] if not story else styles["H1x"]))
     elif line.startswith("## "): story.append(Paragraph(inline(line[3:]),styles["H1x"]))
     elif line.startswith("### "): story.append(Paragraph(inline(line[4:]),styles["H2x"]))
-    elif line.startswith("- "): story.append(Paragraph("- " + inline(line[2:]),styles["Bodyx"]))
-    else: story.append(Paragraph(inline(line),styles["Bodyx"]))
+    elif line.startswith("#### "): story.append(Paragraph(inline(line[5:]),styles["H3x"]))
+    elif line.startswith("- "): story.append(Paragraph("- " + inline(line[2:]),styles["Smallx"] if in_references else styles["Bodyx"]))
+    else: story.append(Paragraph(inline(line),styles["Smallx"] if in_references else styles["Bodyx"]))
 flush_pdf_table(); pdf.build(story)
 print(f"Built {BASE/'REPORT.docx'} and {BASE/'REPORT.pdf'}")

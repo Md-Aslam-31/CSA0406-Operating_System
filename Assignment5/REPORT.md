@@ -9,7 +9,7 @@
 **Faculty:** Dr. Jayasakthi Velmurugan K  
 **Nature:** Individual  
 **Course repository:** [Assignment 5 folder](https://github.com/Md-Aslam-31/CSA0406-Operating_System/tree/main/Assignment5)  
-**Linux run evidence:** [Ubuntu CI run](https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/workflows/assignment5-linux.yml)
+**Linux run evidence:** [successful Ubuntu CI run](https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/45236369527)
 
 ## Executive summary
 
@@ -139,8 +139,8 @@ The same Flask source, two Gunicorn workers and CPU-cost `/simulate/login` endpo
 
 | Deployment | Startup, RSS, size, requests/s and mean latency |
 |---|---|
-| Direct Linux | 0.267 s startup; 83.4 MiB RSS; 877.08 requests/s; 28.504 ms mean latency |
-| Docker | 0.415 s startup; 47.1 MiB RSS; 135.1 MiB image; 256.12 requests/s; 97.610 ms mean latency |
+| Direct Linux | 0.339 s startup; 83.5 MiB RSS; 857.97 requests/s; 29.138 ms mean latency |
+| Docker | 0.429 s startup; 46.6 MiB RSS; 135.1 MiB image; 263.61 requests/s; 94.837 ms mean latency |
 | QEMU VM | Unavailable: TCG guest health endpoint did not become reachable within 360 s. See `evidence/vm-benchmark.txt`. |
 
 The run values are from a hosted Ubuntu CI VM. A short synthetic CPU endpoint omits database locks, TLS, real query mix, connection pooling, client think time and a result-day arrival curve. It is evidence for relative environment overhead on this runner only; use the lower p95 capacity from a representative campus test for production.
@@ -187,13 +187,10 @@ The reproducible cost model uses USD $0.0835 per Linux `t3.large` instance-hour 
 
 ## Reproduction
 
-The full Ubuntu job is `bash scripts/run_linux_evidence.sh`. It records distribution/compiler versions and commands in `evidence/`, builds charts under `plots/`, and stores the run bundle as a GitHub Actions artifact. The workflow commits generated outputs even if a later step fails, preserving partial logs for diagnosis. It uses the course repository's `Assignment5` directory to remain consistent with Assignments 1-4. The Git history contains progressive commits for tasks A1-A5 and B1-B4.
+Reproduce from Ubuntu 24.04 with `bash scripts/run_linux_evidence.sh`; command output and charts are saved under `evidence/` and `plots/`. The GitHub Actions workflow runs the same script and commits the generated evidence.
 
 ## References
 
-- Linux kernel documentation: [CFS](https://docs.kernel.org/scheduler/sched-design-CFS.html), [EEVDF](https://docs.kernel.org/scheduler/sched-eevdf.html), [cgroup v2](https://docs.kernel.org/admin-guide/cgroup-v2.html); Linux man-pages: [namespaces](https://man7.org/linux/man-pages/man7/namespaces.7.html).
-- Ubuntu, [24.04 system requirements](https://ubuntu.com/server/docs/reference/installation/system-requirements/); Microsoft, [Server Core footprint](https://learn.microsoft.com/windows-server/administration/server-core/what-is-server-core) and [Windows Server 2025 pricing](https://www.microsoft.com/en-us/windows-server/pricing).
-- systemd, [service units](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html) and [execution environment/security settings](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html); Ansible, [playbooks and idempotency](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html).
-- Docker, [build best practices](https://docs.docker.com/build/building/best-practices/), [multi-stage builds](https://docs.docker.com/build/building/multi-stage/), [container runtime limits](https://docs.docker.com/engine/containers/run/) and [Compose service fields](https://docs.docker.com/reference/compose-file/services/).
-- Kubernetes, [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), [self-healing](https://kubernetes.io/docs/concepts/architecture/self-healing/), [resource requests and limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) and [HPA](https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/); kind, [quick start](https://kind.sigs.k8s.io/docs/user/quick-start/).
-- AWS, [T3 instance specifications and US East on-demand example pricing](https://aws.amazon.com/ec2/instance-types/t3/).
+- Linux: [CFS](https://docs.kernel.org/scheduler/sched-design-CFS.html), [EEVDF](https://docs.kernel.org/scheduler/sched-eevdf.html), [cgroups](https://docs.kernel.org/admin-guide/cgroup-v2.html), [namespaces](https://man7.org/linux/man-pages/man7/namespaces.7.html).
+- Platforms: [Ubuntu 24.04 requirements](https://ubuntu.com/server/docs/reference/installation/system-requirements/), [Windows Server Core](https://learn.microsoft.com/windows-server/administration/server-core/what-is-server-core), [Windows pricing](https://www.microsoft.com/en-us/windows-server/pricing).
+- Operations: [systemd](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html), [Ansible](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html), [Docker](https://docs.docker.com/build/building/best-practices/), [Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), [kind](https://kind.sigs.k8s.io/docs/user/quick-start/), [AWS T3 pricing](https://aws.amazon.com/ec2/instance-types/t3/).

@@ -7,7 +7,7 @@
 **Faculty:** Dr. Jayasakthi Velmurugan K  
 **Nature:** Individual
 
-This assignment is kept in its own `Assignment5` folder in the course repository, consistent with the repository used for Assignments 1-4. The submission includes the nine rubric tasks, executable sample portal, shell scripts, Docker/Compose/Kubernetes configuration, workload measurements, evidence, and `REPORT.pdf` / `REPORT.docx`.
+This assignment is kept in its own `Assignment5` folder in the course repository, consistent with the repository used for Assignments 1-4. The submission includes the nine rubric tasks, executable sample portal, shell scripts, Docker/Compose/Kubernetes configuration, workload measurements, evidence, and the PDF and editable Word reports. [Open the report PDF](REPORT.pdf), [Word report](REPORT.docx), or [successful Linux run](https://github.com/Md-Aslam-31/CSA0406-Operating_System/actions/runs/45236369527).
 
 ## Run
 
@@ -36,6 +36,7 @@ docker compose -f TaskB2/compose.yaml down
 - `evidence/README.md` describes which measurements ran in the Ubuntu workflow and how to read them.
 - B1's original worksheet code is preserved outside its TODOs; both status-count and busiest-client outputs match the expected output, including its 43,200-byte total.
 - VM performance is labeled with the actual KVM or software-emulation mode; don't treat emulated timings as bare-metal KVM results.
+- The hosted Ubuntu runner booted the QEMU TCG guest, but the guest health endpoint was unavailable within the 360-second limit. The report labels this VM benchmark unavailable; run the same VM script on a Linux host with working KVM for measured VM performance.
 - The production cost example uses published AWS us-east-1 Linux EC2 rates and states the capacity assumptions; it excludes database, storage, load balancer, data transfer and tax.
 
 ## Repository
