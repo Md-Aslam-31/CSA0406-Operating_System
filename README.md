@@ -6,5 +6,6 @@ Course assignment work is organized by assignment:
 * [Assignment 2](Assignment2/)
 * [Assignment 3](Assignment3/)
 * [Assignment 4](Assignment4/)
+* [Assignment 5](Assignment5/)
 
 Each assignment folder contains its report, task files and evidence. Linux execution workflows are available in the GitHub Actions tab.

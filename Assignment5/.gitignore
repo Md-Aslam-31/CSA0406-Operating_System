@@ -1,0 +1,11 @@
+__pycache__/
+.venv/
+*.pyc
+*.qcow2
+*.iso
+*.log
+webapp/.env
+webapp/instance/
+webapp/__pycache__/
+TaskB2/.env
+TaskB2/result-portal
