@@ -1,0 +1,15 @@
+FROM python:3.12-slim AS builder
+WORKDIR /build
+COPY webapp/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+FROM python:3.12-slim AS runtime
+WORKDIR /app
+COPY --from=builder /install /usr/local
+RUN groupadd --system portal \
+    && useradd --system --gid portal --home-dir /app --shell /usr/sbin/nologin portal
+COPY webapp/app.py ./app.py
+RUN chown -R portal:portal /app
+USER portal
+EXPOSE 8000
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--access-logfile", "-", "--error-logfile", "-", "app:app"]

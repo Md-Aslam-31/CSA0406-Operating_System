@@ -1,0 +1,49 @@
+services:
+  portal:
+    build:
+      context: ..
+      dockerfile: TaskB2/Dockerfile
+    image: result-portal:compose
+    environment:
+      APP_NAME: University Result Portal
+      DATABASE_URL: postgresql://portal:local-demo-only@database:5432/results
+    ports:
+      - "8000:8000"
+    cpus: 0.50
+    mem_limit: 512m
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: results
+      POSTGRES_USER: portal
+      POSTGRES_PASSWORD: local-demo-only
+    volumes:
+      - result-db:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/01-demo.sql:ro
+    cpus: 0.50
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portal -d results"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+  lms:
+    build:
+      context: ..
+      dockerfile: TaskB2/Dockerfile
+    image: result-portal:compose
+    environment:
+      APP_NAME: Learning Management Service
+    command: ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "--access-logfile", "-", "--error-logfile", "-", "app:app"]
+    ports:
+      - "8001:8000"
+    cpus: 0.50
+    mem_limit: 512m
+    restart: unless-stopped
+volumes:
+  result-db:
