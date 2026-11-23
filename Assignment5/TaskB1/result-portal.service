@@ -1,0 +1,27 @@
+[Unit]
+Description=University result portal sample web application
+After=network.target
+
+[Service]
+Type=simple
+User=result-portal
+Group=result-portal
+WorkingDirectory=/opt/result-portal
+Environment="APP_NAME=University Result Portal"
+Environment=PORT=8000
+ExecStart=/opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+Restart=on-failure
+RestartSec=2
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target
