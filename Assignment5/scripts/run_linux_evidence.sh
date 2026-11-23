@@ -191,7 +191,7 @@ echo '=== B4.1 second workload with independent resource limits ==='
 kubectl apply -f TaskB4/additional-service.yaml | tee evidence/b4-apply.txt
 kubectl rollout status deployment/lms --timeout=180s | tee evidence/b4-lms-ready.txt
 kubectl get deployment lms -o yaml | tee evidence/b4-lms-resources.yaml
-kubectl port-forward service/result-portal 18000:80 > evidence/b3-port-forward.txt 2>&1 &
+kubectl port-forward service/result-portal 18000:80 > evidence/b3-port-forward.txt 2>/dev/null &
 pf_pid=$!
 for _ in $(seq 1 30); do
   if curl -fsS http://127.0.0.1:18000/health >/dev/null; then break; fi

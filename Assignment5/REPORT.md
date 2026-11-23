@@ -13,7 +13,7 @@
 
 ## Executive summary
 
-The assignment builds a small synthetic result portal and follows the requested workflow: understand Linux, design administration, virtualise, containerise, orchestrate, measure, interpret, and decide. The code contains no actual student result data or credentials. The Linux workflow records host observations, runs a hardened systemd service behind Nginx, executes the completed awk exercise and cron schedule, builds and inspects four container image variants, measures the same Flask application directly/on Docker/in a QEMU guest, then deploys it to a three-node kind cluster and verifies pod recovery and scaling under load.
+The assignment builds a small synthetic result portal and follows the requested workflow: understand Linux, design administration, virtualise, containerise, orchestrate, measure, interpret, and decide. The code contains no actual student result data or credentials. The Linux workflow records host observations, runs a hardened systemd service behind Nginx, executes the completed awk exercise and cron schedule, builds and inspects four container image variants, measures the Flask application directly and in Docker, attempts a QEMU guest run, then deploys it to a three-node kind cluster and verifies pod recovery and scaling under load. On the hosted runner QEMU TCG booted the Ubuntu guest and started cloud-init, but the application health check did not become reachable within 360 seconds; the VM result is clearly marked unavailable, not presented as a successful benchmark.
 
 The engineering decision is a hybrid: keep routine traffic and a three-replica baseline on the university's existing machines, then provision cloud capacity before each of the two annual result releases. Keep the authoritative records behind a private database endpoint with encryption, backups and audited access. The measured request rate and computed replica/cost table are in `evidence/benchmark.csv` and `evidence/b4-capacity-cost.txt`; all figures are specific to this hosted test and must not be presented as a capacity guarantee for the real database-backed portal.
 
@@ -129,19 +129,19 @@ Total bytes sent: 43200
 
 The Dockerfile is built and run with Compose. The portal is non-root; PostgreSQL uses a named `result-db` volume, and the portal waits on a database health check. Compose applies 0.5 CPU/512 MiB per service and binds app ports to loopback. `/results/10001` reads synthetic seed data. The database is restarted while retaining the volume; the same row must remain. `/results/99999` returns 404 as the not-found boundary case. The workflow captures `docker ps`, `docker stats`, image layers, bytes, package counts and `docker exec ... whoami`.
 
-The evidence compares `python:3.12`, `python:3.12-slim`, a slim multi-stage build and Ubuntu 24.04. `evidence/b2-images.txt` records build duration, image bytes, layer history and installed Debian package count; `plots/image-size.png` visualizes size. Fewer OS packages reduce image transfer and patch surface, but package count is only a proxy, not a CVE scan. The multi-stage build avoids carrying builder artifacts into the runtime. A transfer lower bound at effective bandwidth B is image_bytes x 8 / B; actual pulls also depend on shared cached layers and network contention. Use the measured sizes rather than assuming the slim or multi-stage image wins for every Python app.
+The evidence compares `python:3.12`, `python:3.12-slim`, a slim multi-stage build and Ubuntu 24.04. `evidence/b2-images.txt` records build duration, image bytes, layer history and installed Debian package count; `plots/image-size.png` visualizes size. This run measured 1,079.5 MiB (full Python), 135.1 MiB (slim Python), 127.4 MiB (multi-stage) and 141.9 MiB (Ubuntu), respectively. Fewer OS packages reduce image transfer and patch surface, but package count is only a proxy, not a CVE scan. The multi-stage build avoids carrying builder artifacts into the runtime. A transfer lower bound at effective bandwidth B is image_bytes x 8 / B; actual pulls also depend on shared cached layers and network contention. Use the measured sizes rather than assuming the slim or multi-stage image wins for every Python app.
 
 If a full Ubuntu image were chosen, it would carry a general OS base and more packages to maintain; a multi-stage build keeps only runtime dependencies. Build time and actual disk sizes are recorded. This app's pure-Python packages need no compiler in runtime. A real vulnerability count requires a current scanner/database and a selected advisory policy; the package-count comparison alone does not prove the image is vulnerability-free.
 
 ### B3 - Compare bare metal, VM and container (8 marks)
 
-The same Flask source, two Gunicorn workers and CPU-cost `/simulate/login` endpoint are used on the Ubuntu host, in Docker and in a QEMU/KVM Ubuntu guest. `/health` is a lightweight readiness route. The benchmark runs ApacheBench with 2,000 requests and concurrency 25 after readiness. It records first-health startup time, RSS, disk/image footprint, requests/second and mean latency in `evidence/benchmark.csv`; raw ApacheBench summaries are `benchmark-host.txt`, `benchmark-container.txt` and `benchmark-vm.txt`. The VM entry also records assigned RAM and whether KVM or TCG acceleration ran. TCG is instruction emulation and has a much larger CPU penalty; interpret it as a functional virtualized deployment, not production KVM throughput.
+The same Flask source, two Gunicorn workers and CPU-cost `/simulate/login` endpoint are benchmarked on the Ubuntu host and in Docker. `/health` is a lightweight readiness route. The benchmark runs ApacheBench with 2,000 requests and concurrency 25 after readiness. It records first-health startup time, RSS, disk/image footprint, requests/second and mean latency in `evidence/benchmark.csv`; raw ApacheBench summaries are `benchmark-host.txt` and `benchmark-container.txt`. A QEMU/KVM Ubuntu guest was also attempted with 1,536 MiB assigned RAM. This hosted environment had no usable KVM device, so QEMU used TCG; the guest booted and started its service, but the forwarded health endpoint remained unreachable during the 360-second check. Accordingly, no VM performance row is fabricated. For a complete VM timing, rerun `scripts/run_vm_benchmark.sh` on a Linux host with working KVM.
 
 | Deployment | Startup, RSS, size, requests/s and mean latency |
 |---|---|
-| Direct Linux | See `evidence/benchmark.csv` (row `bare-metal`) |
-| Docker | See `evidence/benchmark.csv` (row `container`) |
-| QEMU VM | See `evidence/benchmark.csv` (row `vm`) and `evidence/vm-benchmark.txt` for acceleration mode |
+| Direct Linux | 0.267 s startup; 83.4 MiB RSS; 877.08 requests/s; 28.504 ms mean latency |
+| Docker | 0.415 s startup; 47.1 MiB RSS; 135.1 MiB image; 256.12 requests/s; 97.610 ms mean latency |
+| QEMU VM | Unavailable: TCG guest health endpoint did not become reachable within 360 s. See `evidence/vm-benchmark.txt`. |
 
 The run values are from a hosted Ubuntu CI VM. A short synthetic CPU endpoint omits database locks, TLS, real query mix, connection pooling, client think time and a result-day arrival curve. It is evidence for relative environment overhead on this runner only; use the lower p95 capacity from a representative campus test for production.
 
@@ -187,7 +187,7 @@ The reproducible cost model uses USD $0.0835 per Linux `t3.large` instance-hour 
 
 ## Reproduction
 
-The full Ubuntu job is `bash scripts/run_linux_evidence.sh`. It records distribution/compiler versions and commands in `evidence/`, builds charts under `plots/`, and stores the successful run bundle as a GitHub Actions artifact. The workflow also commits generated outputs after success. It uses the course repository's `Assignment5` directory to remain consistent with Assignments 1-4. The Git history contains progressive commits for tasks A1-A5 and B1-B4.
+The full Ubuntu job is `bash scripts/run_linux_evidence.sh`. It records distribution/compiler versions and commands in `evidence/`, builds charts under `plots/`, and stores the run bundle as a GitHub Actions artifact. The workflow commits generated outputs even if a later step fails, preserving partial logs for diagnosis. It uses the course repository's `Assignment5` directory to remain consistent with Assignments 1-4. The Git history contains progressive commits for tasks A1-A5 and B1-B4.
 
 ## References
 

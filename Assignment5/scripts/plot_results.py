@@ -30,7 +30,7 @@ fig.savefig(base / "plots/deployment-comparison.png", dpi=180)
 
 text = (base / "evidence/b2-images.txt").read_text(encoding="utf-8")
 variants, sizes = [], []
-for match in re.finditer(r"image=\[\"result-portal:([^\"]+)\"\] bytes=(\d+)", text):
+for match in re.finditer(r'image=\["?result-portal:([^\]" ]+)"?\] bytes=(\d+)', text):
     variants.append(match.group(1))
     sizes.append(int(match.group(2)) / 1024 / 1024)
 if not variants:
