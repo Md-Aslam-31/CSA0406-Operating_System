@@ -9,3 +9,11 @@ The workflow built all seven task programs, executed the completed TODO programs
 ## OnlineGDB screenshot
 
 - onlinegdb/task05-replacement-lab.jpg: OnlineGDB compile/run view for Task05/replacement_lab.c.
+
+## Complete OnlineGDB run screenshots
+
+- `onlinegdb/linked_demo-full.jpg` — linked program with `crypto.c` and checksum output.
+- `onlinegdb/dlopen_demo-full.jpg` — OnlineGDB missing `.so` diagnostic; native task artifacts are retained in evidence.
+- `onlinegdb/paging_lab-full.jpg`, `segment_lab-full.jpg`, `virtual_memory-full.jpg` — Q2–Q4 outputs.
+- `onlinegdb/replacement_lab-full.jpg` and `replacement_lab-output-start.jpg` — Q5 benchmark end and locality table.
+- `onlinegdb/disk_analysis-full.jpg`, `memory_plan-full.jpg` — Q6/Q7 outputs.

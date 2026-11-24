@@ -151,3 +151,44 @@ Run all with `bash scripts/run_linux_evidence.sh` from `Assignment2/`. The workf
 This capture shows `Task02/scheduling.c` compiled and run in OnlineGDB. It displays the FCFS Gantt output and the first completion-time rows; the complete output for every scheduling policy remains in `evidence/task02-scheduling.txt`.
 
 ![OnlineGDB run of Assignment 2 CPU scheduling simulator](evidence/onlinegdb/task02-scheduling.jpg)
+## Full OnlineGDB program runs
+
+The complete C sources were pasted into OnlineGDB and executed. Longer terminal output is split into beginning and ending views; the committed raw output files remain the complete transcripts.
+
+### Q1 — process creation and state
+
+The full `Task01/process_demo.c` source is retained in the repository. It created three short-lived children, captured a `ps` process snapshot, inspected each child through `/proc`, and reaped all children with exit statuses. The expanded OnlineGDB terminal screenshots show the process table, per-child status, and final wait results; the terminal output is split across views to keep the text readable.
+
+![Expanded OnlineGDB process run and complete terminal output](evidence/onlinegdb/process-demo-full.jpg)
+
+![Process snapshot output, beginning view](evidence/onlinegdb/process_demo-output-first.jpg)
+
+### Q2 — scheduling algorithms
+
+The full `Task02/scheduling.c` source compares FCFS, non-preemptive SJF, SRTF, non-preemptive priority and Round Robin at four quanta. The expanded OnlineGDB views show per-process completion, turnaround, waiting and response values, Gantt sequences, average metrics, context switches and the successful exit status. The raw transcript remains available in `evidence/task02-scheduling.txt`.
+
+![Expanded OnlineGDB scheduling run and final output](evidence/onlinegdb/scheduling-full.jpg)
+
+![Scheduling policy output, beginning view](evidence/onlinegdb/scheduling-output-start.jpg)
+
+### Q3 — parallel thread pool
+
+![Thread pool source and benchmark output](evidence/onlinegdb/thread_pool-full.jpg)
+
+### Q4 — IPC benchmark
+
+OnlineGDB reported the pipe/shared-memory measurements before its sandbox terminated the 100 MiB POSIX shared-memory case with exit code 135 (SIGBUS). The complete 1/10/100 MiB benchmark succeeded on Ubuntu and is recorded in `evidence/task04-ipc.csv`; use that CSV as the completed benchmark result. The OnlineGDB screenshot documents the sandbox limitation.
+
+![OnlineGDB IPC run and sandbox termination](evidence/onlinegdb/ipc_benchmark-full.jpg)
+
+### Q5 — bounded buffer and synchronization
+
+The bounded-buffer program verified all 10,000 items exactly once in the 1-producer/1-consumer and 4-producer/4-consumer cases, then ran 100 repeated stress runs and lock-scope measurements. The second run compares mutex, spin-lock and atomic counter approaches.
+
+![Bounded buffer correctness, stress and performance output](evidence/onlinegdb/bounded_buffer-full.jpg)
+
+![Synchronization primitive benchmark output](evidence/onlinegdb/sync_primitives_bench-full.jpg)
+
+### Q6 — Banker safety algorithm
+
+![Banker safe/unsafe state and request results](evidence/onlinegdb/banker-full.jpg)

@@ -12,3 +12,10 @@ Reproduce the Linux run with `bash scripts/run_linux_evidence.sh` in Ubuntu 24.0
 ## OnlineGDB screenshot
 
 - onlinegdb/task02-fragmentation-demo.jpg: OnlineGDB compile/run view for Task02/fragmentation_demo.c.
+
+## Complete OnlineGDB run screenshots
+
+- `onlinegdb/allocation_lab-full.jpg` — allocation math and output.
+- `onlinegdb/task02-fragmentation-demo.jpg` — contiguous/indexed allocation demonstration.
+- `onlinegdb/scheduler_sim-full.jpg` — 10,000-request scheduling simulation and starvation illustration.
+- `onlinegdb/streaming_sim-full.jpg` — streaming latency and origin-read model.

@@ -181,3 +181,20 @@ The assignment PDF and evaluation key supplied for this work are the controlling
 This capture shows `Task-07/flush_demo.c` compiled and run in OnlineGDB. The terminal displays `shell: running job 2` and exit code 0. The complete task output and evidence remain in `evidence/`.
 
 ![OnlineGDB run of Assignment 1 Task 7 flush demo](evidence/onlinegdb/task07-flush-demo.jpg)
+## Full OnlineGDB program runs
+
+The complete task sources were pasted into the C compiler and run. The repository source files remain the authoritative complete code; the screenshots show the live OnlineGDB source and resulting terminal output.
+
+### Task 6 — buffered file copy
+
+The full file-copy program generated a 10,000-byte sample and reported the `read()` call counts for 1-byte, 512-byte, and 4,096-byte buffers. The boundary test also verified copied content and invalid buffer/source/destination cases.
+
+![Full Task 6 file copy source and output](evidence/onlinegdb/copy_file-full.jpg)
+
+![Task 6 boundary test PASS output](evidence/onlinegdb/task06-boundary-copy-full.jpg)
+
+### Task 7 — shell job behavior
+
+The parent and child processes ran with exit statuses 0 and 3; the flush demo capture above shows the buffered-output boundary.
+
+![Full Task 7 shell jobs source and output](evidence/onlinegdb/task07-shell-jobs-full.jpg)

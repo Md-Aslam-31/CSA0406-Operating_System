@@ -8,3 +8,9 @@ The GitHub Actions run artifact is the Linux evidence bundle. The hosted runner 
 ## OnlineGDB screenshot
 
 - onlinegdb/taskb4-capacity-calculation.jpg: standalone OnlineGDB Python calculation based on measured container throughput; the full script and CSV evidence are stored separately.
+
+## OnlineGDB output screenshots
+
+- `onlinegdb/capacity_estimate-full.jpg` and `capacity_estimate-output-start.jpg` — complete capacity script using the actual committed benchmark CSV; only the default CSV path is flattened for OnlineGDB.
+- `onlinegdb/taskb4-capacity-calculation.jpg` — preliminary standalone capacity arithmetic, superseded by the full script run.
+- Shell/service/container/Kubernetes output remains in the matching `b1-*`, `b2-*`, and `b3-*` evidence files; those require an Ubuntu/Docker/kind environment and are not runnable in OnlineGDB.

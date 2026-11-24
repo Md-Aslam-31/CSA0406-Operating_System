@@ -184,3 +184,24 @@ The runner compiles every C program with gcc -std=c11 -Wall -Wextra -pthread, ca
 This capture shows `Task02/fragmentation_demo.c` compiled and run in OnlineGDB. It demonstrates the fragmented free-space layout, failure of the contiguous request, successful indexed allocation, and exit code 0.
 
 ![OnlineGDB run of Assignment 4 fragmentation demo](evidence/onlinegdb/task02-fragmentation-demo.jpg)
+## Full OnlineGDB program runs
+
+These captures show complete C program runs with output and exit status. The task source files in this repository contain the full implementations.
+
+### Task 2 — contiguous and indexed allocation
+
+![Allocation comparison output](evidence/onlinegdb/allocation_lab-full.jpg)
+
+The earlier Task 2 demo above shows the contiguous-allocation failure and indexed-allocation success.
+
+### Task 4 — scheduling simulator
+
+The simulator processed 10,000 seeded requests for the light, medium and heavy arrival loads and reported average movement, average wait and maximum wait for each policy. Its ending output includes the SSTF starvation illustration and exit code 0.
+
+![Scheduler simulation full run output](evidence/onlinegdb/scheduler_sim-full.jpg)
+
+### Task 6 — streaming workload model
+
+The run reports p50/p95/p99/max latencies and origin reads for the local HDD pool and SSD/CDN cache model, plus the deterministic model assumptions and exit code 0.
+
+![Streaming simulation full run output](evidence/onlinegdb/streaming_sim-full.jpg)

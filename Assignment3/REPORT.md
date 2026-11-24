@@ -173,3 +173,34 @@ Rebuild with `bash scripts/run_linux_evidence.sh` from `Assignment3/`. Measureme
 This capture shows `Task05/replacement_lab.c` compiled and run in OnlineGDB. It includes the replacement-policy measurements, FIFO hand-check, and exit code 0. The raw result files remain in `evidence/`.
 
 ![OnlineGDB run of Assignment 3 page replacement lab](evidence/onlinegdb/task05-replacement-lab.jpg)
+## Full OnlineGDB program runs
+
+The complete task sources were entered into OnlineGDB. The linked-library task was run with both `main.c` and `crypto.c` present in the OnlineGDB project; the screenshots preserve the source/output views.
+
+### Q1 — linking and loading
+
+The linked program printed the crypto library version and checksum. The separate `dlopen` program requires a prebuilt `libbankcrypto.so`; OnlineGDB's normal single-run build does not create that shared object, so its screenshot records the missing-library diagnostic. The Ubuntu evidence directory contains the task's normal build and run artifacts.
+
+![Linked demo with crypto.c and output](evidence/onlinegdb/linked_demo-full.jpg)
+
+![Dynamic loading diagnostic in OnlineGDB](evidence/onlinegdb/dlopen_demo-full.jpg)
+
+### Q2–Q4 — paging, segmentation and virtual memory
+
+![Paging lab translation and boundary output](evidence/onlinegdb/paging_lab-full.jpg)
+
+![Segmentation mappings and protected-page result](evidence/onlinegdb/segment_lab-full.jpg)
+
+![Virtual memory, working-set and replacement output](evidence/onlinegdb/virtual_memory-full.jpg)
+
+### Q5–Q7 — replacement, disk and memory planning
+
+The replacement-policy run includes separate views for the locality table and the randomized benchmark/hand-check summary.
+
+![Replacement policy benchmark output](evidence/onlinegdb/replacement_lab-full.jpg)
+
+![Beginning of locality benchmark output](evidence/onlinegdb/replacement_lab-output-start.jpg)
+
+![Disk reliability analysis output](evidence/onlinegdb/disk_analysis-full.jpg)
+
+![Memory planning and fault simulation output](evidence/onlinegdb/memory_plan-full.jpg)

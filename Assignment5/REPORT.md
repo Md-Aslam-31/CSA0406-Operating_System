@@ -195,8 +195,18 @@ Reproduce from Ubuntu 24.04 with `bash scripts/run_linux_evidence.sh`; command o
 - Platforms: [Ubuntu 24.04 requirements](https://ubuntu.com/server/docs/reference/installation/system-requirements/), [Windows Server Core](https://learn.microsoft.com/windows-server/administration/server-core/what-is-server-core), [Windows pricing](https://www.microsoft.com/en-us/windows-server/pricing).
 - Operations: [systemd](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html), [Ansible](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html), [Docker](https://docs.docker.com/build/building/best-practices/), [Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), [kind](https://kind.sigs.k8s.io/docs/user/quick-start/), [AWS T3 pricing](https://aws.amazon.com/ec2/instance-types/t3/).
 
-## OnlineGDB output screenshot
+## Preliminary capacity arithmetic screenshot
 
-This capture shows the capacity arithmetic in OnlineGDB Python 3 using the measured container throughput of 263.61 requests/s from `evidence/benchmark.csv`. The full `TaskB4/capacity_estimate.py` reads that CSV from the repository, which OnlineGDB does not have in its isolated workspace; therefore, the screenshot is a standalone reproduction of the same calculation, not a run of the full file-reading script. The full script output is preserved in `evidence/`.
+This first standalone calculation used an earlier throughput value and is superseded by the complete file-reading run in “Complete capacity estimator run in OnlineGDB” below. The final run reads the committed benchmark CSV and reports 303.12 measured container requests/s.
 
-![OnlineGDB Python capacity calculation using measured container throughput](evidence/onlinegdb/taskb4-capacity-calculation.jpg)
+![Preliminary OnlineGDB capacity arithmetic](evidence/onlinegdb/taskb4-capacity-calculation.jpg)
+## Complete capacity estimator run in OnlineGDB
+
+The full `TaskB4/capacity_estimate.py` was entered and run with the assignment's actual `evidence/benchmark.csv` data. OnlineGDB uses a flat project directory, so the run copy changed only the default CSV path from `evidence/benchmark.csv` to `benchmark.csv`; the script logic and CSV values were unchanged. The measured container rate is 303.12 requests/s. The screenshots show all 1/5/10 request-per-student scenarios and the annual compute-only cost summary. The original script and unchanged benchmark CSV remain in the repository.
+
+![Capacity estimator scenarios and final summary](evidence/onlinegdb/capacity_estimate-full.jpg)
+
+![Capacity estimator scenario rows](evidence/onlinegdb/capacity_estimate-output-start.jpg)
+
+OnlineGDB cannot run the Linux shell, Docker Compose, PostgreSQL, Kubernetes/kind or system-service tasks in this assignment. Their complete command outputs and health/recovery evidence are retained under `evidence/` and are reproducible with `bash scripts/run_linux_evidence.sh` on Ubuntu 24.04.
+
