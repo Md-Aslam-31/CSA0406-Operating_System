@@ -117,7 +117,7 @@ for line in lines:
         story.extend([im,Paragraph(inline(image_match.group(1)),styles["Smallx"]),Spacer(1,5)])
         continue
     if line.startswith("```"):
-        if in_code: story.append(Preformatted("\n".join(code),ParagraphStyle("code",fontName="Courier",fontSize=7.2,leading=9,backColor=colors.HexColor("#f2f4f7"),borderPadding=5))); story.append(Spacer(1,5)); code=[]; in_code=False
+        if in_code: story.append(Preformatted("\n".join(code),ParagraphStyle("code",fontName="Courier",fontSize=6.4,leading=7.6,backColor=colors.HexColor("#f2f4f7"),borderPadding=4),maxLineLength=104,splitChars=" \t,;{}()[]+-*/=<>:&|",newLineChars="")); story.append(Spacer(1,5)); code=[]; in_code=False
         else: flush_pdf_table(); in_code=True
         continue
     if in_code: code.append(line); continue

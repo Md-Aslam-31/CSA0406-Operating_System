@@ -205,3 +205,624 @@ The simulator processed 10,000 seeded requests for the light, medium and heavy a
 The run reports p50/p95/p99/max latencies and origin reads for the local HDD pool and SSD/CDN cache model, plus the deterministic model assumptions and exit code 0.
 
 ![Streaming simulation full run output](evidence/onlinegdb/streaming_sim-full.jpg)
+
+## Appendix - Full source code listings
+
+This appendix reproduces all assignment programs, implementation scripts, and deployment/workflow configuration. Evidence screenshots and raw outputs appear earlier in this report and under `evidence/`. The exact source files are also retained at the listed repository paths. Report line wrapping is visual only.
+
+### `scripts/plot_results.py`
+
+```python
+from pathlib import Path
+import csv
+import re
+import matplotlib.pyplot as plt
+
+base = Path(__file__).resolve().parent.parent
+lines = (base / "evidence/task04-simulation.csv").read_text().splitlines()
+header_index = next(i for i, line in enumerate(lines) if line.startswith("load,policy,"))
+rows = list(csv.DictReader(lines[header_index:]))
+fig, axes = plt.subplots(1, 3, figsize=(10, 3.7), sharey=True)
+for ax, load in zip(axes, ["light", "medium", "heavy"]):
+    group = [r for r in rows if r["load"] == load]
+    ax.bar([r["policy"] for r in group], [float(r["max_wait_ms"]) for r in group], color="#2673b8")
+    ax.set_title(load.title() + " load")
+    ax.tick_params(axis="x", rotation=45)
+    ax.grid(axis="y", alpha=.25)
+axes[0].set_ylabel("Maximum queue wait (ms)")
+fig.suptitle("Disk scheduling: maximum wait in seeded 10,000-request model")
+fig.tight_layout()
+fig.savefig(base / "plots/scheduler_wait.png", dpi=170)
+
+text = (base / "evidence/task06-simulation.txt").read_text()
+names = ["Local HDD pool (4 disks, no edge cache)", "SSD edge cache plus HDD origin (95% hits)"]
+values = []
+for name in names:
+    m = re.search(re.escape(name) + r":.*?p95=([0-9.]+) ms", text)
+    if m:
+        values.append(float(m.group(1)))
+fig, ax = plt.subplots(figsize=(7, 4))
+ax.bar(["Four HDDs\n(no edge cache)", "SSD/CDN cache\n(95% modeled hits)"], values, color=["#b54708", "#18805a"])
+ax.set_ylabel("95th percentile startup lookup latency (ms)")
+ax.set_title("Streaming start requests in stated queue model")
+ax.grid(axis="y", alpha=.25)
+fig.tight_layout()
+fig.savefig(base / "plots/streaming_latency.png", dpi=170)
+```
+
+### `scripts/run_linux_evidence.sh`
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+mkdir -p evidence plots
+{
+  . /etc/os-release
+  printf 'Linux: %s\nCompiler: ' "$PRETTY_NAME"
+  gcc --version | head -n1
+  echo 'Compile flags: gcc -std=c11 -O2 -Wall -Wextra -pthread'
+  echo 'Filesystem mount:'
+  findmnt -T . -o TARGET,SOURCE,FSTYPE
+} | tee evidence/build-environment.txt
+
+for spec in \
+  'Task02/allocation_todo.c:Task02/allocation_todo:' \
+  'Task02/fragmentation_demo.c:Task02/fragmentation_demo:' \
+  'Task02/allocation_lab.c:Task02/allocation_lab:' \
+  'Task04/disk_todo.c:Task04/disk_todo:' \
+  'Task04/scheduler_sim.c:Task04/scheduler_sim:' \
+  'Task06/streaming_sim.c:Task06/streaming_sim:-lm'; do
+  src=$(echo "$spec" | cut -d: -f1)
+  bin=$(echo "$spec" | cut -d: -f2)
+  libs=$(echo "$spec" | cut -d: -f3)
+  command="gcc -std=c11 -O2 -Wall -Wextra -pthread $src -o $bin $libs"
+  echo "$command" | tee -a evidence/build-environment.txt
+  eval "$command"
+done
+
+timeout 30s Task02/allocation_todo | tee evidence/task02-allocation.txt
+timeout 30s Task02/fragmentation_demo | tee evidence/task02-fragmentation.txt
+timeout 30s Task02/allocation_lab | tee evidence/task02-costs.txt
+timeout 30s Task04/disk_todo | tee evidence/task04-todo.txt
+timeout 120s Task04/scheduler_sim | tee evidence/task04-simulation.csv
+bash Task03/inspect_filesystem.sh
+bash Task04/inspect_scheduler.sh
+timeout 120s Task06/streaming_sim | tee evidence/task06-simulation.txt
+python3 scripts/plot_results.py
+
+grep -q 'E (10 blocks) contiguous: start 19' evidence/task02-allocation.txt
+grep -q 'largest run=7, contiguous 10-block allocation start=-1' evidence/task02-fragmentation.txt
+grep -q 'FCFS   53 98 183 37 122 14 124 65 67  -> 640 cylinders' evidence/task04-todo.txt
+grep -q 'SSTF   53 65 67 37 14 98 122 124 183  -> 236 cylinders' evidence/task04-todo.txt
+grep -q '183 cylinders (+199 for the jump)' evidence/task04-todo.txt
+grep -q 'origin_reads=5057/100000' evidence/task06-simulation.txt
+test -s evidence/task03-filesystem.txt
+test -s evidence/task04-device.txt
+test -s plots/scheduler_wait.png && test -s plots/streaming_latency.png
+echo 'All Assignment 4 programs ran; expected allocation/SSTF outputs and evidence checks passed.' | tee evidence/verification.txt
+```
+
+### `Task02/allocation_lab.c`
+
+```c
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
+
+int main(void)
+{
+    const uint64_t file_bytes = UINT64_C(4) * 1024 * 1024 * 1024;
+    const uint64_t block_bytes = 4 * 1024;
+    const uint64_t blocks = file_bytes / block_bytes;
+    const uint64_t pointers_per_block = block_bytes / sizeof(uint32_t);
+    const uint64_t inode_blocks = 12 + pointers_per_block +
+        pointers_per_block * pointers_per_block +
+        pointers_per_block * pointers_per_block * pointers_per_block;
+    const uint64_t disk_bytes = UINT64_C(4000000000000); /* decimal 4 TB */
+    const uint64_t disk_blocks = disk_bytes / block_bytes;
+    const uint64_t bitmap_bytes = (disk_blocks + 7) / 8;
+    const uint64_t fat_bytes = disk_blocks * sizeof(uint32_t);
+
+    printf("4 GiB file / 4 KiB blocks: %" PRIu64 " data blocks\n", blocks);
+    printf("Last-block access (inode/directory metadata excluded): contiguous=1 data read; linked=%" PRIu64 " block reads; FAT-in-memory=%" PRIu64 " RAM next-pointer lookups + 1 data read; two-level indexed=2 index reads + 1 data read\n",
+           blocks, blocks - 1);
+    printf("4-byte inode pointers per 4 KiB block: %" PRIu64 "\n", pointers_per_block);
+    printf("12 direct + single + double + triple indirect: %" PRIu64 " blocks = %.0f bytes = %.2f TiB (theoretical pointer-address limit)\n",
+           inode_blocks, (double)inode_blocks * (double)block_bytes,
+           (double)inode_blocks * (double)block_bytes / (1024.0 * 1024 * 1024 * 1024));
+    printf("4 TB decimal disk, 4 KiB blocks: %" PRIu64 " whole blocks\n", disk_blocks);
+    printf("free-space bitmap: %" PRIu64 " bytes = %.2f MiB\n", bitmap_bytes,
+           (double)bitmap_bytes / (1024.0 * 1024));
+    printf("4-byte FAT for that many blocks: %" PRIu64 " bytes = %.2f MiB\n", fat_bytes,
+           (double)fat_bytes / (1024.0 * 1024));
+    return 0;
+}
+```
+
+### `Task02/allocation_todo.c`
+
+```c
+#include <stdio.h>
+#include <string.h>
+#define BLOCKS 32
+char disk[BLOCKS];                           /* '.' = free, otherwise the file letter */
+/* Contiguous allocation, first fit: returns the start block or -1. */
+int alloc_contiguous(char file, int size)
+{
+    if (size <= 0 || size > BLOCKS) return -1;
+    int run = 0;
+    for (int b = 0; b < BLOCKS; b++) {
+        if (disk[b] == '.') {
+            run++;
+            if (run == size) {
+                int start = b - size + 1;
+                for (int i = start; i <= b; i++) disk[i] = file;
+                return start;
+            }
+        } else {
+            run = 0;
+        }
+    }
+    return -1;
+}
+/* Indexed allocation: one index block plus any free data blocks. */
+int alloc_indexed(char file, int size, int index[])
+{
+    int got = 0, idx = -1;
+    for (int b = 0; b < BLOCKS && got <= size; b++) {
+        if (disk[b] != '.') continue;
+        if (idx < 0) idx = b;                /* first free block holds the index */
+        else index[got++] = b;
+        if (got == size) break;
+    }
+    if (idx < 0 || got < size) return -1;
+    disk[idx] = (char)(file + 32);           /* lowercase letter = index block */
+    for (int i = 0; i < size; i++) disk[index[i]] = file;
+    return idx;
+}
+void release(char file)
+{
+    for (int b = 0; b < BLOCKS; b++) if (disk[b] == file) disk[b] = '.';
+}
+int main(void)
+{
+    memset(disk, '.', BLOCKS);
+    alloc_contiguous('A', 6);
+    alloc_contiguous('B', 8);
+    alloc_contiguous('C', 5);
+    alloc_contiguous('D', 7);
+    release('B');
+    release('D');
+    printf("%.32s\n", disk);
+    printf("E (10 blocks) contiguous: start %d\n", alloc_contiguous('E', 10));
+    int index[16];
+    int ib = alloc_indexed('E', 10, index);
+    printf("E (10 blocks) indexed: index block %d, data blocks", ib);
+    for (int i = 0; i < 10; i++) printf(" %d", index[i]);
+    printf("\n%.32s\n", disk);
+    return 0;
+}
+```
+
+### `Task02/fragmentation_demo.c`
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+#define BLOCKS 32
+static char disk[BLOCKS];
+static int contiguous(int size)
+{
+    int run = 0;
+    for (int i = 0; i < BLOCKS; i++) {
+        run = disk[i] == '.' ? run + 1 : 0;
+        if (run == size) return i - size + 1;
+    }
+    return -1;
+}
+static int indexed(int size, int *index, int *data)
+{
+    int got = 0, root = -1;
+    for (int i = 0; i < BLOCKS; i++) if (disk[i] == '.') {
+        if (root < 0) root = i;
+        else data[got++] = i;
+        if (got == size) break;
+    }
+    if (root < 0 || got < size) return -1;
+    disk[root] = 'i'; *index = root;
+    for (int i = 0; i < size; i++) disk[data[i]] = 'X';
+    return 0;
+}
+int main(void)
+{
+    memset(disk, '.', sizeof disk);
+    memset(disk, 'A', 5); memset(disk + 10, 'C', 5); memset(disk + 20, 'E', 5);
+    printf("fragmented layout: %.32s\n", disk);
+    printf("free blocks=17, largest run=7, contiguous 10-block allocation start=%d\n", contiguous(10));
+    int index, data[10];
+    if (indexed(10, &index, data) != 0) return 1;
+    printf("indexed 10-block allocation succeeds: index block=%d, data blocks", index);
+    for (int i = 0; i < 10; i++) printf(" %d", data[i]);
+    putchar('\n');
+    return 0;
+}
+```
+
+### `Task03/inspect_filesystem.sh`
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+mkdir -p evidence
+{
+  echo '=== Host filesystem containing the assignment ==='
+  findmnt -T . -o TARGET,SOURCE,FSTYPE,OPTIONS
+  sample=$(mktemp)
+  printf 'assignment-4-filesystem-inspection\n' > "$sample"
+  stat -c 'stat: inode=%i size=%s bytes block_size=%o blocks=%b mode=%A' "$sample"
+  echo 'df -i for working filesystem:'
+  df -i .
+  echo 'ls -i sample:'
+  ls -i "$sample"
+  rm -f "$sample"
+  src=$(findmnt -n -o SOURCE -T .)
+  echo "tune2fs attempt for host source: $src"
+  if command -v tune2fs >/dev/null 2>&1 && [[ -b "$src" ]]; then
+    sudo -n tune2fs -l "$src" 2>&1 | head -n 25 || true
+  else
+    echo 'Host mount is not a directly accessible ext filesystem block device in this runner.'
+  fi
+  echo '=== Created ext4 image inspected with dumpe2fs ==='
+  img=$(mktemp --suffix=.img)
+  truncate -s 64M "$img"
+  mkfs.ext4 -F -q "$img"
+  dumpe2fs -h "$img" 2>&1 | grep -E 'Filesystem UUID|Filesystem features|Block count|Free blocks|Block size|Inode count|Free inodes|Inode size|Journal features|Checksum' || true
+  rm -f "$img"
+} | tee evidence/task03-filesystem.txt
+```
+
+### `Task04/disk_todo.c`
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#define N 8
+#define MAXCYL 199
+int req[N] = {98, 183, 37, 122, 14, 124, 65, 67};
+int cmp(const void *a, const void *b) { return *(const int *)a - *(const int *)b; }
+void show(const char *name, const int order[], int n, int head, int extra)
+{
+    int total = 0, pos = head;
+    printf("%-6s %d", name, head);
+    for (int i = 0; i < n; i++) {
+        printf(" %d", order[i]);
+        total += abs(order[i] - pos);
+        pos = order[i];
+    }
+    printf("  -> %d cylinders\n", total + extra);
+}
+int main(void)
+{
+    int head = 53, order[N + 2];
+    show("FCFS", req, N, head, 0);
+    /* SSTF: always serve the nearest pending request */
+    int done[N] = {0}, pos = head;
+    for (int k = 0; k < N; k++) {
+        int best = -1, distance = MAXCYL + 1;
+        for (int j = 0; j < N; j++) {
+            int d = abs(req[j] - pos);
+            if (!done[j] && d < distance) { best = j; distance = d; }
+        }
+        done[best] = 1;
+        order[k] = req[best];
+        pos = req[best];
+    }
+    show("SSTF", order, N, head, 0);
+    /* SCAN (towards cylinder 0 first, like an elevator) */
+    int s[N];
+    for (int i = 0; i < N; i++) s[i] = req[i];
+    qsort(s, N, sizeof s[0], cmp);
+    int n = 0, i;
+    for (i = N - 1; i >= 0; i--) if (s[i] < head) order[n++] = s[i];
+    order[n++] = 0;
+    for (i = 0; i < N; i++) if (s[i] > head) order[n++] = s[i];
+    show("SCAN", order, n, head, 0);
+    /* C-SCAN (towards the last cylinder, then jump back to 0) */
+    n = 0;
+    for (i = 0; i < N; i++) if (s[i] > head) order[n++] = s[i];
+    order[n++] = MAXCYL;
+    int part = 0, p = head;
+    for (int k = 0; k < n; k++) { part += abs(order[k] - p); p = order[k]; }
+    int rest[N], m = 0;
+    for (i = 0; i < N; i++) if (s[i] < head) rest[m++] = s[i];
+    int back = 0; p = 0;
+    for (int k = 0; k < m; k++) { back += abs(rest[k] - p); p = rest[k]; }
+    printf("C-SCAN %d ... %d, jump to 0 ... %d  -> %d cylinders (+%d for the jump)\n",
+           head, MAXCYL, rest[m - 1], part + back, MAXCYL);
+    return 0;
+}
+```
+
+### `Task04/inspect_scheduler.sh`
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+{
+  echo 'Block devices and rotation flags:'
+  lsblk -dn -o NAME,ROTA,TYPE,SIZE,MODEL || true
+  echo 'Available Linux block schedulers:'
+  found=0
+  for sched in /sys/block/*/queue/scheduler; do
+    [[ -r "$sched" ]] || continue
+    found=1
+    printf '%s: ' "$sched"
+    cat "$sched"
+  done
+  if [[ $found -eq 0 ]]; then echo 'No host block scheduler sysfs paths exposed to this environment.'; fi
+  echo 'The CI runner is virtualized; these values describe its guest-visible device, not the faculty/student laptop.'
+} | tee evidence/task04-device.txt
+```
+
+### `Task04/scheduler_sim.c`
+
+```c
+#include <math.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define CYLINDERS 200
+#define REQUESTS 10000
+#define SEEK_MS_PER_CYL 0.08
+#define IO_MS 2.0
+
+enum policy { FCFS, SSTF, SCAN, CSCAN, LOOK, CLOOK, POLICY_COUNT };
+static const char *policy_name[] = {"FCFS", "SSTF", "SCAN", "C-SCAN", "LOOK", "C-LOOK"};
+struct request { int cyl, state; double arrival; };
+struct stats { double avg_move, max_wait, avg_wait; };
+static uint32_t rng = 0x0406a55aU;
+static uint32_t random_u32(void)
+{
+    rng = rng * 1664525U + 1013904223U;
+    return rng;
+}
+static void add_arrivals(struct request r[], int *next, double now)
+{
+    while (*next < REQUESTS && r[*next].arrival <= now) {
+        r[*next].state = 1;
+        (*next)++;
+    }
+}
+static int queued(const struct request r[], int count)
+{
+    for (int i = 0; i < count; i++) if (r[i].state == 1) return 1;
+    return 0;
+}
+static int choose_fifo(const struct request r[])
+{
+    for (int i = 0; i < REQUESTS; i++) if (r[i].state == 1) return i;
+    return -1;
+}
+static int choose_sstf(const struct request r[], int head)
+{
+    int best = -1, distance = CYLINDERS + 1;
+    for (int i = 0; i < REQUESTS; i++) if (r[i].state == 1) {
+        int d = abs(r[i].cyl - head);
+        if (d < distance) { best = i; distance = d; }
+    }
+    return best;
+}
+static int choose_direction(const struct request r[], int head, int direction, int extreme)
+{
+    int best = -1;
+    for (int i = 0; i < REQUESTS; i++) if (r[i].state == 1) {
+        int c = r[i].cyl;
+        if ((direction > 0 && c >= head) || (direction < 0 && c <= head)) {
+            if (best < 0 || (direction > 0 ? c < r[best].cyl : c > r[best].cyl)) best = i;
+        }
+    }
+    if (best >= 0 || !extreme) return best;
+    for (int i = 0; i < REQUESTS; i++) if (r[i].state == 1) {
+        int c = r[i].cyl;
+        if (best < 0 || (direction > 0 ? c < r[best].cyl : c > r[best].cyl)) best = i;
+    }
+    return best;
+}
+static struct stats simulate(enum policy policy, double interval)
+{
+    struct request *r = calloc(REQUESTS, sizeof *r);
+    if (!r) exit(2);
+    rng = 0x0406a55aU;
+    for (int i = 0; i < REQUESTS; i++) {
+        r[i].cyl = (int)(random_u32() % CYLINDERS);
+        r[i].arrival = i * interval;
+    }
+    int next = 0, head = 53, direction = policy == SCAN ? -1 : 1;
+    double now = 0, total_move = 0, total_wait = 0, max_wait = 0;
+    for (int served = 0; served < REQUESTS;) {
+        add_arrivals(r, &next, now);
+        if (!queued(r, REQUESTS)) {
+            now = r[next].arrival;
+            add_arrivals(r, &next, now);
+        }
+        int pick = -1;
+        if (policy == FCFS) pick = choose_fifo(r);
+        else if (policy == SSTF) pick = choose_sstf(r, head);
+        else if (policy == SCAN || policy == CSCAN || policy == LOOK || policy == CLOOK) {
+            pick = choose_direction(r, head, direction, 0);
+            if (pick < 0 && (policy == LOOK || policy == CLOOK)) {
+                int other = 0;
+                for (int j = 0; j < REQUESTS; j++) if (r[j].state == 1) other = 1;
+                if (other && policy == LOOK) {
+                    direction = -direction;
+                    pick = choose_direction(r, head, direction, 0);
+                } else if (other && policy == CLOOK) {
+                    direction = 1;
+                    int far = -1;
+                    for (int j = 0; j < REQUESTS; j++) if (r[j].state == 1 &&
+                        (far < 0 || r[j].cyl < r[far].cyl)) far = j;
+                    pick = far;
+                    if (pick >= 0) {
+                        total_move += abs(head - r[pick].cyl);
+                        now += abs(head - r[pick].cyl) * SEEK_MS_PER_CYL;
+                        head = r[pick].cyl;
+                    }
+                }
+            } else if (pick < 0 && policy == SCAN) {
+                int edge = direction < 0 ? 0 : CYLINDERS - 1;
+                total_move += abs(head - edge);
+                now += abs(head - edge) * SEEK_MS_PER_CYL;
+                head = edge; direction = -direction;
+                add_arrivals(r, &next, now);
+                pick = choose_direction(r, head, direction, 0);
+            } else if (pick < 0 && policy == CSCAN) {
+                int edge = direction > 0 ? CYLINDERS - 1 : 0;
+                int wrap = direction > 0 ? 0 : CYLINDERS - 1;
+                total_move += abs(head - edge) + abs(edge - wrap);
+                now += (abs(head - edge) + abs(edge - wrap)) * SEEK_MS_PER_CYL;
+                head = wrap;
+                add_arrivals(r, &next, now);
+                pick = choose_direction(r, head, direction, 1);
+            }
+        }
+        if (pick < 0 && next < REQUESTS && policy >= SCAN) {
+            if ((policy == LOOK || policy == CLOOK) && !queued(r, REQUESTS)) {
+                now = r[next].arrival;
+                add_arrivals(r, &next, now);
+            }
+            continue;
+        }
+        if (pick < 0) { free(r); fprintf(stderr, "scheduler made no progress\n"); exit(3); }
+        double wait = now - r[pick].arrival;
+        if (wait > max_wait) max_wait = wait;
+        total_wait += wait;
+        int distance = abs(head - r[pick].cyl);
+        total_move += distance;
+        now += distance * SEEK_MS_PER_CYL + IO_MS;
+        head = r[pick].cyl;
+        r[pick].state = 2;
+        served++;
+    }
+    struct stats result = {total_move / REQUESTS, max_wait, total_wait / REQUESTS};
+    free(r);
+    return result;
+}
+int main(void)
+{
+    const double intervals[] = {30.0, 10.0, 3.0};
+    const char *loads[] = {"light", "medium", "heavy"};
+    puts("Synthetic online queue simulation: 10,000 seeded requests, cylinders 0-199, head=53");
+    puts("Model: 0.08 ms per cylinder plus 2 ms per request; arrival intervals are assumptions, not hardware benchmarks.");
+    puts("load,policy,arrival_ms,average_head_movement_cyl,average_wait_ms,max_wait_ms");
+    for (int l = 0; l < 3; l++) for (int p = 0; p < POLICY_COUNT; p++) {
+        struct stats s = simulate((enum policy)p, intervals[l]);
+        printf("%s,%s,%.1f,%.3f,%.3f,%.3f\n", loads[l], policy_name[p],
+               intervals[l], s.avg_move, s.avg_wait, s.max_wait);
+    }
+    puts("SSTF starvation illustration: while positioned at cylinder 60, 200 requests at cylinder 60 arrive every 1 ms; each read occupies 2 ms. A queued request at 183 remains behind the closer stream for at least 400 ms. If closer work continues without bound, SSTF has no finite wait bound.");
+    return 0;
+}
+```
+
+### `Task06/streaming_sim.c`
+
+```c
+#include <math.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define STARTS 100000
+#define VIDEO_COUNT 10000
+#define SEGMENT_MIB 1.0
+#define DISK_COUNT 4
+#define HDD_SEEK_MS 8.0
+#define HDD_MIB_PER_SEC 180.0
+#define SSD_SEEK_MS 0.15
+#define SSD_MIB_PER_SEC 1800.0
+
+static uint32_t rng = 0x4062026U;
+static uint32_t next_u32(void) { rng = rng * 1664525U + 1013904223U; return rng; }
+static int compare_double(const void *a, const void *b)
+{
+    double x = *(const double *)a, y = *(const double *)b;
+    return (x > y) - (x < y);
+}
+static void simulate_local_hdd(double wait[], double service)
+{
+    double available[DISK_COUNT] = {0};
+    for (int i = 0; i < STARTS; i++) {
+        int disk = 0;
+        for (int d = 1; d < DISK_COUNT; d++) if (available[d] < available[disk]) disk = d;
+        double arrival = i * 0.5; /* 2,000 start requests/second; time unit is ms */
+        double start = fmax(arrival, available[disk]);
+        wait[i] = start - arrival + service;
+        available[disk] = start + service;
+    }
+}
+static void simulate_ssd_edge_cache(double wait[], double hit_ratio)
+{
+    double available[DISK_COUNT] = {0};
+    for (int i = 0; i < STARTS; i++) {
+        int video = (int)(next_u32() % VIDEO_COUNT);
+        int hot = video < (int)(VIDEO_COUNT * hit_ratio);
+        double arrival = i * 0.5;
+        if (hot) {
+            wait[i] = 20.0 + SSD_SEEK_MS + SEGMENT_MIB / SSD_MIB_PER_SEC * 1000.0;
+        } else {
+            int disk = 0;
+            for (int d = 1; d < DISK_COUNT; d++) if (available[d] < available[disk]) disk = d;
+            double service = HDD_SEEK_MS + SEGMENT_MIB / HDD_MIB_PER_SEC * 1000.0;
+            double start = fmax(arrival, available[disk]);
+            wait[i] = start - arrival + 20.0 + service;
+            available[disk] = start + service;
+        }
+    }
+}
+static void report(const char *name, double values[])
+{
+    double *sorted = malloc(sizeof(double) * STARTS);
+    if (!sorted) exit(2);
+    for (int i = 0; i < STARTS; i++) sorted[i] = values[i];
+    qsort(sorted, STARTS, sizeof *sorted, compare_double);
+    double sum = 0;
+    for (int i = 0; i < STARTS; i++) sum += sorted[i];
+    int reads = 0;
+    for (int i = 0; i < STARTS; i++) if (values[i] > 21.0) reads++;
+    printf("%s: starts=%d mean_start_latency=%.3f ms p50=%.3f ms p95=%.3f ms p99=%.3f ms max=%.3f ms origin_reads=%d/%d\n",
+           name, STARTS, sum / STARTS, sorted[STARTS / 2],
+           sorted[(STARTS * 95) / 100], sorted[(STARTS * 99) / 100], sorted[STARTS - 1],
+           name[0] == 'L' ? STARTS : reads, STARTS);
+    free(sorted);
+}
+int main(void)
+{
+    const double bytes_per_video_gib = 1.0;
+    const double library_gib = VIDEO_COUNT * bytes_per_video_gib;
+    const double network_gbps = 20000.0 * 4.0 / 1000.0;
+    const double origin_gbps = network_gbps * 0.05;
+    double service = HDD_SEEK_MS + SEGMENT_MIB / HDD_MIB_PER_SEC * 1000.0;
+    double *a = calloc(STARTS, sizeof *a), *b = calloc(STARTS, sizeof *b);
+    if (!a || !b) return 2;
+    printf("Assumed catalog: %d videos x %.1f GiB = %.1f TiB raw; 3 replicas = %.1f TiB before overhead.\n",
+           VIDEO_COUNT, bytes_per_video_gib, library_gib / 1024.0, library_gib * 3 / 1024.0);
+    printf("Peak scenario: 20,000 viewers x 4 Mbit/s = %.0f Gbit/s; CDN 95%% cache ratio => %.1f Gbit/s origin egress.\n",
+           network_gbps, origin_gbps);
+    printf("Random-seek segment: %.1f MiB. Model service: HDD %.3f ms, SSD %.3f ms; network edge RTT 20 ms.\n",
+           SEGMENT_MIB, service, SSD_SEEK_MS + SEGMENT_MIB / SSD_MIB_PER_SEC * 1000.0);
+    printf("4 TB disk at 4 KiB allocation blocks: each %.1f MiB segment spans %d blocks; an offset lookup needs a few extent/index reads before the data run.\n",
+           SEGMENT_MIB,
+           (int)(SEGMENT_MIB * 1024.0 / 4.0));
+    simulate_local_hdd(a, service);
+    simulate_ssd_edge_cache(b, 0.95);
+    report("Local HDD pool (4 disks, no edge cache)", a);
+    report("SSD edge cache plus HDD origin (95% hits)", b);
+    puts("Arrival burst is modeled at 2,000 starts/second. All latency values are a deterministic queueing simulation using stated assumptions, not a physical hardware or CDN benchmark. Playback start includes the modeled random segment lookup, not full-video transfer.");
+    free(a); free(b);
+    return 0;
+}
+```
