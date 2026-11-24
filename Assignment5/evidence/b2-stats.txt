@@ -1,4 +1,4 @@
-CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O           BLOCK I/O     PIDS
-c6da931019c8   taskb2-portal-1     0.01%     47.43MiB / 512MiB   9.26%     5.69kB / 4.86kB   0B / 0B       3
-ffed76319b9e   taskb2-lms-1        0.01%     46.86MiB / 512MiB   9.15%     2.1kB / 707B      0B / 0B       3
-61808929b045   taskb2-database-1   0.02%     24.55MiB / 512MiB   4.80%     3.92kB / 2.98kB   0B / 52.7MB   6
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O           BLOCK I/O    PIDS
+4b70d5236b00   taskb2-portal-1     0.01%     48.73MiB / 512MiB   9.52%     5.75kB / 4.8kB    0B / 0B      3
+e1b9ac0e61da   taskb2-database-1   0.03%     24.71MiB / 512MiB   4.83%     3.92kB / 2.98kB   0B / 105MB   6
+95169c6b3c41   taskb2-lms-1        0.01%     46.88MiB / 512MiB   9.16%     2.1kB / 707B      0B / 0B      3

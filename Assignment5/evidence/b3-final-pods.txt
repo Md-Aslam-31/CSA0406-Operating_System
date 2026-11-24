@@ -1,13 +1,13 @@
 NAME                            READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                  SELECTOR
-deployment.apps/lms             2/2     2            2           23s   lms          result-portal:compose   app=lms
+deployment.apps/lms             2/2     2            2           22s   lms          result-portal:compose   app=lms
 deployment.apps/result-portal   6/6     6            6           35s   portal       result-portal:compose   app=result-portal
 
 NAME                                 READY   STATUS    RESTARTS   AGE   IP           NODE                  NOMINATED NODE   READINESS GATES
-pod/lms-6895f5cf59-cbk78             1/1     Running   0          23s   10.244.1.4   assignment5-worker    <none>           <none>
-pod/lms-6895f5cf59-pxvkj             1/1     Running   0          23s   10.244.2.4   assignment5-worker2   <none>           <none>
-pod/result-portal-55744f64c4-d9xnc   1/1     Running   0          35s   10.244.2.2   assignment5-worker2   <none>           <none>
-pod/result-portal-55744f64c4-dp2zd   1/1     Running   0          35s   10.244.1.2   assignment5-worker    <none>           <none>
-pod/result-portal-55744f64c4-krgjg   1/1     Running   0          29s   10.244.1.3   assignment5-worker    <none>           <none>
-pod/result-portal-55744f64c4-rskg5   1/1     Running   0          19s   10.244.2.5   assignment5-worker2   <none>           <none>
-pod/result-portal-55744f64c4-s5h5b   1/1     Running   0          19s   10.244.1.5   assignment5-worker    <none>           <none>
-pod/result-portal-55744f64c4-vdtbb   1/1     Running   0          19s   10.244.2.6   assignment5-worker2   <none>           <none>
+pod/lms-6895f5cf59-2wbr6             1/1     Running   0          22s   10.244.3.4   assignment5-worker    <none>           <none>
+pod/lms-6895f5cf59-fgt9d             1/1     Running   0          22s   10.244.1.4   assignment5-worker2   <none>           <none>
+pod/result-portal-55744f64c4-5rxhc   1/1     Running   0          18s   10.244.3.5   assignment5-worker    <none>           <none>
+pod/result-portal-55744f64c4-7hrsc   1/1     Running   0          29s   10.244.1.3   assignment5-worker2   <none>           <none>
+pod/result-portal-55744f64c4-b6777   1/1     Running   0          35s   10.244.3.2   assignment5-worker    <none>           <none>
+pod/result-portal-55744f64c4-k47cz   1/1     Running   0          18s   10.244.1.5   assignment5-worker2   <none>           <none>
+pod/result-portal-55744f64c4-pjff9   1/1     Running   0          18s   10.244.3.6   assignment5-worker    <none>           <none>
+pod/result-portal-55744f64c4-x47d2   1/1     Running   0          35s   10.244.1.2   assignment5-worker2   <none>           <none>

@@ -5,12 +5,12 @@ metadata:
     deployment.kubernetes.io/revision: "1"
     kubectl.kubernetes.io/last-applied-configuration: |
       {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"lms","namespace":"default"},"spec":{"replicas":2,"selector":{"matchLabels":{"app":"lms"}},"template":{"metadata":{"labels":{"app":"lms"}},"spec":{"containers":[{"env":[{"name":"APP_NAME","value":"Learning Management Service"}],"image":"result-portal:compose","imagePullPolicy":"IfNotPresent","name":"lms","ports":[{"containerPort":8000}],"readinessProbe":{"httpGet":{"path":"/health","port":8000}},"resources":{"limits":{"cpu":"400m","memory":"256Mi"},"requests":{"cpu":"200m","memory":"128Mi"}}}]}}}}
-  creationTimestamp: "2026-11-23T19:09:55Z"
+  creationTimestamp: "2026-11-24T17:52:52Z"
   generation: 1
   name: lms
   namespace: default
-  resourceVersion: "817"
-  uid: e82c9b9d-950a-48eb-bc19-667180c9c342
+  resourceVersion: "778"
+  uid: eeaf318d-c5b4-44a0-83e4-deb9af93acf4
 spec:
   progressDeadlineSeconds: 600
   replicas: 2
@@ -64,14 +64,14 @@ spec:
 status:
   availableReplicas: 2
   conditions:
-  - lastTransitionTime: "2026-11-23T19:09:56Z"
-    lastUpdateTime: "2026-11-23T19:09:56Z"
+  - lastTransitionTime: "2026-11-24T17:52:53Z"
+    lastUpdateTime: "2026-11-24T17:52:53Z"
     message: Deployment has minimum availability.
     reason: MinimumReplicasAvailable
     status: "True"
     type: Available
-  - lastTransitionTime: "2026-11-23T19:09:55Z"
-    lastUpdateTime: "2026-11-23T19:09:56Z"
+  - lastTransitionTime: "2026-11-24T17:52:52Z"
+    lastUpdateTime: "2026-11-24T17:52:53Z"
     message: ReplicaSet "lms-6895f5cf59" has successfully progressed.
     reason: NewReplicaSetAvailable
     status: "True"
