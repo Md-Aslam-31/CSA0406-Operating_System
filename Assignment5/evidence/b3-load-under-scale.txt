@@ -1,1 +1,1 @@
-url=http://127.0.0.1:18000/simulate/login duration_s=20.194 concurrency=30 ok=3946 errors=0 requests_per_second=195.41
+url=http://127.0.0.1:18000/simulate/login duration_s=20.197 concurrency=30 ok=4091 errors=0 requests_per_second=202.55

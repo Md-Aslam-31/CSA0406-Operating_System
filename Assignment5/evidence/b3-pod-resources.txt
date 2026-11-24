@@ -1,9 +1,9 @@
-Name:             result-portal-55744f64c4-4wwzz
+Name:             result-portal-55744f64c4-g8lht
 Namespace:        default
 Priority:         0
 Service Account:  default
 Node:             assignment5-worker/172.18.0.2
-Start Time:       Tue, 24 Nov 2026 17:52:39 +0000
+Start Time:       Tue, 24 Nov 2026 19:07:57 +0000
 Labels:           app=result-portal
                   pod-template-hash=55744f64c4
 Annotations:      <none>
@@ -14,13 +14,13 @@ IPs:
 Controlled By:  ReplicaSet/result-portal-55744f64c4
 Containers:
   portal:
-    Container ID:   containerd://862d36b9b1a5ac6f22d9ccb569024a4eb9384d0138fa909e31919d295591d564
+    Container ID:   containerd://bf3993b49d3e81a48efeb25b40faa6c494dbc52c30f405c6702916f14e7e00c7
     Image:          result-portal:compose
-    Image ID:       docker.io/library/import-2026-11-24@sha256:70298d0f03ddf7fd0dba92ad6746798c8a7d540e7c19ace1b15cc46f58787938
+    Image ID:       docker.io/library/import-2026-11-24@sha256:80c5d8a780c4e13321f346131f904ec30485082408fc1a6bd348642b72395b3e
     Port:           8000/TCP
     Host Port:      0/TCP
     State:          Running
-      Started:      Tue, 24 Nov 2026 17:52:39 +0000
+      Started:      Tue, 24 Nov 2026 19:07:57 +0000
     Ready:          True
     Restart Count:  0
     Limits:
@@ -32,7 +32,7 @@ Containers:
     Readiness:    http-get http://:8000/health delay=2s timeout=1s period=5s successThreshold=1 failureThreshold=3
     Environment:  <none>
     Mounts:
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-57n6z (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-xcrwm (ro)
 Conditions:
   Type                        Status
   PodReadyToStartContainers   True 
@@ -41,7 +41,7 @@ Conditions:
   ContainersReady             True 
   PodScheduled                True 
 Volumes:
-  kube-api-access-57n6z:
+  kube-api-access-xcrwm:
     Type:                    Projected (a volume that contains injected data from multiple sources)
     TokenExpirationSeconds:  3607
     ConfigMapName:           kube-root-ca.crt
@@ -54,7 +54,7 @@ Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists fo
 Events:
   Type    Reason     Age   From               Message
   ----    ------     ----  ----               -------
-  Normal  Scheduled  6s    default-scheduler  Successfully assigned default/result-portal-55744f64c4-4wwzz to assignment5-worker
+  Normal  Scheduled  6s    default-scheduler  Successfully assigned default/result-portal-55744f64c4-g8lht to assignment5-worker
   Normal  Pulled     6s    kubelet            spec.containers{portal}: Container image "result-portal:compose" already present on machine and can be accessed by the pod
   Normal  Created    6s    kubelet            spec.containers{portal}: Container created
   Normal  Started    6s    kubelet            spec.containers{portal}: Container started

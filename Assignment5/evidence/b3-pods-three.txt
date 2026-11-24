@@ -1,4 +1,4 @@
 NAME                             READY   STATUS    RESTARTS   AGE   IP           NODE                  NOMINATED NODE   READINESS GATES
-result-portal-55744f64c4-4wwzz   1/1     Running   0          6s    10.244.3.3   assignment5-worker    <none>           <none>
-result-portal-55744f64c4-b6777   1/1     Running   0          6s    10.244.3.2   assignment5-worker    <none>           <none>
-result-portal-55744f64c4-x47d2   1/1     Running   0          6s    10.244.1.2   assignment5-worker2   <none>           <none>
+result-portal-55744f64c4-g8lht   1/1     Running   0          6s    10.244.3.3   assignment5-worker    <none>           <none>
+result-portal-55744f64c4-pwnt8   1/1     Running   0          6s    10.244.1.2   assignment5-worker2   <none>           <none>
+result-portal-55744f64c4-sw6lm   1/1     Running   0          6s    10.244.3.2   assignment5-worker    <none>           <none>

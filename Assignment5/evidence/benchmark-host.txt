@@ -13,31 +13,31 @@ Document Path:          /simulate/login
 Document Length:        60 bytes
 
 Concurrency Level:      25
-Time taken for tests:   2.355 seconds
+Time taken for tests:   2.087 seconds
 Complete requests:      2000
 Failed requests:        0
 Keep-Alive requests:    0
 Total transferred:      410000 bytes
 HTML transferred:       120000 bytes
-Requests per second:    849.12 [#/sec] (mean)
-Time per request:       29.442 [ms] (mean)
-Time per request:       1.178 [ms] (mean, across all concurrent requests)
-Transfer rate:          169.99 [Kbytes/sec] received
+Requests per second:    958.48 [#/sec] (mean)
+Time per request:       26.083 [ms] (mean)
+Time per request:       1.043 [ms] (mean, across all concurrent requests)
+Transfer rate:          191.88 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   0.0      0       1
-Processing:     2   29   1.9     29      31
-Waiting:        2   29   1.9     29      31
-Total:          3   29   1.9     29      31
+Connect:        0    0   0.1      0       1
+Processing:     2   26   2.0     26      33
+Waiting:        2   26   2.0     26      33
+Total:          3   26   2.0     26      33
 
 Percentage of the requests served within a certain time (ms)
-  50%     29
-  66%     30
-  75%     30
-  80%     30
-  90%     30
-  95%     30
-  98%     31
-  99%     31
- 100%     31 (longest request)
+  50%     26
+  66%     26
+  75%     26
+  80%     27
+  90%     27
+  95%     28
+  98%     30
+  99%     32
+ 100%     33 (longest request)

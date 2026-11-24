@@ -1,2 +1,2 @@
-Deleting pod result-portal-55744f64c4-4wwzz
-pod "result-portal-55744f64c4-4wwzz" deleted from default namespace
+Deleting pod result-portal-55744f64c4-g8lht
+pod "result-portal-55744f64c4-g8lht" deleted from default namespace

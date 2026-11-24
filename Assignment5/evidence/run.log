@@ -1,6 +1,6 @@
 === Environment ===
 Linux: Ubuntu 24.04.5 LTS
-Linux ip-10-0-138-137 7.0.0-1014-aws #14~24.04.1-Ubuntu SMP PREEMPT Fri Sep 18 21:24:59 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Linux runnervmeozm8 7.0.0-1017-azure #17~24.04.1-Ubuntu SMP PREEMPT Thu Sep 24 18:46:57 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
 gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
 Python 3.12.3
 Docker version 28.0.4, build b8034c0
@@ -9,102 +9,98 @@ Virtualization: KVM
 === B1.1 Linux observations ===
 $ ps -eo pid,ppid,user,%cpu,%mem,rss,comm --sort=-%cpu | head -n 15
     PID    PPID USER     %CPU %MEM   RSS COMMAND
-   2013    1992 runner    3.1  0.8 143816 Runner.Worker
-   1992    1925 runner    1.1  0.5 96228 Runner.Listener
-      1       0 root      0.8  0.0 14012 systemd
-   1966    1963 root      0.4  0.8 139392 provjobd1413403
-     15       2 root      0.3  0.0     0 pr/ttyS0
-   1121       1 root      0.1  0.2 44088 containerd
-    466       1 root      0.1  0.1 17940 systemd-journal
-   1403       1 root      0.0  0.4 71964 dockerd
-    997       1 root      0.0  0.2 41652 snapd
-    524       1 root      0.0  0.0  8448 systemd-udevd
-    664       2 root      0.0  0.0     0 kworker/0:4-events
-   1925       1 runner    0.0  0.1 17852 hosted-compute-
-    982       1 message+  0.0  0.0  5616 dbus-daemon
-     50       2 root      0.0  0.0     0 kworker/1:1-events
+   2482    2464 runner    4.8  0.7 130292 Runner.Worker
+   2464    2375 runner    2.3  0.5 95436 Runner.Listener
+      1       0 root      1.0  0.0 14292 systemd
+   2391    2388 root      0.4  0.9 149384 provjobd3258715
+   1230     858 root      0.2  0.2 36764 python3
+     15       2 root      0.1  0.0     0 pr/ttyS0
+    817       1 message+  0.0  0.0  5740 dbus-daemon
+    160       1 root      0.0  0.1 18132 systemd-journal
+    914       1 root      0.0  0.2 42100 containerd
+    858       1 root      0.0  0.1 30872 python3
+    229       1 root      0.0  0.0  8144 systemd-udevd
+    506       1 root      0.0  0.0  5108 haveged
+   1991       1 root      0.0  0.0  8968 dns-resolver
+    836       1 root      0.0  0.0 10092 systemd-logind
 $ top -b -n1 | head -n 15
-top - 17:43:10 up 4 min,  0 user,  load average: 0.76, 0.34, 0.14
-Tasks: 198 total,   1 running, 197 sleeping,   0 stopped,   0 zombie
-%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni, 94.4 id,  5.6 wa,  0.0 hi,  0.0 si,  0.0 st 
-MiB Mem :  15701.6 total,  13210.0 free,    980.8 used,   1848.7 buff/cache     
-MiB Swap:   3072.0 total,   3072.0 free,      0.0 used.  14720.8 avail Mem 
+top - 18:58:25 up 4 min,  0 user,  load average: 0.43, 0.17, 0.06
+Tasks: 167 total,   1 running, 166 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  2.4 sy,  0.0 ni, 97.6 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st 
+MiB Mem :  15983.9 total,  13297.2 free,   1069.3 used,   1964.0 buff/cache     
+MiB Swap:   3072.0 total,   3072.0 free,      0.0 used.  14914.6 avail Mem 
 
     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-      1 root      20   0   22704  14012   9588 S   0.0   0.1   0:02.01 systemd
+   2482 runner    20   0  261.6g 130336  85452 S  10.0   0.8   0:01.52 Runner.+
+      1 root      20   0   22892  14292   9768 S   0.0   0.1   0:03.22 systemd
       2 root      20   0       0      0      0 S   0.0   0.0   0:00.00 kthreadd
       3 root      20   0       0      0      0 S   0.0   0.0   0:00.00 pool_wo+
       4 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
       5 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
       6 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
       7 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
-      8 root       0 -20       0      0      0 I   0.0   0.0   0:00.00 kworker+
 $ free -h
                total        used        free      shared  buff/cache   available
-Mem:            15Gi       980Mi        12Gi        44Mi       1.8Gi        14Gi
+Mem:            15Gi       1.0Gi        12Gi        43Mi       1.9Gi        14Gi
 Swap:          3.0Gi          0B       3.0Gi
 $ vmstat 1 3
 procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu-------
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st gu
- 0  0      0 13526992  79292 1813940    0    0  3917 15266 1137    3  2  1 86 10  0  0
- 0  0      0 13547304  79292 1813920    0    0     0     0  186  312  0  0 100  0  0  0
- 0  0      0 13571600  79292 1813920    0    0     0     0  144  311  0  0 100  0  0  0
+ 2  0      0 13616284  86724 1924744    0    0  3201 10845 1263    3  2  1 95  1  0  0
+ 0  0      0 13625112  86724 1924780    0    0     0     0  516  410  0  0 100  0  0  0
+ 0  0      0 13636896  86724 1924780    0    0     0     4  531  428  0  0 100  0  0  0
 $ iostat -xz 1 2
-Linux 7.0.0-1014-aws (ip-10-0-138-137) 	11/24/26 	_x86_64_	(4 CPU)
+Linux 7.0.0-1017-azure (runnervmeozm8) 	11/24/26 	_x86_64_	(4 CPU)
 
 avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-           2.13    0.34    1.23    9.82    0.03   86.46
+           1.79    0.20    1.20    1.38    0.00   95.43
 
 Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
-dm-0           934.21   3736.79     0.00   0.00   10.83     4.00 3743.81  14975.11     0.00   0.00    1.89     4.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00   17.18  30.25
-loop0            0.26      4.46     0.00   0.00    4.64    16.91    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.10
-loop1            0.22      1.51     0.00   0.00    6.25     6.92    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.10
-loop2            0.05      0.06     0.00   0.00    0.00     1.27    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
-nvme0n1         97.00   3864.91   842.70  89.68    6.37    39.84    0.11      0.75     0.12  52.73    0.85     6.98    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.62  29.15
-nvme1n1          0.56     10.00     0.00   0.00    0.07    17.72  189.99  15139.71  3594.97  94.98    0.86    79.69    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.16   0.71
-zram0            0.22      4.84     0.00   0.00    0.00    22.19    0.00      0.02     0.00   0.00    0.00     4.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+loop0            0.03      0.03     0.00   0.00    0.10     1.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.00   0.00
+nvme0n1         73.52   3180.00    27.89  27.50    0.30    43.25   67.93  10772.92    84.91  55.55   14.00   158.58    4.28   1976.03     0.00   0.00    0.16   462.06    0.06    0.05    0.97   5.46
 
 
 avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-           0.25    0.00    0.25    0.00    0.00   99.50
+           0.00    0.00    0.25    1.51    0.00   98.24
 
 Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
+nvme0n1          0.00      0.00     0.00   0.00    0.00     0.00  105.00  17084.00   244.00  69.91    4.86   162.70    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    0.51   7.10
 
 
 $ df -h
-Filesystem            Size  Used Avail Use% Mounted on
-tmpfs                 1.6G  1.2M  1.6G   1% /run
-efivarfs              128K  3.6K  120K   3% /sys/firmware/efi/efivars
-/dev/mapper/cow-root  145G   57G   88G  40% /
-tmpfs                 7.7G   84K  7.7G   1% /dev/shm
-tmpfs                 5.0M     0  5.0M   0% /run/lock
-/dev/nvme0n1p16       881M  115M  705M  14% /boot
-/dev/nvme0n1p15       105M  6.2M   99M   6% /boot/efi
-tmpfs                 1.6G   12K  1.6G   1% /run/user/1001
-tmpfs                 7.7G     0  7.7G   0% /run/qemu
+Filesystem       Size  Used Avail Use% Mounted on
+/dev/root        145G   60G   85G  42% /
+tmpfs            7.9G   84K  7.9G   1% /dev/shm
+tmpfs            3.2G  1.1M  3.2G   1% /run
+tmpfs            5.0M     0  5.0M   0% /run/lock
+/dev/nvme0n1p16  881M   85M  735M  11% /boot
+/dev/nvme0n1p15  105M  6.2M   99M   6% /boot/efi
+tmpfs            1.6G   12K  1.6G   1% /run/user/1001
+tmpfs            7.9G     0  7.9G   0% /run/qemu
 $ ss -tulpen
-Netid State  Recv-Q Send-Q        Local Address:Port Peer Address:PortProcess                                                                 
-udp   UNCONN 0      0                127.0.0.54:53        0.0.0.0:*    uid:991 ino:7479 sk:1 cgroup:/system.slice/systemd-resolved.service <->
-udp   UNCONN 0      0             127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:7477 sk:2 cgroup:/system.slice/systemd-resolved.service <->
-udp   UNCONN 0      0      10.0.138.137%enp39s0:68        0.0.0.0:*    uid:998 ino:6768 sk:3 cgroup:/system.slice/systemd-networkd.service <->
-udp   UNCONN 0      0                 127.0.0.1:323       0.0.0.0:*    ino:10150 sk:4 cgroup:/system.slice/chrony.service <->                 
-udp   UNCONN 0      0                     [::1]:323          [::]:*    ino:10151 sk:5 cgroup:/system.slice/chrony.service v6only:1 <->        
-tcp   LISTEN 0      4096          127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:7478 sk:6 cgroup:/system.slice/systemd-resolved.service <->
-tcp   LISTEN 0      4096                0.0.0.0:22        0.0.0.0:*    ino:7667 sk:7 cgroup:/system.slice/ssh.socket <->                      
-tcp   LISTEN 0      4096             127.0.0.54:53        0.0.0.0:*    uid:991 ino:7480 sk:8 cgroup:/system.slice/systemd-resolved.service <->
-tcp   LISTEN 0      4096                   [::]:22           [::]:*    ino:9802 sk:9 cgroup:/system.slice/ssh.socket v6only:1 <->             
+Netid State  Recv-Q Send-Q   Local Address:Port Peer Address:PortProcess                                                                  
+udp   UNCONN 0      0           127.0.0.54:53        0.0.0.0:*    uid:991 ino:13610 sk:1 cgroup:/system.slice/systemd-resolved.service <->
+udp   UNCONN 0      0        127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:13608 sk:2 cgroup:/system.slice/systemd-resolved.service <->
+udp   UNCONN 0      0          127.0.0.100:53        0.0.0.0:*    ino:11623 sk:3 cgroup:/system.slice/egress-dns-resolver.service <->     
+udp   UNCONN 0      0      10.1.0.116%eth0:68        0.0.0.0:*    uid:998 ino:4770 sk:4 cgroup:/system.slice/systemd-networkd.service <-> 
+udp   UNCONN 0      0            127.0.0.1:323       0.0.0.0:*    ino:7987 sk:5 cgroup:/system.slice/chrony.service <->                   
+udp   UNCONN 0      0                [::1]:323          [::]:*    ino:7988 sk:6 cgroup:/system.slice/chrony.service v6only:1 <->          
+tcp   LISTEN 0      4096        127.0.0.54:53        0.0.0.0:*    uid:991 ino:13611 sk:7 cgroup:/system.slice/systemd-resolved.service <->
+tcp   LISTEN 0      4096           0.0.0.0:22        0.0.0.0:*    ino:4966 sk:8 cgroup:/system.slice/ssh.socket <->                       
+tcp   LISTEN 0      4096     127.0.0.53%lo:53        0.0.0.0:*    uid:991 ino:13609 sk:9 cgroup:/system.slice/systemd-resolved.service <->
+tcp   LISTEN 0      4096              [::]:22           [::]:*    ino:4968 sk:a cgroup:/system.slice/ssh.socket v6only:1 <->              
 $ uname -r
-7.0.0-1014-aws
+7.0.0-1017-azure
 $ head /proc/meminfo
-MemTotal:       16078420 kB
-MemFree:        13579676 kB
-MemAvailable:   15129028 kB
-Buffers:           80124 kB
-Cached:          1735460 kB
+MemTotal:       16367524 kB
+MemFree:        13646540 kB
+MemAvailable:   15304688 kB
+Buffers:           87060 kB
+Cached:          1844996 kB
 SwapCached:            0 kB
-Active:           802028 kB
-Inactive:        1236780 kB
-Active(anon):     277920 kB
+Active:           844860 kB
+Inactive:        1331036 kB
+Active(anon):     297532 kB
 Inactive(anon):        0 kB
 $ cat /sys/devices/system/cpu/online
 0-3
@@ -125,9 +121,8 @@ Requests per status code:
 Busiest client:
   10.0.0.5 4
 Total bytes sent: 43200
-ALERT filesystem=efivarfs used=3% mount=/sys/firmware/efi/efivars
-ALERT filesystem=/dev/mapper/cow-root used=40% mount=/
-ALERT filesystem=/dev/nvme0n1p16 used=14% mount=/boot
+ALERT filesystem=/dev/root used=42% mount=/
+ALERT filesystem=/dev/nvme0n1p16 used=11% mount=/boot
 ALERT filesystem=/dev/nvme0n1p15 used=6% mount=/boot/efi
 0 * * * * /usr/local/sbin/disk-alert.sh >> /var/log/disk-alert.log 2>&1
 === B1.3 systemd, Nginx and firewall ===
@@ -152,22 +147,22 @@ Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r /opt/result-portal/requirement
 Collecting packaging (from gunicorn==23.0.0->-r /opt/result-portal/requirements.txt (line 2))
   Downloading packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.3/103.3 kB 7.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.3/103.3 kB 11.2 MB/s eta 0:00:00
 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.0/85.0 kB 33.2 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.0/85.0 kB 45.1 MB/s eta 0:00:00
 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 73.9 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 111.7 MB/s eta 0:00:00
 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
 Downloading click-8.5.1-py3-none-any.whl (126 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.2/126.2 kB 68.1 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.2/126.2 kB 71.1 MB/s eta 0:00:00
 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 72.0 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 63.9 MB/s eta 0:00:00
 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 228.7/228.7 kB 122.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 228.7/228.7 kB 113.4 MB/s eta 0:00:00
 Downloading packaging-26.4-py3-none-any.whl (140 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 140.0/140.0 kB 63.5 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 140.0/140.0 kB 76.6 MB/s eta 0:00:00
 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.4 psycopg2-binary-2.9.10 werkzeug-3.1.9
 Created symlink /etc/systemd/system/multi-user.target.wants/result-portal.service → /etc/systemd/system/result-portal.service.
@@ -208,50 +203,50 @@ To                         Action      From
 
 ● result-portal.service - University result portal sample web application
      Loaded: loaded (/etc/systemd/system/result-portal.service; enabled; preset: enabled)
-     Active: active (running) since Tue 2026-11-24 17:43:17 UTC; 1s ago
-   Main PID: 4102 (gunicorn)
-      Tasks: 3 (limit: 16654)
-     Memory: 41.3M (peak: 41.4M)
-        CPU: 207ms
+     Active: active (running) since Tue 2026-11-24 18:58:32 UTC; 2s ago
+   Main PID: 4660 (gunicorn)
+      Tasks: 3 (limit: 17436)
+     Memory: 41.1M (peak: 41.4M)
+        CPU: 185ms
      CGroup: /system.slice/result-portal.service
-             ├─4102 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
-             ├─4109 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
-             └─4167 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             ├─4660 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             ├─4727 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
+             └─4728 /opt/result-portal/.venv/bin/python3 /opt/result-portal/.venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - --error-logfile - app:app
 
-Nov 24 17:43:17 ip-10-0-138-137 systemd[1]: Started result-portal.service - University result portal sample web application.
-Nov 24 17:43:18 ip-10-0-138-137 gunicorn[4102]: [2026-11-24 17:43:18 +0000] [4102] [INFO] Starting gunicorn 23.0.0
-Nov 24 17:43:18 ip-10-0-138-137 gunicorn[4102]: [2026-11-24 17:43:18 +0000] [4102] [INFO] Listening at: http://127.0.0.1:8000 (4102)
-Nov 24 17:43:18 ip-10-0-138-137 gunicorn[4102]: [2026-11-24 17:43:18 +0000] [4102] [INFO] Using worker: sync
-Nov 24 17:43:18 ip-10-0-138-137 gunicorn[4109]: [2026-11-24 17:43:18 +0000] [4109] [INFO] Booting worker with pid: 4109
-Nov 24 17:43:18 ip-10-0-138-137 gunicorn[4167]: [2026-11-24 17:43:18 +0000] [4167] [INFO] Booting worker with pid: 4167
+Nov 24 18:58:32 runnervmeozm8 systemd[1]: Started result-portal.service - University result portal sample web application.
+Nov 24 18:58:32 runnervmeozm8 gunicorn[4660]: [2026-11-24 18:58:32 +0000] [4660] [INFO] Starting gunicorn 23.0.0
+Nov 24 18:58:32 runnervmeozm8 gunicorn[4660]: [2026-11-24 18:58:32 +0000] [4660] [INFO] Listening at: http://127.0.0.1:8000 (4660)
+Nov 24 18:58:32 runnervmeozm8 gunicorn[4660]: [2026-11-24 18:58:32 +0000] [4660] [INFO] Using worker: sync
+Nov 24 18:58:32 runnervmeozm8 gunicorn[4727]: [2026-11-24 18:58:32 +0000] [4727] [INFO] Booting worker with pid: 4727
+Nov 24 18:58:32 runnervmeozm8 gunicorn[4728]: [2026-11-24 18:58:32 +0000] [4728] [INFO] Booting worker with pid: 4728
 
 ● nginx.service - A high performance web server and a reverse proxy server
      Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; preset: enabled)
-     Active: active (running) since Tue 2026-11-24 17:43:18 UTC; 1s ago
+     Active: active (running) since Tue 2026-11-24 18:58:32 UTC; 1s ago
        Docs: man:nginx(8)
-   Main PID: 4290 (nginx)
-      Tasks: 5 (limit: 16654)
-     Memory: 3.8M (peak: 4.3M)
-        CPU: 12ms
+   Main PID: 4857 (nginx)
+      Tasks: 5 (limit: 17436)
+     Memory: 4.1M (peak: 4.6M)
+        CPU: 14ms
      CGroup: /system.slice/nginx.service
-             ├─4290 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
-             ├─4291 "nginx: worker process"
-             ├─4292 "nginx: worker process"
-             ├─4293 "nginx: worker process"
-             └─4294 "nginx: worker process"
+             ├─4857 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+             ├─4858 "nginx: worker process"
+             ├─4859 "nginx: worker process"
+             ├─4860 "nginx: worker process"
+             └─4861 "nginx: worker process"
 
-Nov 24 17:43:18 ip-10-0-138-137 systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
-Nov 24 17:43:18 ip-10-0-138-137 systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.
+Nov 24 18:58:32 runnervmeozm8 systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
+Nov 24 18:58:32 runnervmeozm8 systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.
 {"service":"University Result Portal","status":"ok"}
 {"grade":"A","semester":"2025-odd","service":"University Result Portal","student_id":10001}
-Nov 24 17:43:17 ip-10-0-138-137 systemd[1]: Started result-portal.service - University result portal sample web application.
-Nov 24 17:43:18 ip-10-0-138-137 gunicorn[4102]: [2026-11-24 17:43:18 +0000] [4102] [INFO] Starting gunicorn 23.0.0
-Nov 24 17:43:18 ip-10-0-138-137 gunicorn[4102]: [2026-11-24 17:43:18 +0000] [4102] [INFO] Listening at: http://127.0.0.1:8000 (4102)
-Nov 24 17:43:18 ip-10-0-138-137 gunicorn[4102]: [2026-11-24 17:43:18 +0000] [4102] [INFO] Using worker: sync
-Nov 24 17:43:18 ip-10-0-138-137 gunicorn[4109]: [2026-11-24 17:43:18 +0000] [4109] [INFO] Booting worker with pid: 4109
-Nov 24 17:43:18 ip-10-0-138-137 gunicorn[4167]: [2026-11-24 17:43:18 +0000] [4167] [INFO] Booting worker with pid: 4167
-Nov 24 17:43:19 ip-10-0-138-137 gunicorn[4167]: 127.0.0.1 - - [24/Nov/2026:17:43:19 +0000] "GET /health HTTP/1.0" 200 53 "-" "curl/8.5.0"
-Nov 24 17:43:19 ip-10-0-138-137 gunicorn[4167]: 127.0.0.1 - - [24/Nov/2026:17:43:19 +0000] "GET /results/10001 HTTP/1.0" 200 92 "-" "curl/8.5.0"
+Nov 24 18:58:32 runnervmeozm8 systemd[1]: Started result-portal.service - University result portal sample web application.
+Nov 24 18:58:32 runnervmeozm8 gunicorn[4660]: [2026-11-24 18:58:32 +0000] [4660] [INFO] Starting gunicorn 23.0.0
+Nov 24 18:58:32 runnervmeozm8 gunicorn[4660]: [2026-11-24 18:58:32 +0000] [4660] [INFO] Listening at: http://127.0.0.1:8000 (4660)
+Nov 24 18:58:32 runnervmeozm8 gunicorn[4660]: [2026-11-24 18:58:32 +0000] [4660] [INFO] Using worker: sync
+Nov 24 18:58:32 runnervmeozm8 gunicorn[4727]: [2026-11-24 18:58:32 +0000] [4727] [INFO] Booting worker with pid: 4727
+Nov 24 18:58:32 runnervmeozm8 gunicorn[4728]: [2026-11-24 18:58:32 +0000] [4728] [INFO] Booting worker with pid: 4728
+Nov 24 18:58:34 runnervmeozm8 gunicorn[4728]: 127.0.0.1 - - [24/Nov/2026:18:58:34 +0000] "GET /health HTTP/1.0" 200 53 "-" "curl/8.5.0"
+Nov 24 18:58:34 runnervmeozm8 gunicorn[4728]: 127.0.0.1 - - [24/Nov/2026:18:58:34 +0000] "GET /results/10001 HTTP/1.0" 200 92 "-" "curl/8.5.0"
 === B3.1 bare-metal deployment ===
 curl: (7) Failed to connect to 127.0.0.1 port 8100 after 0 ms: Couldn't connect to server
 {"service":"University Result Portal","status":"ok"}
@@ -294,15 +289,15 @@ Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
 Using cached markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
 Using cached werkzeug-3.1.9-py3-none-any.whl (228 kB)
 Using cached packaging-26.4-py3-none-any.whl (140 kB)
-Saved /tmp/tmp.o3BSQiAqs2/wheels/flask-3.1.2-py3-none-any.whl
-Saved /tmp/tmp.o3BSQiAqs2/wheels/gunicorn-23.0.0-py3-none-any.whl
-Saved /tmp/tmp.o3BSQiAqs2/wheels/blinker-1.9.0-py3-none-any.whl
-Saved /tmp/tmp.o3BSQiAqs2/wheels/click-8.5.1-py3-none-any.whl
-Saved /tmp/tmp.o3BSQiAqs2/wheels/itsdangerous-2.2.0-py3-none-any.whl
-Saved /tmp/tmp.o3BSQiAqs2/wheels/jinja2-3.1.6-py3-none-any.whl
-Saved /tmp/tmp.o3BSQiAqs2/wheels/markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
-Saved /tmp/tmp.o3BSQiAqs2/wheels/werkzeug-3.1.9-py3-none-any.whl
-Saved /tmp/tmp.o3BSQiAqs2/wheels/packaging-26.4-py3-none-any.whl
+Saved /tmp/tmp.TbA8jxUzzq/wheels/flask-3.1.2-py3-none-any.whl
+Saved /tmp/tmp.TbA8jxUzzq/wheels/gunicorn-23.0.0-py3-none-any.whl
+Saved /tmp/tmp.TbA8jxUzzq/wheels/blinker-1.9.0-py3-none-any.whl
+Saved /tmp/tmp.TbA8jxUzzq/wheels/click-8.5.1-py3-none-any.whl
+Saved /tmp/tmp.TbA8jxUzzq/wheels/itsdangerous-2.2.0-py3-none-any.whl
+Saved /tmp/tmp.TbA8jxUzzq/wheels/jinja2-3.1.6-py3-none-any.whl
+Saved /tmp/tmp.TbA8jxUzzq/wheels/markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+Saved /tmp/tmp.TbA8jxUzzq/wheels/werkzeug-3.1.9-py3-none-any.whl
+Saved /tmp/tmp.TbA8jxUzzq/wheels/packaging-26.4-py3-none-any.whl
 Successfully downloaded Flask gunicorn blinker click itsdangerous jinja2 markupsafe werkzeug packaging
 curl: (56) Recv failure: Connection reset by peer
 curl: (56) Recv failure: Connection reset by peer
@@ -499,7 +494,7 @@ VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
 #3 DONE 0.0s
 
 #2 [internal] load metadata for docker.io/library/python:3.12
-#2 DONE 0.8s
+#2 DONE 1.0s
 
 #4 [internal] load .dockerignore
 #4 transferring context: 102B done
@@ -512,88 +507,99 @@ VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
 #6 [1/6] FROM docker.io/library/python:3.12@sha256:28c94cd555fc58284608d5608324fb345869903ea73768395ebd85f961bd9b1f
 #6 resolve docker.io/library/python:3.12@sha256:28c94cd555fc58284608d5608324fb345869903ea73768395ebd85f961bd9b1f done
 #6 sha256:44085b551578963fb7c40f6ed85800e374e9841ba873dfc7855ed2e7ba62fbff 2.32kB / 2.32kB done
-#6 sha256:133e21d3e00f3d2179ee10bc16a86f143abd8d09d42089b8b8542a3f01c80448 0B / 49.41MB 0.1s
-#6 sha256:f0be6780dc18eb58a60fabb4c8bedb0c3ea852f4f3c7d199d0dd2ca073068d3c 0B / 25.65MB 0.1s
-#6 sha256:c2acb1a7e2440113768de2c5a81ca8c6c89281a433d4e9f05eecc3082aac2c04 0B / 67.82MB 0.1s
-#6 sha256:28c94cd555fc58284608d5608324fb345869903ea73768395ebd85f961bd9b1f 10.32kB / 10.32kB done
 #6 sha256:49bd3aa859658c3a840239b6eea90d94ff72fbf301e200c377a0710509f7253a 6.52kB / 6.52kB done
-#6 sha256:133e21d3e00f3d2179ee10bc16a86f143abd8d09d42089b8b8542a3f01c80448 35.65MB / 49.41MB 0.2s
-#6 sha256:133e21d3e00f3d2179ee10bc16a86f143abd8d09d42089b8b8542a3f01c80448 49.41MB / 49.41MB 0.2s done
-#6 sha256:f0be6780dc18eb58a60fabb4c8bedb0c3ea852f4f3c7d199d0dd2ca073068d3c 14.68MB / 25.65MB 0.3s
-#6 sha256:c2acb1a7e2440113768de2c5a81ca8c6c89281a433d4e9f05eecc3082aac2c04 33.55MB / 67.82MB 0.3s
-#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 0B / 237.38MB 0.3s
+#6 sha256:f0be6780dc18eb58a60fabb4c8bedb0c3ea852f4f3c7d199d0dd2ca073068d3c 0B / 25.65MB 0.1s
+#6 sha256:28c94cd555fc58284608d5608324fb345869903ea73768395ebd85f961bd9b1f 10.32kB / 10.32kB done
+#6 sha256:c2acb1a7e2440113768de2c5a81ca8c6c89281a433d4e9f05eecc3082aac2c04 0B / 67.82MB 0.1s
+#6 sha256:133e21d3e00f3d2179ee10bc16a86f143abd8d09d42089b8b8542a3f01c80448 0B / 49.41MB 0.1s
+#6 sha256:133e21d3e00f3d2179ee10bc16a86f143abd8d09d42089b8b8542a3f01c80448 24.12MB / 49.41MB 0.2s
+#6 sha256:f0be6780dc18eb58a60fabb4c8bedb0c3ea852f4f3c7d199d0dd2ca073068d3c 25.65MB / 25.65MB 0.4s
+#6 sha256:c2acb1a7e2440113768de2c5a81ca8c6c89281a433d4e9f05eecc3082aac2c04 40.89MB / 67.82MB 0.4s
+#6 sha256:133e21d3e00f3d2179ee10bc16a86f143abd8d09d42089b8b8542a3f01c80448 49.41MB / 49.41MB 0.4s
+#6 sha256:c2acb1a7e2440113768de2c5a81ca8c6c89281a433d4e9f05eecc3082aac2c04 57.67MB / 67.82MB 0.5s
 #6 extracting sha256:133e21d3e00f3d2179ee10bc16a86f143abd8d09d42089b8b8542a3f01c80448
-#6 sha256:f0be6780dc18eb58a60fabb4c8bedb0c3ea852f4f3c7d199d0dd2ca073068d3c 25.65MB / 25.65MB 0.3s done
-#6 sha256:c2acb1a7e2440113768de2c5a81ca8c6c89281a433d4e9f05eecc3082aac2c04 67.82MB / 67.82MB 0.4s done
-#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 78.64MB / 237.38MB 0.5s
-#6 sha256:726c2f0f7f10f3234b760c828f6a86e26b8f2fa463989cb017b063a9fa0b14aa 6.09MB / 6.09MB 0.4s done
-#6 sha256:10482f025baa940ecb4cf4801c26185ec389cb9ff97c45884ba150b33f973d0e 0B / 25.75MB 0.5s
-#6 sha256:ab60e49e3dc75dcaf82e0c6a95b95d13f749a9745151c9e8afe26caae8c585dc 0B / 248B 0.5s
-#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 117.44MB / 237.38MB 0.6s
-#6 sha256:10482f025baa940ecb4cf4801c26185ec389cb9ff97c45884ba150b33f973d0e 25.75MB / 25.75MB 0.6s
-#6 sha256:ab60e49e3dc75dcaf82e0c6a95b95d13f749a9745151c9e8afe26caae8c585dc 248B / 248B 0.5s done
-#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 168.82MB / 237.38MB 0.7s
-#6 sha256:10482f025baa940ecb4cf4801c26185ec389cb9ff97c45884ba150b33f973d0e 25.75MB / 25.75MB 0.6s done
-#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 217.06MB / 237.38MB 0.8s
-#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 237.38MB / 237.38MB 0.9s done
-#6 extracting sha256:133e21d3e00f3d2179ee10bc16a86f143abd8d09d42089b8b8542a3f01c80448 0.9s done
-#6 extracting sha256:f0be6780dc18eb58a60fabb4c8bedb0c3ea852f4f3c7d199d0dd2ca073068d3c 0.1s
-#6 extracting sha256:f0be6780dc18eb58a60fabb4c8bedb0c3ea852f4f3c7d199d0dd2ca073068d3c 0.3s done
-#6 extracting sha256:c2acb1a7e2440113768de2c5a81ca8c6c89281a433d4e9f05eecc3082aac2c04 0.1s
-#6 extracting sha256:c2acb1a7e2440113768de2c5a81ca8c6c89281a433d4e9f05eecc3082aac2c04 1.2s done
-#6 extracting sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 0.1s
-#6 extracting sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 3.5s done
-#6 extracting sha256:726c2f0f7f10f3234b760c828f6a86e26b8f2fa463989cb017b063a9fa0b14aa 0.1s
-#6 extracting sha256:726c2f0f7f10f3234b760c828f6a86e26b8f2fa463989cb017b063a9fa0b14aa 0.1s done
-#6 extracting sha256:10482f025baa940ecb4cf4801c26185ec389cb9ff97c45884ba150b33f973d0e 0.1s
+#6 sha256:f0be6780dc18eb58a60fabb4c8bedb0c3ea852f4f3c7d199d0dd2ca073068d3c 25.65MB / 25.65MB 0.5s done
+#6 sha256:c2acb1a7e2440113768de2c5a81ca8c6c89281a433d4e9f05eecc3082aac2c04 67.82MB / 67.82MB 0.6s
+#6 sha256:133e21d3e00f3d2179ee10bc16a86f143abd8d09d42089b8b8542a3f01c80448 49.41MB / 49.41MB 0.5s done
+#6 sha256:726c2f0f7f10f3234b760c828f6a86e26b8f2fa463989cb017b063a9fa0b14aa 0B / 6.09MB 0.6s
+#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 0B / 237.38MB 0.6s
+#6 sha256:726c2f0f7f10f3234b760c828f6a86e26b8f2fa463989cb017b063a9fa0b14aa 6.09MB / 6.09MB 0.7s
+#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 20.97MB / 237.38MB 0.7s
+#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 41.94MB / 237.38MB 0.8s
+#6 sha256:c2acb1a7e2440113768de2c5a81ca8c6c89281a433d4e9f05eecc3082aac2c04 67.82MB / 67.82MB 0.8s done
+#6 sha256:726c2f0f7f10f3234b760c828f6a86e26b8f2fa463989cb017b063a9fa0b14aa 6.09MB / 6.09MB 0.8s done
+#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 61.87MB / 237.38MB 0.9s
+#6 sha256:10482f025baa940ecb4cf4801c26185ec389cb9ff97c45884ba150b33f973d0e 3.15MB / 25.75MB 0.9s
+#6 sha256:ab60e49e3dc75dcaf82e0c6a95b95d13f749a9745151c9e8afe26caae8c585dc 0B / 248B 0.9s
+#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 109.05MB / 237.38MB 1.1s
+#6 sha256:10482f025baa940ecb4cf4801c26185ec389cb9ff97c45884ba150b33f973d0e 25.75MB / 25.75MB 1.1s done
+#6 sha256:ab60e49e3dc75dcaf82e0c6a95b95d13f749a9745151c9e8afe26caae8c585dc 248B / 248B 0.9s done
+#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 123.73MB / 237.38MB 1.2s
+#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 140.51MB / 237.38MB 1.3s
+#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 166.72MB / 237.38MB 1.4s
+#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 184.55MB / 237.38MB 1.5s
+#6 extracting sha256:133e21d3e00f3d2179ee10bc16a86f143abd8d09d42089b8b8542a3f01c80448 1.1s done
+#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 212.86MB / 237.38MB 1.6s
+#6 extracting sha256:f0be6780dc18eb58a60fabb4c8bedb0c3ea852f4f3c7d199d0dd2ca073068d3c
+#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 237.38MB / 237.38MB 1.7s
+#6 extracting sha256:f0be6780dc18eb58a60fabb4c8bedb0c3ea852f4f3c7d199d0dd2ca073068d3c 0.4s done
+#6 sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 237.38MB / 237.38MB 2.6s done
+#6 extracting sha256:c2acb1a7e2440113768de2c5a81ca8c6c89281a433d4e9f05eecc3082aac2c04
+#6 extracting sha256:c2acb1a7e2440113768de2c5a81ca8c6c89281a433d4e9f05eecc3082aac2c04 1.4s done
+#6 extracting sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1
+#6 extracting sha256:807982f6af4fc03f2d394347e6e9bcaab579df144f168742316271ff8f226ac1 3.9s done
+#6 extracting sha256:726c2f0f7f10f3234b760c828f6a86e26b8f2fa463989cb017b063a9fa0b14aa
+#6 extracting sha256:726c2f0f7f10f3234b760c828f6a86e26b8f2fa463989cb017b063a9fa0b14aa 0.2s done
+#6 extracting sha256:10482f025baa940ecb4cf4801c26185ec389cb9ff97c45884ba150b33f973d0e
 #6 extracting sha256:10482f025baa940ecb4cf4801c26185ec389cb9ff97c45884ba150b33f973d0e 0.4s done
+#6 extracting sha256:ab60e49e3dc75dcaf82e0c6a95b95d13f749a9745151c9e8afe26caae8c585dc
 #6 extracting sha256:ab60e49e3dc75dcaf82e0c6a95b95d13f749a9745151c9e8afe26caae8c585dc done
-#6 DONE 7.0s
+#6 DONE 14.4s
 
 #7 [2/6] WORKDIR /app
-#7 DONE 4.3s
+#7 DONE 0.0s
 
 #8 [3/6] COPY webapp/requirements.txt ./requirements.txt
 #8 DONE 0.0s
 
 #9 [4/6] RUN pip install --no-cache-dir -r requirements.txt     && groupadd --system portal     && useradd --system --gid portal --home-dir /app --shell /usr/sbin/nologin portal
-#9 1.136 Collecting Flask==3.1.2 (from -r requirements.txt (line 1))
-#9 1.170   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
-#9 1.190 Collecting gunicorn==23.0.0 (from -r requirements.txt (line 2))
-#9 1.198   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
-#9 1.254 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 3))
-#9 1.262   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
-#9 1.274 Collecting blinker>=1.9.0 (from Flask==3.1.2->-r requirements.txt (line 1))
-#9 1.282   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
-#9 1.299 Collecting click>=8.1.3 (from Flask==3.1.2->-r requirements.txt (line 1))
-#9 1.308   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
-#9 1.321 Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r requirements.txt (line 1))
-#9 1.330   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
-#9 1.345 Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r requirements.txt (line 1))
-#9 1.354   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
-#9 1.389 Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r requirements.txt (line 1))
-#9 1.398   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
-#9 1.416 Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r requirements.txt (line 1))
-#9 1.424   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
-#9 1.440 Collecting packaging (from gunicorn==23.0.0->-r requirements.txt (line 2))
-#9 1.448   Downloading packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
-#9 1.461 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
-#9 1.478 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
-#9 1.488 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
-#9 1.516    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 140.3 MB/s eta 0:00:00
-#9 1.524 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
-#9 1.532 Downloading click-8.5.1-py3-none-any.whl (126 kB)
-#9 1.541 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
-#9 1.549 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
-#9 1.558 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
-#9 1.566 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
-#9 1.575 Downloading packaging-26.4-py3-none-any.whl (140 kB)
-#9 1.593 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
-#9 1.984 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.4 psycopg2-binary-2.9.10 werkzeug-3.1.9
-#9 1.985 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
-#9 2.041 
-#9 2.041 [notice] A new release of pip is available: 25.0.1 -> 26.3
-#9 2.041 [notice] To update, run: pip install --upgrade pip
+#9 1.001 Collecting Flask==3.1.2 (from -r requirements.txt (line 1))
+#9 1.040   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+#9 1.055 Collecting gunicorn==23.0.0 (from -r requirements.txt (line 2))
+#9 1.063   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+#9 1.106 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 3))
+#9 1.117   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#9 1.126 Collecting blinker>=1.9.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.133   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#9 1.146 Collecting click>=8.1.3 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.152   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+#9 1.162 Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.169   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#9 1.180 Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.187   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#9 1.216 Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.223   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#9 1.237 Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.244   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+#9 1.257 Collecting packaging (from gunicorn==23.0.0->-r requirements.txt (line 2))
+#9 1.263   Downloading packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
+#9 1.274 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
+#9 1.289 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+#9 1.296 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+#9 1.319    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 181.9 MB/s eta 0:00:00
+#9 1.326 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#9 1.333 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+#9 1.339 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#9 1.346 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#9 1.353 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#9 1.360 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+#9 1.366 Downloading packaging-26.4-py3-none-any.whl (140 kB)
+#9 1.384 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
+#9 1.770 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.4 psycopg2-binary-2.9.10 werkzeug-3.1.9
+#9 1.771 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#9 1.826 
+#9 1.826 [notice] A new release of pip is available: 25.0.1 -> 26.3
+#9 1.826 [notice] To update, run: pip install --upgrade pip
 #9 DONE 2.1s
 
 #10 [5/6] COPY webapp/app.py ./app.py
@@ -603,10 +609,11 @@ VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
 #11 DONE 0.1s
 
 #12 exporting to image
-#12 exporting layers 0.1s done
-#12 writing image sha256:8f3df8fd861212f22044170ca16b25f1ae6c8a0986ee78b44a35f613f1af41fd done
+#12 exporting layers
+#12 exporting layers 1.7s done
+#12 writing image sha256:8560f8aff340b872ea8ac259858e1be0b3a9fc941efc490ecdfe7279e263c001 done
 #12 naming to docker.io/library/result-portal:full done
-#12 DONE 0.1s
+#12 DONE 1.7s
 #0 building with "default" instance using docker driver
 
 #1 [internal] load build definition from Dockerfile
@@ -614,7 +621,7 @@ VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
 #1 DONE 0.0s
 
 #2 [internal] load metadata for docker.io/library/python:3.12-slim
-#2 DONE 0.4s
+#2 DONE 0.5s
 
 #3 [internal] load .dockerignore
 #3 transferring context: 102B done
@@ -626,70 +633,73 @@ VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
 
 #5 [1/6] FROM docker.io/library/python:3.12-slim@sha256:191083cdf6c7bda8c76158983163ead5d5cf7b77cf3033e805bb0f5296f51b4b
 #5 resolve docker.io/library/python:3.12-slim@sha256:191083cdf6c7bda8c76158983163ead5d5cf7b77cf3033e805bb0f5296f51b4b done
-#5 sha256:40748add9f4f6f944f334cbfc286590d6e93f60fb06f6ee7ffa1b894080ad861 1.05MB / 29.84MB 0.1s
-#5 sha256:30cf67d7101c07c55eef20970bc403fbde5f8600c2c4c38b4881a2da4fffb0b6 0B / 1.29MB 0.1s
-#5 sha256:e3e428093f5e80791498526d73a46eabf0e69575dc10897cf47aa99120e41712 6.29MB / 12.12MB 0.1s
+#5 sha256:286d8c291daa64125703b22c3d009462bcae0b630eaa16ad5b934502c4917233 0B / 248B 0.1s
 #5 sha256:191083cdf6c7bda8c76158983163ead5d5cf7b77cf3033e805bb0f5296f51b4b 10.37kB / 10.37kB done
 #5 sha256:4a68d3169325c47e1bafbb86425220f03fbdff6f079a419e8d39407183288217 1.75kB / 1.75kB done
 #5 sha256:d497f3e5689c500c07dd6c13dee73cd21ed4da604e09ecd99059843c09ab8cd6 5.66kB / 5.66kB done
-#5 sha256:40748add9f4f6f944f334cbfc286590d6e93f60fb06f6ee7ffa1b894080ad861 29.84MB / 29.84MB 0.2s done
+#5 sha256:40748add9f4f6f944f334cbfc286590d6e93f60fb06f6ee7ffa1b894080ad861 0B / 29.84MB 0.1s
 #5 sha256:30cf67d7101c07c55eef20970bc403fbde5f8600c2c4c38b4881a2da4fffb0b6 1.29MB / 1.29MB 0.1s done
-#5 sha256:e3e428093f5e80791498526d73a46eabf0e69575dc10897cf47aa99120e41712 12.12MB / 12.12MB 0.1s done
-#5 extracting sha256:40748add9f4f6f944f334cbfc286590d6e93f60fb06f6ee7ffa1b894080ad861 0.1s
-#5 sha256:286d8c291daa64125703b22c3d009462bcae0b630eaa16ad5b934502c4917233 0B / 248B 0.2s
-#5 sha256:286d8c291daa64125703b22c3d009462bcae0b630eaa16ad5b934502c4917233 248B / 248B 0.2s done
-#5 extracting sha256:40748add9f4f6f944f334cbfc286590d6e93f60fb06f6ee7ffa1b894080ad861 0.5s done
-#5 extracting sha256:30cf67d7101c07c55eef20970bc403fbde5f8600c2c4c38b4881a2da4fffb0b6 0.0s done
-#5 extracting sha256:e3e428093f5e80791498526d73a46eabf0e69575dc10897cf47aa99120e41712 0.1s
+#5 sha256:e3e428093f5e80791498526d73a46eabf0e69575dc10897cf47aa99120e41712 0B / 12.12MB 0.1s
+#5 sha256:286d8c291daa64125703b22c3d009462bcae0b630eaa16ad5b934502c4917233 248B / 248B 0.2s
+#5 sha256:40748add9f4f6f944f334cbfc286590d6e93f60fb06f6ee7ffa1b894080ad861 29.84MB / 29.84MB 0.3s
+#5 sha256:e3e428093f5e80791498526d73a46eabf0e69575dc10897cf47aa99120e41712 12.12MB / 12.12MB 0.3s
+#5 sha256:286d8c291daa64125703b22c3d009462bcae0b630eaa16ad5b934502c4917233 248B / 248B 0.3s done
+#5 sha256:40748add9f4f6f944f334cbfc286590d6e93f60fb06f6ee7ffa1b894080ad861 29.84MB / 29.84MB 0.4s done
+#5 sha256:e3e428093f5e80791498526d73a46eabf0e69575dc10897cf47aa99120e41712 12.12MB / 12.12MB 0.3s done
+#5 extracting sha256:40748add9f4f6f944f334cbfc286590d6e93f60fb06f6ee7ffa1b894080ad861
+#5 extracting sha256:40748add9f4f6f944f334cbfc286590d6e93f60fb06f6ee7ffa1b894080ad861 0.6s done
+#5 extracting sha256:30cf67d7101c07c55eef20970bc403fbde5f8600c2c4c38b4881a2da4fffb0b6 0.1s done
+#5 extracting sha256:e3e428093f5e80791498526d73a46eabf0e69575dc10897cf47aa99120e41712
 #5 extracting sha256:e3e428093f5e80791498526d73a46eabf0e69575dc10897cf47aa99120e41712 0.3s done
+#5 extracting sha256:286d8c291daa64125703b22c3d009462bcae0b630eaa16ad5b934502c4917233
 #5 extracting sha256:286d8c291daa64125703b22c3d009462bcae0b630eaa16ad5b934502c4917233 done
-#5 DONE 1.1s
+#5 DONE 2.2s
 
 #6 [2/6] WORKDIR /app
-#6 DONE 0.1s
+#6 DONE 0.0s
 
 #7 [3/6] COPY webapp/requirements.txt ./requirements.txt
 #7 DONE 0.0s
 
 #8 [4/6] RUN pip install --no-cache-dir -r requirements.txt     && groupadd --system portal     && useradd --system --gid portal --home-dir /app --shell /usr/sbin/nologin portal
-#8 1.011 Collecting Flask==3.1.2 (from -r requirements.txt (line 1))
-#8 1.043   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
-#8 1.062 Collecting gunicorn==23.0.0 (from -r requirements.txt (line 2))
-#8 1.072   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
-#8 1.124 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 3))
-#8 1.132   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
-#8 1.159 Collecting blinker>=1.9.0 (from Flask==3.1.2->-r requirements.txt (line 1))
-#8 1.167   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
-#8 1.182 Collecting click>=8.1.3 (from Flask==3.1.2->-r requirements.txt (line 1))
-#8 1.191   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
-#8 1.203 Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r requirements.txt (line 1))
-#8 1.212   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
-#8 1.225 Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r requirements.txt (line 1))
-#8 1.234   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
-#8 1.267 Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r requirements.txt (line 1))
-#8 1.276   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
-#8 1.293 Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r requirements.txt (line 1))
-#8 1.302   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
-#8 1.316 Collecting packaging (from gunicorn==23.0.0->-r requirements.txt (line 2))
-#8 1.325   Downloading packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
-#8 1.338 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
-#8 1.356 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
-#8 1.365 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
-#8 1.395    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 133.5 MB/s eta 0:00:00
-#8 1.404 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
-#8 1.413 Downloading click-8.5.1-py3-none-any.whl (126 kB)
-#8 1.422 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
-#8 1.431 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
-#8 1.440 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
-#8 1.449 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
-#8 1.457 Downloading packaging-26.4-py3-none-any.whl (140 kB)
-#8 1.474 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
-#8 1.860 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.4 psycopg2-binary-2.9.10 werkzeug-3.1.9
-#8 1.860 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
-#8 1.931 
-#8 1.931 [notice] A new release of pip is available: 25.0.1 -> 26.3
-#8 1.931 [notice] To update, run: pip install --upgrade pip
-#8 DONE 2.0s
+#8 1.007 Collecting Flask==3.1.2 (from -r requirements.txt (line 1))
+#8 1.053   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+#8 1.069 Collecting gunicorn==23.0.0 (from -r requirements.txt (line 2))
+#8 1.077   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+#8 1.120 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 3))
+#8 1.127   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#8 1.137 Collecting blinker>=1.9.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#8 1.143   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#8 1.156 Collecting click>=8.1.3 (from Flask==3.1.2->-r requirements.txt (line 1))
+#8 1.163   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+#8 1.174 Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#8 1.181   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#8 1.193 Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r requirements.txt (line 1))
+#8 1.200   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#8 1.230 Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r requirements.txt (line 1))
+#8 1.236   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#8 1.252 Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#8 1.259   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+#8 1.281 Collecting packaging (from gunicorn==23.0.0->-r requirements.txt (line 2))
+#8 1.287   Downloading packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
+#8 1.299 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
+#8 1.312 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+#8 1.319 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+#8 1.350    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 119.0 MB/s eta 0:00:00
+#8 1.356 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#8 1.363 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+#8 1.372 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#8 1.378 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#8 1.385 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#8 1.392 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+#8 1.410 Downloading packaging-26.4-py3-none-any.whl (140 kB)
+#8 1.427 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
+#8 1.801 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.4 psycopg2-binary-2.9.10 werkzeug-3.1.9
+#8 1.802 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#8 1.877 
+#8 1.877 [notice] A new release of pip is available: 25.0.1 -> 26.3
+#8 1.877 [notice] To update, run: pip install --upgrade pip
+#8 DONE 2.1s
 
 #9 [5/6] COPY webapp/app.py ./app.py
 #9 DONE 0.0s
@@ -698,10 +708,11 @@ VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
 #10 DONE 0.1s
 
 #11 exporting to image
-#11 exporting layers 0.1s done
-#11 writing image sha256:cb62a595c6bf1042d49375230bec3e88f655f1778ca90d9dbb021c41e182068b done
+#11 exporting layers
+#11 exporting layers 0.6s done
+#11 writing image sha256:8712febecf042c9af4879c465e262ec468ba76c32c63888923e1a6ca01f96415 done
 #11 naming to docker.io/library/result-portal:compose done
-#11 DONE 0.1s
+#11 DONE 0.6s
 #0 building with "default" instance using docker driver
 
 #1 [internal] load build definition from Dockerfile.multistage
@@ -715,10 +726,10 @@ VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
 #3 transferring context: 102B done
 #3 DONE 0.0s
 
-#4 [runtime 2/6] WORKDIR /app
+#4 [builder 1/4] FROM docker.io/library/python:3.12-slim@sha256:191083cdf6c7bda8c76158983163ead5d5cf7b77cf3033e805bb0f5296f51b4b
 #4 CACHED
 
-#5 [builder 1/4] FROM docker.io/library/python:3.12-slim@sha256:191083cdf6c7bda8c76158983163ead5d5cf7b77cf3033e805bb0f5296f51b4b
+#5 [runtime 2/6] WORKDIR /app
 #5 CACHED
 
 #6 [internal] load build context
@@ -732,50 +743,50 @@ VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
 #8 DONE 0.0s
 
 #9 [builder 4/4] RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
-#9 1.003 Collecting Flask==3.1.2 (from -r requirements.txt (line 1))
-#9 1.034   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
-#9 1.054 Collecting gunicorn==23.0.0 (from -r requirements.txt (line 2))
-#9 1.065   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
-#9 1.114 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 3))
-#9 1.124   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
-#9 1.134 Collecting blinker>=1.9.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.005 Collecting Flask==3.1.2 (from -r requirements.txt (line 1))
+#9 1.052   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+#9 1.069 Collecting gunicorn==23.0.0 (from -r requirements.txt (line 2))
+#9 1.076   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+#9 1.120 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 3))
+#9 1.127   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#9 1.137 Collecting blinker>=1.9.0 (from Flask==3.1.2->-r requirements.txt (line 1))
 #9 1.144   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
-#9 1.159 Collecting click>=8.1.3 (from Flask==3.1.2->-r requirements.txt (line 1))
-#9 1.168   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
-#9 1.179 Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r requirements.txt (line 1))
-#9 1.188   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
-#9 1.201 Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r requirements.txt (line 1))
-#9 1.209   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
-#9 1.242 Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r requirements.txt (line 1))
-#9 1.251   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
-#9 1.268 Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r requirements.txt (line 1))
-#9 1.276   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
-#9 1.291 Collecting packaging (from gunicorn==23.0.0->-r requirements.txt (line 2))
-#9 1.301   Downloading packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
-#9 1.314 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
-#9 1.332 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
-#9 1.343 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
-#9 1.371    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 134.1 MB/s eta 0:00:00
-#9 1.380 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
-#9 1.389 Downloading click-8.5.1-py3-none-any.whl (126 kB)
-#9 1.398 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
-#9 1.407 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
-#9 1.416 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
-#9 1.425 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
-#9 1.435 Downloading packaging-26.4-py3-none-any.whl (140 kB)
-#9 1.452 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
-#9 1.838 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.4 psycopg2-binary-2.9.10 werkzeug-3.1.9
-#9 1.838 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
-#9 1.911 
-#9 1.911 [notice] A new release of pip is available: 25.0.1 -> 26.3
-#9 1.911 [notice] To update, run: pip install --upgrade pip
-#9 DONE 2.0s
+#9 1.157 Collecting click>=8.1.3 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.164   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+#9 1.174 Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.181   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#9 1.192 Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.199   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#9 1.228 Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.235   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#9 1.249 Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#9 1.256   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+#9 1.268 Collecting packaging (from gunicorn==23.0.0->-r requirements.txt (line 2))
+#9 1.275   Downloading packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
+#9 1.287 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
+#9 1.301 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+#9 1.308 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+#9 1.330    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 194.7 MB/s eta 0:00:00
+#9 1.337 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#9 1.343 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+#9 1.350 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#9 1.357 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#9 1.364 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#9 1.371 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+#9 1.378 Downloading packaging-26.4-py3-none-any.whl (140 kB)
+#9 1.394 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
+#9 1.777 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.4 psycopg2-binary-2.9.10 werkzeug-3.1.9
+#9 1.777 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#9 1.859 
+#9 1.859 [notice] A new release of pip is available: 25.0.1 -> 26.3
+#9 1.859 [notice] To update, run: pip install --upgrade pip
+#9 DONE 2.1s
 
 #10 [runtime 3/6] COPY --from=builder /install /usr/local
-#10 DONE 0.0s
+#10 DONE 0.1s
 
 #11 [runtime 4/6] RUN groupadd --system portal     && useradd --system --gid portal --home-dir /app --shell /usr/sbin/nologin portal
-#11 DONE 0.1s
+#11 DONE 0.2s
 
 #12 [runtime 5/6] COPY webapp/app.py ./app.py
 #12 DONE 0.0s
@@ -784,10 +795,11 @@ VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
 #13 DONE 0.1s
 
 #14 exporting to image
-#14 exporting layers 0.1s done
-#14 writing image sha256:9e7fddcbc929e96603b54ef839ca291458c9fa3e2f5947d6824457605f2843b1 done
+#14 exporting layers
+#14 exporting layers 0.3s done
+#14 writing image sha256:05f1ae026539fc3f1bb640f8df5cd20eb711762a2f63ac9b9b363d34ab3c74ca done
 #14 naming to docker.io/library/result-portal:multistage done
-#14 DONE 0.1s
+#14 DONE 0.3s
 #0 building with "default" instance using docker driver
 
 #1 [internal] load build definition from Dockerfile.ubuntu
@@ -813,225 +825,226 @@ VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
 
 #6 [1/7] FROM docker.io/library/ubuntu:24.04@sha256:562111b88caa79c71391c0c4d3c2114a7d5c35915c20561fd893cb1e07929e6b
 #6 resolve docker.io/library/ubuntu:24.04@sha256:562111b88caa79c71391c0c4d3c2114a7d5c35915c20561fd893cb1e07929e6b done
+#6 sha256:562111b88caa79c71391c0c4d3c2114a7d5c35915c20561fd893cb1e07929e6b 6.69kB / 6.69kB done
 #6 sha256:9a04f13b3f80ef056361e30868593b1cfd2279fe19e4081cb93a90bf56819d6a 424B / 424B done
 #6 sha256:2b147973fd863c93ced60f325461fe0e262b91317b008e6a2d961f13e81af0e4 2.05kB / 2.05kB done
 #6 sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050 0B / 29.79MB 0.1s
-#6 sha256:562111b88caa79c71391c0c4d3c2114a7d5c35915c20561fd893cb1e07929e6b 6.69kB / 6.69kB done
-#6 sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050 29.79MB / 29.79MB 0.2s done
-#6 extracting sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050
-#6 extracting sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050 0.5s done
-#6 DONE 0.8s
+#6 sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050 29.79MB / 29.79MB 0.3s
+#6 sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050 29.79MB / 29.79MB 0.3s done
+#6 extracting sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050 0.1s
+#6 extracting sha256:8e8df94085bf9af8de500d2042195f1819a4c381b7f3be2a6b920cab65039050 0.6s done
+#6 DONE 0.9s
 
 #7 [2/7] WORKDIR /app
-#7 DONE 0.0s
+#7 DONE 0.5s
 
 #8 [3/7] RUN apt-get update     && apt-get install -y --no-install-recommends python3 python3-venv ca-certificates     && rm -rf /var/lib/apt/lists/*     && python3 -m venv /opt/venv     && groupadd --system portal     && useradd --system --gid portal --home-dir /app --shell /usr/sbin/nologin portal
-#8 0.332 Get:1 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
-#8 0.344 Get:2 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
-#8 0.492 Get:3 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2272 kB]
-#8 0.648 Get:4 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
-#8 0.711 Get:5 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1562 kB]
-#8 0.732 Get:6 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1504 kB]
-#8 0.760 Get:7 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [55.6 kB]
-#8 0.882 Get:8 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
-#8 0.956 Get:9 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [331 kB]
-#8 0.997 Get:10 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1808 kB]
-#8 1.100 Get:11 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [19.3 MB]
-#8 1.245 Get:12 http://archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [117 kB]
-#8 1.252 Get:13 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2403 kB]
-#8 1.270 Get:14 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [61.7 kB]
-#8 1.278 Get:15 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [2184 kB]
-#8 1.299 Get:16 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1842 kB]
-#8 1.314 Get:17 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [669 B]
-#8 1.322 Get:18 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [36.0 kB]
-#8 1.331 Get:19 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [49.0 kB]
-#8 1.959 Fetched 34.2 MB in 2s (18.2 MB/s)
-#8 1.959 Reading package lists...
-#8 2.568 Reading package lists...
-#8 3.170 Building dependency tree...
-#8 3.274 Reading state information...
-#8 3.417 The following additional packages will be installed:
-#8 3.417   libexpat1 libpython3-stdlib libpython3.12-minimal libpython3.12-stdlib
-#8 3.418   libreadline8t64 libsqlite3-0 media-types netbase openssl python3-minimal
-#8 3.418   python3-pip-whl python3-setuptools-whl python3.12 python3.12-minimal
-#8 3.418   python3.12-venv readline-common tzdata
-#8 3.418 Suggested packages:
-#8 3.418   python3-doc python3-tk python3.12-doc binutils binfmt-support readline-doc
-#8 3.467 The following NEW packages will be installed:
-#8 3.467   ca-certificates libexpat1 libpython3-stdlib libpython3.12-minimal
-#8 3.468   libpython3.12-stdlib libreadline8t64 libsqlite3-0 media-types netbase
-#8 3.468   openssl python3 python3-minimal python3-pip-whl python3-setuptools-whl
-#8 3.468   python3-venv python3.12 python3.12-minimal python3.12-venv readline-common
-#8 3.468   tzdata
-#8 3.586 0 upgraded, 20 newly installed, 0 to remove and 4 not upgraded.
-#8 3.586 Need to get 10.9 MB of archives.
-#8 3.586 After this operation, 33.0 MB of additional disk space will be used.
-#8 3.586 Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-minimal amd64 3.12.3-1ubuntu0.17 [839 kB]
-#8 3.815 Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libexpat1 amd64 2.6.1-2ubuntu0.6 [98.9 kB]
-#8 3.823 Get:3 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12-minimal amd64 3.12.3-1ubuntu0.17 [2335 kB]
-#8 3.910 Get:4 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3-minimal amd64 3.12.3-0ubuntu2.1 [27.4 kB]
-#8 3.919 Get:5 http://archive.ubuntu.com/ubuntu noble/main amd64 media-types all 10.1.0 [27.5 kB]
-#8 3.931 Get:6 http://archive.ubuntu.com/ubuntu noble/main amd64 netbase all 6.4 [13.1 kB]
-#8 3.940 Get:7 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 tzdata all 2026f-0ubuntu0.24.04.1 [283 kB]
-#8 3.958 Get:8 http://archive.ubuntu.com/ubuntu noble/main amd64 readline-common all 8.2-4build1 [56.5 kB]
-#8 3.966 Get:9 http://archive.ubuntu.com/ubuntu noble/main amd64 libreadline8t64 amd64 8.2-4build1 [153 kB]
-#8 3.977 Get:10 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libsqlite3-0 amd64 3.45.1-1ubuntu2.11 [702 kB]
-#8 4.000 Get:11 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-stdlib amd64 3.12.3-1ubuntu0.17 [2071 kB]
-#8 4.033 Get:12 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12 amd64 3.12.3-1ubuntu0.17 [651 kB]
-#8 4.050 Get:13 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3-stdlib amd64 3.12.3-0ubuntu2.1 [10.1 kB]
-#8 4.057 Get:14 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3 amd64 3.12.3-0ubuntu2.1 [23.0 kB]
-#8 4.069 Get:15 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 openssl amd64 3.0.13-0ubuntu3.16 [1004 kB]
-#8 4.084 Get:16 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 ca-certificates all 20260816ubuntu0.24.04.2 [140 kB]
-#8 4.096 Get:17 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-pip-whl all 24.0+dfsg-1ubuntu1.3 [1707 kB]
-#8 4.112 Get:18 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-setuptools-whl all 68.1.2-2ubuntu1.2 [716 kB]
-#8 4.124 Get:19 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3.12-venv amd64 3.12.3-1ubuntu0.17 [5684 B]
-#8 4.133 Get:20 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-venv amd64 3.12.3-0ubuntu2.1 [1032 B]
-#8 4.207 debconf: delaying package configuration, since apt-utils is not installed
-#8 4.225 Fetched 10.9 MB in 1s (16.5 MB/s)
-#8 4.233 Selecting previously unselected package libpython3.12-minimal:amd64.
-#8 4.233 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4381 files and directories currently installed.)
-#8 4.236 Preparing to unpack .../libpython3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
-#8 4.236 Unpacking libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
-#8 4.267 Selecting previously unselected package libexpat1:amd64.
-#8 4.268 Preparing to unpack .../libexpat1_2.6.1-2ubuntu0.6_amd64.deb ...
-#8 4.269 Unpacking libexpat1:amd64 (2.6.1-2ubuntu0.6) ...
-#8 4.276 Selecting previously unselected package python3.12-minimal.
-#8 4.277 Preparing to unpack .../python3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
-#8 4.279 Unpacking python3.12-minimal (3.12.3-1ubuntu0.17) ...
-#8 4.312 Setting up libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
-#8 4.315 Setting up libexpat1:amd64 (2.6.1-2ubuntu0.6) ...
-#8 4.316 Setting up python3.12-minimal (3.12.3-1ubuntu0.17) ...
-#8 4.811 Selecting previously unselected package python3-minimal.
-#8 4.811 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4700 files and directories currently installed.)
-#8 4.814 Preparing to unpack .../0-python3-minimal_3.12.3-0ubuntu2.1_amd64.deb ...
-#8 4.814 Unpacking python3-minimal (3.12.3-0ubuntu2.1) ...
-#8 4.822 Selecting previously unselected package media-types.
-#8 4.822 Preparing to unpack .../1-media-types_10.1.0_all.deb ...
-#8 4.823 Unpacking media-types (10.1.0) ...
-#8 4.830 Selecting previously unselected package netbase.
-#8 4.830 Preparing to unpack .../2-netbase_6.4_all.deb ...
-#8 4.831 Unpacking netbase (6.4) ...
-#8 4.838 Selecting previously unselected package tzdata.
-#8 4.839 Preparing to unpack .../3-tzdata_2026f-0ubuntu0.24.04.1_all.deb ...
-#8 4.839 Unpacking tzdata (2026f-0ubuntu0.24.04.1) ...
-#8 4.868 Selecting previously unselected package readline-common.
-#8 4.868 Preparing to unpack .../4-readline-common_8.2-4build1_all.deb ...
-#8 4.869 Unpacking readline-common (8.2-4build1) ...
-#8 4.876 Selecting previously unselected package libreadline8t64:amd64.
-#8 4.877 Preparing to unpack .../5-libreadline8t64_8.2-4build1_amd64.deb ...
-#8 4.879 Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8 to /lib/x86_64-linux-gnu/libhistory.so.8.usr-is-merged by libreadline8t64'
-#8 4.881 Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8.2 to /lib/x86_64-linux-gnu/libhistory.so.8.2.usr-is-merged by libreadline8t64'
-#8 4.883 Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8 to /lib/x86_64-linux-gnu/libreadline.so.8.usr-is-merged by libreadline8t64'
-#8 4.885 Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8.2 to /lib/x86_64-linux-gnu/libreadline.so.8.2.usr-is-merged by libreadline8t64'
-#8 4.886 Unpacking libreadline8t64:amd64 (8.2-4build1) ...
-#8 4.894 Selecting previously unselected package libsqlite3-0:amd64.
-#8 4.894 Preparing to unpack .../6-libsqlite3-0_3.45.1-1ubuntu2.11_amd64.deb ...
-#8 4.895 Unpacking libsqlite3-0:amd64 (3.45.1-1ubuntu2.11) ...
-#8 4.906 Selecting previously unselected package libpython3.12-stdlib:amd64.
-#8 4.906 Preparing to unpack .../7-libpython3.12-stdlib_3.12.3-1ubuntu0.17_amd64.deb ...
-#8 4.906 Unpacking libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
-#8 4.951 Selecting previously unselected package python3.12.
-#8 4.952 Preparing to unpack .../8-python3.12_3.12.3-1ubuntu0.17_amd64.deb ...
-#8 4.953 Unpacking python3.12 (3.12.3-1ubuntu0.17) ...
-#8 4.960 Selecting previously unselected package libpython3-stdlib:amd64.
-#8 4.961 Preparing to unpack .../9-libpython3-stdlib_3.12.3-0ubuntu2.1_amd64.deb ...
-#8 4.961 Unpacking libpython3-stdlib:amd64 (3.12.3-0ubuntu2.1) ...
-#8 4.970 Setting up python3-minimal (3.12.3-0ubuntu2.1) ...
-#8 5.056 Selecting previously unselected package python3.
-#8 5.056 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5706 files and directories currently installed.)
-#8 5.059 Preparing to unpack .../0-python3_3.12.3-0ubuntu2.1_amd64.deb ...
-#8 5.061 Unpacking python3 (3.12.3-0ubuntu2.1) ...
-#8 5.068 Selecting previously unselected package openssl.
-#8 5.068 Preparing to unpack .../1-openssl_3.0.13-0ubuntu3.16_amd64.deb ...
-#8 5.069 Unpacking openssl (3.0.13-0ubuntu3.16) ...
-#8 5.084 Selecting previously unselected package ca-certificates.
-#8 5.085 Preparing to unpack .../2-ca-certificates_20260816ubuntu0.24.04.2_all.deb ...
-#8 5.085 Unpacking ca-certificates (20260816ubuntu0.24.04.2) ...
-#8 5.098 Selecting previously unselected package python3-pip-whl.
-#8 5.098 Preparing to unpack .../3-python3-pip-whl_24.0+dfsg-1ubuntu1.3_all.deb ...
-#8 5.099 Unpacking python3-pip-whl (24.0+dfsg-1ubuntu1.3) ...
-#8 5.109 Selecting previously unselected package python3-setuptools-whl.
-#8 5.110 Preparing to unpack .../4-python3-setuptools-whl_68.1.2-2ubuntu1.2_all.deb ...
-#8 5.110 Unpacking python3-setuptools-whl (68.1.2-2ubuntu1.2) ...
-#8 5.118 Selecting previously unselected package python3.12-venv.
-#8 5.119 Preparing to unpack .../5-python3.12-venv_3.12.3-1ubuntu0.17_amd64.deb ...
-#8 5.119 Unpacking python3.12-venv (3.12.3-1ubuntu0.17) ...
-#8 5.125 Selecting previously unselected package python3-venv.
-#8 5.126 Preparing to unpack .../6-python3-venv_3.12.3-0ubuntu2.1_amd64.deb ...
-#8 5.126 Unpacking python3-venv (3.12.3-0ubuntu2.1) ...
-#8 5.135 Setting up media-types (10.1.0) ...
-#8 5.136 Setting up python3-setuptools-whl (68.1.2-2ubuntu1.2) ...
-#8 5.137 Setting up libsqlite3-0:amd64 (3.45.1-1ubuntu2.11) ...
-#8 5.138 Setting up tzdata (2026f-0ubuntu0.24.04.1) ...
-#8 5.184 
-#8 5.184 Current default time zone: 'Etc/UTC'
-#8 5.185 Local time is now:      Tue Nov 24 17:51:12 UTC 2026.
-#8 5.185 Universal Time is now:  Tue Nov 24 17:51:12 UTC 2026.
-#8 5.185 Run 'dpkg-reconfigure tzdata' if you wish to change it.
-#8 5.185 
-#8 5.189 Setting up netbase (6.4) ...
-#8 5.191 Setting up openssl (3.0.13-0ubuntu3.16) ...
-#8 5.193 Setting up readline-common (8.2-4build1) ...
-#8 5.196 Setting up ca-certificates (20260816ubuntu0.24.04.2) ...
-#8 5.423 Updating certificates in /etc/ssl/certs...
-#8 5.696 120 added, 0 removed; done.
-#8 5.696 Running hooks in /etc/ca-certificates/update.d...
-#8 5.697 done.
-#8 5.704 Setting up libreadline8t64:amd64 (8.2-4build1) ...
-#8 5.705 Setting up libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
-#8 5.706 Setting up python3-pip-whl (24.0+dfsg-1ubuntu1.3) ...
-#8 5.707 Setting up python3.12 (3.12.3-1ubuntu0.17) ...
-#8 6.277 Setting up libpython3-stdlib:amd64 (3.12.3-0ubuntu2.1) ...
-#8 6.278 Setting up python3.12-venv (3.12.3-1ubuntu0.17) ...
-#8 6.308 Setting up python3 (3.12.3-0ubuntu2.1) ...
-#8 6.365 Setting up python3-venv (3.12.3-0ubuntu2.1) ...
-#8 6.366 Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
-#8 DONE 8.4s
+#8 0.277 Get:1 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+#8 0.284 Get:2 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+#8 0.404 Get:3 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1562 kB]
+#8 0.451 Get:4 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1504 kB]
+#8 0.459 Get:5 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [2272 kB]
+#8 0.487 Get:6 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [55.6 kB]
+#8 0.502 Get:7 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+#8 1.030 Get:8 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+#8 1.074 Get:9 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1808 kB]
+#8 1.101 Get:10 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [331 kB]
+#8 1.116 Get:11 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [19.3 MB]
+#8 1.264 Get:12 http://archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [117 kB]
+#8 1.284 Get:13 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [2184 kB]
+#8 1.302 Get:14 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [61.7 kB]
+#8 1.311 Get:15 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2403 kB]
+#8 1.335 Get:16 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1842 kB]
+#8 1.349 Get:17 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [36.0 kB]
+#8 1.359 Get:18 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [669 B]
+#8 1.369 Get:19 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [49.0 kB]
+#8 1.906 Fetched 34.2 MB in 2s (19.1 MB/s)
+#8 1.906 Reading package lists...
+#8 2.491 Reading package lists...
+#8 3.041 Building dependency tree...
+#8 3.217 Reading state information...
+#8 3.335 The following additional packages will be installed:
+#8 3.335   libexpat1 libpython3-stdlib libpython3.12-minimal libpython3.12-stdlib
+#8 3.336   libreadline8t64 libsqlite3-0 media-types netbase openssl python3-minimal
+#8 3.336   python3-pip-whl python3-setuptools-whl python3.12 python3.12-minimal
+#8 3.336   python3.12-venv readline-common tzdata
+#8 3.337 Suggested packages:
+#8 3.337   python3-doc python3-tk python3.12-doc binutils binfmt-support readline-doc
+#8 3.405 The following NEW packages will be installed:
+#8 3.405   ca-certificates libexpat1 libpython3-stdlib libpython3.12-minimal
+#8 3.405   libpython3.12-stdlib libreadline8t64 libsqlite3-0 media-types netbase
+#8 3.405   openssl python3 python3-minimal python3-pip-whl python3-setuptools-whl
+#8 3.406   python3-venv python3.12 python3.12-minimal python3.12-venv readline-common
+#8 3.406   tzdata
+#8 3.627 0 upgraded, 20 newly installed, 0 to remove and 4 not upgraded.
+#8 3.627 Need to get 10.9 MB of archives.
+#8 3.627 After this operation, 33.0 MB of additional disk space will be used.
+#8 3.627 Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-minimal amd64 3.12.3-1ubuntu0.17 [839 kB]
+#8 3.662 Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libexpat1 amd64 2.6.1-2ubuntu0.6 [98.9 kB]
+#8 3.670 Get:3 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12-minimal amd64 3.12.3-1ubuntu0.17 [2335 kB]
+#8 3.690 Get:4 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3-minimal amd64 3.12.3-0ubuntu2.1 [27.4 kB]
+#8 3.699 Get:5 http://archive.ubuntu.com/ubuntu noble/main amd64 media-types all 10.1.0 [27.5 kB]
+#8 3.709 Get:6 http://archive.ubuntu.com/ubuntu noble/main amd64 netbase all 6.4 [13.1 kB]
+#8 3.720 Get:7 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 tzdata all 2026f-0ubuntu0.24.04.1 [283 kB]
+#8 3.728 Get:8 http://archive.ubuntu.com/ubuntu noble/main amd64 readline-common all 8.2-4build1 [56.5 kB]
+#8 3.738 Get:9 http://archive.ubuntu.com/ubuntu noble/main amd64 libreadline8t64 amd64 8.2-4build1 [153 kB]
+#8 3.749 Get:10 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libsqlite3-0 amd64 3.45.1-1ubuntu2.11 [702 kB]
+#8 3.764 Get:11 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-stdlib amd64 3.12.3-1ubuntu0.17 [2071 kB]
+#8 3.784 Get:12 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12 amd64 3.12.3-1ubuntu0.17 [651 kB]
+#8 3.795 Get:13 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3-stdlib amd64 3.12.3-0ubuntu2.1 [10.1 kB]
+#8 3.803 Get:14 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3 amd64 3.12.3-0ubuntu2.1 [23.0 kB]
+#8 3.813 Get:15 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 openssl amd64 3.0.13-0ubuntu3.16 [1004 kB]
+#8 3.826 Get:16 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 ca-certificates all 20260816ubuntu0.24.04.2 [140 kB]
+#8 3.834 Get:17 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-pip-whl all 24.0+dfsg-1ubuntu1.3 [1707 kB]
+#8 3.849 Get:18 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-setuptools-whl all 68.1.2-2ubuntu1.2 [716 kB]
+#8 3.868 Get:19 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3.12-venv amd64 3.12.3-1ubuntu0.17 [5684 B]
+#8 3.878 Get:20 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-venv amd64 3.12.3-0ubuntu2.1 [1032 B]
+#8 3.957 debconf: delaying package configuration, since apt-utils is not installed
+#8 3.985 Fetched 10.9 MB in 0s (23.7 MB/s)
+#8 3.997 Selecting previously unselected package libpython3.12-minimal:amd64.
+#8 3.997 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4381 files and directories currently installed.)
+#8 4.002 Preparing to unpack .../libpython3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
+#8 4.003 Unpacking libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
+#8 4.054 Selecting previously unselected package libexpat1:amd64.
+#8 4.055 Preparing to unpack .../libexpat1_2.6.1-2ubuntu0.6_amd64.deb ...
+#8 4.056 Unpacking libexpat1:amd64 (2.6.1-2ubuntu0.6) ...
+#8 4.071 Selecting previously unselected package python3.12-minimal.
+#8 4.072 Preparing to unpack .../python3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
+#8 4.074 Unpacking python3.12-minimal (3.12.3-1ubuntu0.17) ...
+#8 4.111 Setting up libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
+#8 4.114 Setting up libexpat1:amd64 (2.6.1-2ubuntu0.6) ...
+#8 4.116 Setting up python3.12-minimal (3.12.3-1ubuntu0.17) ...
+#8 4.580 Selecting previously unselected package python3-minimal.
+#8 4.580 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4700 files and directories currently installed.)
+#8 4.584 Preparing to unpack .../0-python3-minimal_3.12.3-0ubuntu2.1_amd64.deb ...
+#8 4.585 Unpacking python3-minimal (3.12.3-0ubuntu2.1) ...
+#8 4.596 Selecting previously unselected package media-types.
+#8 4.597 Preparing to unpack .../1-media-types_10.1.0_all.deb ...
+#8 4.597 Unpacking media-types (10.1.0) ...
+#8 4.608 Selecting previously unselected package netbase.
+#8 4.609 Preparing to unpack .../2-netbase_6.4_all.deb ...
+#8 4.609 Unpacking netbase (6.4) ...
+#8 4.620 Selecting previously unselected package tzdata.
+#8 4.621 Preparing to unpack .../3-tzdata_2026f-0ubuntu0.24.04.1_all.deb ...
+#8 4.622 Unpacking tzdata (2026f-0ubuntu0.24.04.1) ...
+#8 4.684 Selecting previously unselected package readline-common.
+#8 4.686 Preparing to unpack .../4-readline-common_8.2-4build1_all.deb ...
+#8 4.686 Unpacking readline-common (8.2-4build1) ...
+#8 4.697 Selecting previously unselected package libreadline8t64:amd64.
+#8 4.698 Preparing to unpack .../5-libreadline8t64_8.2-4build1_amd64.deb ...
+#8 4.701 Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8 to /lib/x86_64-linux-gnu/libhistory.so.8.usr-is-merged by libreadline8t64'
+#8 4.704 Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8.2 to /lib/x86_64-linux-gnu/libhistory.so.8.2.usr-is-merged by libreadline8t64'
+#8 4.706 Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8 to /lib/x86_64-linux-gnu/libreadline.so.8.usr-is-merged by libreadline8t64'
+#8 4.709 Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8.2 to /lib/x86_64-linux-gnu/libreadline.so.8.2.usr-is-merged by libreadline8t64'
+#8 4.711 Unpacking libreadline8t64:amd64 (8.2-4build1) ...
+#8 4.723 Selecting previously unselected package libsqlite3-0:amd64.
+#8 4.724 Preparing to unpack .../6-libsqlite3-0_3.45.1-1ubuntu2.11_amd64.deb ...
+#8 4.725 Unpacking libsqlite3-0:amd64 (3.45.1-1ubuntu2.11) ...
+#8 4.739 Selecting previously unselected package libpython3.12-stdlib:amd64.
+#8 4.739 Preparing to unpack .../7-libpython3.12-stdlib_3.12.3-1ubuntu0.17_amd64.deb ...
+#8 4.740 Unpacking libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
+#8 4.806 Selecting previously unselected package python3.12.
+#8 4.808 Preparing to unpack .../8-python3.12_3.12.3-1ubuntu0.17_amd64.deb ...
+#8 4.808 Unpacking python3.12 (3.12.3-1ubuntu0.17) ...
+#8 4.820 Selecting previously unselected package libpython3-stdlib:amd64.
+#8 4.821 Preparing to unpack .../9-libpython3-stdlib_3.12.3-0ubuntu2.1_amd64.deb ...
+#8 4.822 Unpacking libpython3-stdlib:amd64 (3.12.3-0ubuntu2.1) ...
+#8 4.840 Setting up python3-minimal (3.12.3-0ubuntu2.1) ...
+#8 4.940 Selecting previously unselected package python3.
+#8 4.940 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5706 files and directories currently installed.)
+#8 4.945 Preparing to unpack .../0-python3_3.12.3-0ubuntu2.1_amd64.deb ...
+#8 4.949 Unpacking python3 (3.12.3-0ubuntu2.1) ...
+#8 4.961 Selecting previously unselected package openssl.
+#8 4.962 Preparing to unpack .../1-openssl_3.0.13-0ubuntu3.16_amd64.deb ...
+#8 4.962 Unpacking openssl (3.0.13-0ubuntu3.16) ...
+#8 4.990 Selecting previously unselected package ca-certificates.
+#8 4.991 Preparing to unpack .../2-ca-certificates_20260816ubuntu0.24.04.2_all.deb ...
+#8 4.992 Unpacking ca-certificates (20260816ubuntu0.24.04.2) ...
+#8 5.019 Selecting previously unselected package python3-pip-whl.
+#8 5.020 Preparing to unpack .../3-python3-pip-whl_24.0+dfsg-1ubuntu1.3_all.deb ...
+#8 5.021 Unpacking python3-pip-whl (24.0+dfsg-1ubuntu1.3) ...
+#8 5.034 Selecting previously unselected package python3-setuptools-whl.
+#8 5.035 Preparing to unpack .../4-python3-setuptools-whl_68.1.2-2ubuntu1.2_all.deb ...
+#8 5.036 Unpacking python3-setuptools-whl (68.1.2-2ubuntu1.2) ...
+#8 5.048 Selecting previously unselected package python3.12-venv.
+#8 5.049 Preparing to unpack .../5-python3.12-venv_3.12.3-1ubuntu0.17_amd64.deb ...
+#8 5.050 Unpacking python3.12-venv (3.12.3-1ubuntu0.17) ...
+#8 5.060 Selecting previously unselected package python3-venv.
+#8 5.061 Preparing to unpack .../6-python3-venv_3.12.3-0ubuntu2.1_amd64.deb ...
+#8 5.061 Unpacking python3-venv (3.12.3-0ubuntu2.1) ...
+#8 5.078 Setting up media-types (10.1.0) ...
+#8 5.080 Setting up python3-setuptools-whl (68.1.2-2ubuntu1.2) ...
+#8 5.082 Setting up libsqlite3-0:amd64 (3.45.1-1ubuntu2.11) ...
+#8 5.083 Setting up tzdata (2026f-0ubuntu0.24.04.1) ...
+#8 5.131 
+#8 5.131 Current default time zone: 'Etc/UTC'
+#8 5.132 Local time is now:      Tue Nov 24 19:06:17 UTC 2026.
+#8 5.132 Universal Time is now:  Tue Nov 24 19:06:17 UTC 2026.
+#8 5.132 Run 'dpkg-reconfigure tzdata' if you wish to change it.
+#8 5.132 
+#8 5.138 Setting up netbase (6.4) ...
+#8 5.143 Setting up openssl (3.0.13-0ubuntu3.16) ...
+#8 5.146 Setting up readline-common (8.2-4build1) ...
+#8 5.149 Setting up ca-certificates (20260816ubuntu0.24.04.2) ...
+#8 5.433 Updating certificates in /etc/ssl/certs...
+#8 5.793 120 added, 0 removed; done.
+#8 5.793 Running hooks in /etc/ca-certificates/update.d...
+#8 5.794 done.
+#8 5.804 Setting up libreadline8t64:amd64 (8.2-4build1) ...
+#8 5.806 Setting up libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
+#8 5.807 Setting up python3-pip-whl (24.0+dfsg-1ubuntu1.3) ...
+#8 5.809 Setting up python3.12 (3.12.3-1ubuntu0.17) ...
+#8 6.402 Setting up libpython3-stdlib:amd64 (3.12.3-0ubuntu2.1) ...
+#8 6.404 Setting up python3.12-venv (3.12.3-1ubuntu0.17) ...
+#8 6.438 Setting up python3 (3.12.3-0ubuntu2.1) ...
+#8 6.503 Setting up python3-venv (3.12.3-0ubuntu2.1) ...
+#8 6.505 Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+#8 DONE 8.8s
 
 #9 [4/7] COPY webapp/requirements.txt ./requirements.txt
 #9 DONE 0.0s
 
 #10 [5/7] RUN /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
-#10 0.345 Collecting Flask==3.1.2 (from -r requirements.txt (line 1))
-#10 0.384   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
-#10 0.420 Collecting gunicorn==23.0.0 (from -r requirements.txt (line 2))
-#10 0.430   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
-#10 0.492 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 3))
-#10 0.500   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
-#10 0.518 Collecting blinker>=1.9.0 (from Flask==3.1.2->-r requirements.txt (line 1))
-#10 0.526   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
-#10 0.547 Collecting click>=8.1.3 (from Flask==3.1.2->-r requirements.txt (line 1))
-#10 0.555   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
-#10 0.570 Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r requirements.txt (line 1))
-#10 0.578   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
-#10 0.596 Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r requirements.txt (line 1))
-#10 0.604   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
-#10 0.649 Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r requirements.txt (line 1))
-#10 0.658   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
-#10 0.683 Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r requirements.txt (line 1))
-#10 0.691   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
-#10 0.716 Collecting packaging (from gunicorn==23.0.0->-r requirements.txt (line 2))
-#10 0.724   Downloading packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
-#10 0.743 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
-#10 0.754    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.3/103.3 kB 10.8 MB/s eta 0:00:00
-#10 0.762 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
-#10 0.764    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.0/85.0 kB 210.1 MB/s eta 0:00:00
-#10 0.772 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
-#10 0.799    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 113.8 MB/s eta 0:00:00
-#10 0.808 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
-#10 0.816 Downloading click-8.5.1-py3-none-any.whl (126 kB)
-#10 0.817    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.2/126.2 kB 579.5 MB/s eta 0:00:00
-#10 0.825 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
-#10 0.834 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
-#10 0.835    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 623.1 MB/s eta 0:00:00
-#10 0.844 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
-#10 0.853 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
-#10 0.854    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 228.7/228.7 kB 532.3 MB/s eta 0:00:00
-#10 0.863 Downloading packaging-26.4-py3-none-any.whl (140 kB)
-#10 0.864    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 140.0/140.0 kB 696.1 MB/s eta 0:00:00
-#10 0.887 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
-#10 1.288 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.4 psycopg2-binary-2.9.10 werkzeug-3.1.9
-#10 DONE 1.4s
+#10 0.365 Collecting Flask==3.1.2 (from -r requirements.txt (line 1))
+#10 0.408   Downloading flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+#10 0.450 Collecting gunicorn==23.0.0 (from -r requirements.txt (line 2))
+#10 0.457   Downloading gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+#10 0.516 Collecting psycopg2-binary==2.9.10 (from -r requirements.txt (line 3))
+#10 0.523   Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#10 0.580 Collecting blinker>=1.9.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#10 0.590   Downloading blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#10 0.609 Collecting click>=8.1.3 (from Flask==3.1.2->-r requirements.txt (line 1))
+#10 0.616   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+#10 0.630 Collecting itsdangerous>=2.2.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#10 0.636   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#10 0.655 Collecting jinja2>=3.1.2 (from Flask==3.1.2->-r requirements.txt (line 1))
+#10 0.662   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#10 0.705 Collecting markupsafe>=2.1.1 (from Flask==3.1.2->-r requirements.txt (line 1))
+#10 0.712   Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#10 0.735 Collecting werkzeug>=3.1.0 (from Flask==3.1.2->-r requirements.txt (line 1))
+#10 0.743   Downloading werkzeug-3.1.9-py3-none-any.whl.metadata (4.1 kB)
+#10 0.767 Collecting packaging (from gunicorn==23.0.0->-r requirements.txt (line 2))
+#10 0.774   Downloading packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
+#10 0.791 Downloading flask-3.1.2-py3-none-any.whl (103 kB)
+#10 0.801    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.3/103.3 kB 13.7 MB/s eta 0:00:00
+#10 0.808 Downloading gunicorn-23.0.0-py3-none-any.whl (85 kB)
+#10 0.810    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.0/85.0 kB 495.0 MB/s eta 0:00:00
+#10 0.817 Downloading psycopg2_binary-2.9.10-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.0 MB)
+#10 0.839    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.0/3.0 MB 149.9 MB/s eta 0:00:00
+#10 0.847 Downloading blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#10 0.855 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+#10 0.857    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.2/126.2 kB 518.9 MB/s eta 0:00:00
+#10 0.864 Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#10 0.872 Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+#10 0.874    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.9/134.9 kB 543.4 MB/s eta 0:00:00
+#10 0.883 Downloading markupsafe-3.0.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#10 0.890 Downloading werkzeug-3.1.9-py3-none-any.whl (228 kB)
+#10 0.892    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 228.7/228.7 kB 586.8 MB/s eta 0:00:00
+#10 0.899 Downloading packaging-26.4-py3-none-any.whl (140 kB)
+#10 0.901    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 140.0/140.0 kB 536.9 MB/s eta 0:00:00
+#10 0.924 Installing collected packages: psycopg2-binary, packaging, markupsafe, itsdangerous, click, blinker, werkzeug, jinja2, gunicorn, Flask
+#10 1.334 Successfully installed Flask-3.1.2 blinker-1.9.0 click-8.5.1 gunicorn-23.0.0 itsdangerous-2.2.0 jinja2-3.1.6 markupsafe-3.0.4 packaging-26.4 psycopg2-binary-2.9.10 werkzeug-3.1.9
+#10 DONE 1.6s
 
 #11 [6/7] COPY webapp/app.py ./app.py
 #11 DONE 0.0s
@@ -1041,75 +1054,75 @@ VM result: UNAVAILABLE; QEMU mode=tcg; guest did not become healthy within 360s.
 
 #13 exporting to image
 #13 exporting layers
-#13 exporting layers 0.2s done
-#13 writing image sha256:ce835f589d354ddcf051824be10ca3cc90b326792e597b47d9d38893920c6c98 done
+#13 exporting layers 0.9s done
+#13 writing image sha256:d285e164e45822b954ee0bd9c441680f1290f56cbadeb63d5927612342db91f7 done
 #13 naming to docker.io/library/result-portal:ubuntu done
-#13 DONE 0.2s
+#13 DONE 0.9s
 REPOSITORY      TAG          IMAGE ID       CREATED          SIZE
-result-portal   ubuntu       ce835f589d35   1 second ago     149MB
-result-portal   multistage   9e7fddcbc929   12 seconds ago   134MB
-result-portal   compose      cb62a595c6bf   15 seconds ago   142MB
-result-portal   full         8f3df8fd8612   19 seconds ago   1.13GB
-build_ms full_python=18004 slim_python=3846 multistage=2558 ubuntu_base=11794
+result-portal   ubuntu       d285e164e458   1 second ago     149MB
+result-portal   multistage   05f1ae026539   15 seconds ago   134MB
+result-portal   compose      8712febecf04   18 seconds ago   142MB
+result-portal   full         8560f8aff340   25 seconds ago   1.13GB
+build_ms full_python=19559 slim_python=5602 multistage=3236 ubuntu_base=13763
 docker history result-portal:full
 IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
-8f3df8fd8612   19 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--w…   0B        buildkit.dockerfile.v0
-<missing>      19 seconds ago   EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
-<missing>      19 seconds ago   USER portal                                     0B        buildkit.dockerfile.v0
-<missing>      19 seconds ago   RUN /bin/sh -c chown -R portal:portal /app #…   2.04kB    buildkit.dockerfile.v0
-<missing>      19 seconds ago   COPY webapp/app.py ./app.py # buildkit          1.99kB    buildkit.dockerfile.v0
-<missing>      19 seconds ago   RUN /bin/sh -c pip install --no-cache-dir -r…   22.3MB    buildkit.dockerfile.v0
-<missing>      21 seconds ago   COPY webapp/requirements.txt ./requirements.…   54B       buildkit.dockerfile.v0
-<missing>      21 seconds ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
-<missing>      10 hours ago     CMD ["python3"]                                 0B        buildkit.dockerfile.v0
-<missing>      10 hours ago     RUN /bin/sh -c set -eux;  for src in idle3 p…   36B       buildkit.dockerfile.v0
-<missing>      10 hours ago     RUN /bin/sh -c set -eux;   wget -O python.ta…   68.5MB    buildkit.dockerfile.v0
-image=[result-portal:full] bytes=1132245333
+8560f8aff340   25 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--w…   0B        buildkit.dockerfile.v0
+<missing>      25 seconds ago   EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
+<missing>      25 seconds ago   USER portal                                     0B        buildkit.dockerfile.v0
+<missing>      25 seconds ago   RUN /bin/sh -c chown -R portal:portal /app #…   2.04kB    buildkit.dockerfile.v0
+<missing>      25 seconds ago   COPY webapp/app.py ./app.py # buildkit          1.99kB    buildkit.dockerfile.v0
+<missing>      25 seconds ago   RUN /bin/sh -c pip install --no-cache-dir -r…   22.3MB    buildkit.dockerfile.v0
+<missing>      27 seconds ago   COPY webapp/requirements.txt ./requirements.…   54B       buildkit.dockerfile.v0
+<missing>      27 seconds ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
+<missing>      11 hours ago     CMD ["python3"]                                 0B        buildkit.dockerfile.v0
+<missing>      11 hours ago     RUN /bin/sh -c set -eux;  for src in idle3 p…   0B        buildkit.dockerfile.v0
+<missing>      11 hours ago     RUN /bin/sh -c set -eux;   wget -O python.ta…   68.5MB    buildkit.dockerfile.v0
+image=[result-portal:full] bytes=1132148003
 installed_deb_packages=469
 docker history result-portal:compose
 IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
-cb62a595c6bf   15 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--w…   0B        buildkit.dockerfile.v0
-<missing>      15 seconds ago   EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
-<missing>      15 seconds ago   USER portal                                     0B        buildkit.dockerfile.v0
-<missing>      15 seconds ago   RUN /bin/sh -c chown -R portal:portal /app #…   2.04kB    buildkit.dockerfile.v0
-<missing>      15 seconds ago   COPY webapp/app.py ./app.py # buildkit          1.99kB    buildkit.dockerfile.v0
-<missing>      15 seconds ago   RUN /bin/sh -c pip install --no-cache-dir -r…   22.3MB    buildkit.dockerfile.v0
-<missing>      17 seconds ago   COPY webapp/requirements.txt ./requirements.…   54B       buildkit.dockerfile.v0
-<missing>      17 seconds ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
-<missing>      13 hours ago     CMD ["python3"]                                 0B        buildkit.dockerfile.v0
-<missing>      13 hours ago     RUN /bin/sh -c set -eux;  for src in idle3 p…   36B       buildkit.dockerfile.v0
-<missing>      13 hours ago     RUN /bin/sh -c set -eux;   savedAptMark="$(a…   36.8MB    buildkit.dockerfile.v0
-image=[result-portal:compose] bytes=141732709
+8712febecf04   18 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--w…   0B        buildkit.dockerfile.v0
+<missing>      18 seconds ago   EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
+<missing>      18 seconds ago   USER portal                                     0B        buildkit.dockerfile.v0
+<missing>      18 seconds ago   RUN /bin/sh -c chown -R portal:portal /app #…   2.04kB    buildkit.dockerfile.v0
+<missing>      18 seconds ago   COPY webapp/app.py ./app.py # buildkit          1.99kB    buildkit.dockerfile.v0
+<missing>      18 seconds ago   RUN /bin/sh -c pip install --no-cache-dir -r…   22.3MB    buildkit.dockerfile.v0
+<missing>      20 seconds ago   COPY webapp/requirements.txt ./requirements.…   54B       buildkit.dockerfile.v0
+<missing>      20 seconds ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
+<missing>      14 hours ago     CMD ["python3"]                                 0B        buildkit.dockerfile.v0
+<missing>      14 hours ago     RUN /bin/sh -c set -eux;  for src in idle3 p…   0B        buildkit.dockerfile.v0
+<missing>      14 hours ago     RUN /bin/sh -c set -eux;   savedAptMark="$(a…   36.8MB    buildkit.dockerfile.v0
+image=[result-portal:compose] bytes=141714856
 installed_deb_packages=87
 docker history result-portal:multistage
 IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
-9e7fddcbc929   12 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--w…   0B        buildkit.dockerfile.v0
-<missing>      12 seconds ago   EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
-<missing>      12 seconds ago   USER portal                                     0B        buildkit.dockerfile.v0
-<missing>      12 seconds ago   RUN /bin/sh -c chown -R portal:portal /app #…   1.99kB    buildkit.dockerfile.v0
-<missing>      12 seconds ago   COPY webapp/app.py ./app.py # buildkit          1.99kB    buildkit.dockerfile.v0
-<missing>      12 seconds ago   RUN /bin/sh -c groupadd --system portal     …   4.31kB    buildkit.dockerfile.v0
-<missing>      12 seconds ago   COPY /install /usr/local # buildkit             14.2MB    buildkit.dockerfile.v0
-<missing>      17 seconds ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
-<missing>      13 hours ago     CMD ["python3"]                                 0B        buildkit.dockerfile.v0
-<missing>      13 hours ago     RUN /bin/sh -c set -eux;  for src in idle3 p…   36B       buildkit.dockerfile.v0
-<missing>      13 hours ago     RUN /bin/sh -c set -eux;   savedAptMark="$(a…   36.8MB    buildkit.dockerfile.v0
-image=[result-portal:multistage] bytes=133626771
+05f1ae026539   15 seconds ago   CMD ["gunicorn" "--bind" "0.0.0.0:8000" "--w…   0B        buildkit.dockerfile.v0
+<missing>      15 seconds ago   EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
+<missing>      15 seconds ago   USER portal                                     0B        buildkit.dockerfile.v0
+<missing>      15 seconds ago   RUN /bin/sh -c chown -R portal:portal /app #…   1.99kB    buildkit.dockerfile.v0
+<missing>      15 seconds ago   COPY webapp/app.py ./app.py # buildkit          1.99kB    buildkit.dockerfile.v0
+<missing>      15 seconds ago   RUN /bin/sh -c groupadd --system portal     …   3.88kB    buildkit.dockerfile.v0
+<missing>      15 seconds ago   COPY /install /usr/local # buildkit             14.2MB    buildkit.dockerfile.v0
+<missing>      20 seconds ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
+<missing>      14 hours ago     CMD ["python3"]                                 0B        buildkit.dockerfile.v0
+<missing>      14 hours ago     RUN /bin/sh -c set -eux;  for src in idle3 p…   0B        buildkit.dockerfile.v0
+<missing>      14 hours ago     RUN /bin/sh -c set -eux;   savedAptMark="$(a…   36.8MB    buildkit.dockerfile.v0
+image=[result-portal:multistage] bytes=133608918
 installed_deb_packages=87
 docker history result-portal:ubuntu
 IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
-ce835f589d35   1 second ago     CMD ["/opt/venv/bin/gunicorn" "--bind" "0.0.…   0B        buildkit.dockerfile.v0
+d285e164e458   1 second ago     CMD ["/opt/venv/bin/gunicorn" "--bind" "0.0.…   0B        buildkit.dockerfile.v0
 <missing>      1 second ago     EXPOSE map[8000/tcp:{}]                         0B        buildkit.dockerfile.v0
 <missing>      1 second ago     USER portal                                     0B        buildkit.dockerfile.v0
 <missing>      1 second ago     RUN /bin/sh -c chown -R portal:portal /app #…   2.04kB    buildkit.dockerfile.v0
 <missing>      1 second ago     COPY webapp/app.py ./app.py # buildkit          1.99kB    buildkit.dockerfile.v0
-<missing>      1 second ago     RUN /bin/sh -c /opt/venv/bin/pip install --n…   14.2MB    buildkit.dockerfile.v0
-<missing>      2 seconds ago    COPY webapp/requirements.txt ./requirements.…   54B       buildkit.dockerfile.v0
-<missing>      2 seconds ago    RUN /bin/sh -c apt-get update     && apt-get…   56.4MB    buildkit.dockerfile.v0
-<missing>      11 seconds ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
-<missing>      11 seconds ago   ENV DEBIAN_FRONTEND=noninteractive              0B        buildkit.dockerfile.v0
-<missing>      13 days ago      /bin/sh -c #(nop)  CMD ["/bin/bash"]            0B        
-image=[result-portal:ubuntu] bytes=148800464
+<missing>      2 seconds ago    RUN /bin/sh -c /opt/venv/bin/pip install --n…   14.2MB    buildkit.dockerfile.v0
+<missing>      3 seconds ago    COPY webapp/requirements.txt ./requirements.…   54B       buildkit.dockerfile.v0
+<missing>      3 seconds ago    RUN /bin/sh -c apt-get update     && apt-get…   56.4MB    buildkit.dockerfile.v0
+<missing>      12 seconds ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
+<missing>      12 seconds ago   ENV DEBIAN_FRONTEND=noninteractive              0B        buildkit.dockerfile.v0
+<missing>      2 weeks ago      /bin/sh -c #(nop)  CMD ["/bin/bash"]            0B        
+image=[result-portal:ubuntu] bytes=148796924
 installed_deb_packages=112
  database Pulling 
  881fc932939e Pulling fs layer 
@@ -1121,6 +1134,7 @@ installed_deb_packages=112
  47714f1b82c2 Pulling fs layer 
  8e5860b895ab Pulling fs layer 
  b9f6a8f632b2 Pulling fs layer 
+ 7a36a4ed4172 Waiting 
  98e9a0326760 Pulling fs layer 
  cc382d912eb7 Waiting 
  576cb8ef4643 Waiting 
@@ -1128,14 +1142,13 @@ installed_deb_packages=112
  8e5860b895ab Waiting 
  b9f6a8f632b2 Waiting 
  98e9a0326760 Waiting 
- 7a36a4ed4172 Waiting 
- 59b353deb50e Downloading [>                                                  ]  15.79kB/901.1kB
  6cedc56424d1 Downloading [==================================================>]     994B/994B
  6cedc56424d1 Verifying Checksum 
  6cedc56424d1 Download complete 
+ 59b353deb50e Downloading [>                                                  ]  15.79kB/901.1kB
+ 881fc932939e Downloading [>                                                  ]  48.55kB/3.854MB
  59b353deb50e Verifying Checksum 
  59b353deb50e Download complete 
- 881fc932939e Downloading [>                                                  ]  48.55kB/3.854MB
  881fc932939e Verifying Checksum 
  881fc932939e Download complete 
  881fc932939e Extracting [>                                                  ]  65.54kB/3.854MB
@@ -1161,14 +1174,17 @@ installed_deb_packages=112
  cc382d912eb7 Extracting [==================================================>]     116B/116B
  cc382d912eb7 Extracting [==================================================>]     116B/116B
  cc382d912eb7 Pull complete 
- 576cb8ef4643 Downloading [>                                                  ]  537.5kB/111.5MB
- 576cb8ef4643 Downloading [======================>                            ]  49.41MB/111.5MB
+ 576cb8ef4643 Downloading [>                                                  ]  535.4kB/111.5MB
+ 576cb8ef4643 Downloading [==========>                                        ]     23MB/111.5MB
  47714f1b82c2 Downloading [==================>                                ]  3.502kB/9.673kB
+ 47714f1b82c2 Downloading [==================================================>]  9.673kB/9.673kB
+ 47714f1b82c2 Verifying Checksum 
  47714f1b82c2 Download complete 
  8e5860b895ab Downloading [==================================================>]     170B/170B
  8e5860b895ab Verifying Checksum 
  8e5860b895ab Download complete 
- 576cb8ef4643 Downloading [=============================================>     ]  102.4MB/111.5MB
+ 576cb8ef4643 Downloading [========================>                          ]     54MB/111.5MB
+ 576cb8ef4643 Downloading [======================================>            ]  86.51MB/111.5MB
  576cb8ef4643 Verifying Checksum 
  576cb8ef4643 Download complete 
  576cb8ef4643 Extracting [>                                                  ]  557.1kB/111.5MB
@@ -1176,21 +1192,21 @@ installed_deb_packages=112
  b9f6a8f632b2 Downloading [==================================================>]  6.104kB/6.104kB
  b9f6a8f632b2 Verifying Checksum 
  b9f6a8f632b2 Download complete 
- 576cb8ef4643 Extracting [===>                                               ]  8.913MB/111.5MB
  98e9a0326760 Downloading [==================================================>]     183B/183B
  98e9a0326760 Verifying Checksum 
  98e9a0326760 Download complete 
- 576cb8ef4643 Extracting [========>                                          ]   19.5MB/111.5MB
- 576cb8ef4643 Extracting [=============>                                     ]  30.08MB/111.5MB
- 576cb8ef4643 Extracting [==================>                                ]  40.67MB/111.5MB
- 576cb8ef4643 Extracting [======================>                            ]  51.25MB/111.5MB
- 576cb8ef4643 Extracting [==========================>                        ]  59.05MB/111.5MB
- 576cb8ef4643 Extracting [==============================>                    ]  68.52MB/111.5MB
- 576cb8ef4643 Extracting [===================================>               ]   79.1MB/111.5MB
- 576cb8ef4643 Extracting [====================================>              ]  81.89MB/111.5MB
- 576cb8ef4643 Extracting [=======================================>           ]  87.46MB/111.5MB
- 576cb8ef4643 Extracting [===========================================>       ]  96.37MB/111.5MB
- 576cb8ef4643 Extracting [==============================================>    ]  104.2MB/111.5MB
+ 576cb8ef4643 Extracting [===>                                               ]  8.913MB/111.5MB
+ 576cb8ef4643 Extracting [=========>                                         ]  20.61MB/111.5MB
+ 576cb8ef4643 Extracting [==============>                                    ]  32.31MB/111.5MB
+ 576cb8ef4643 Extracting [===================>                               ]  43.45MB/111.5MB
+ 576cb8ef4643 Extracting [========================>                          ]  54.59MB/111.5MB
+ 576cb8ef4643 Extracting [===========================>                       ]  62.39MB/111.5MB
+ 576cb8ef4643 Extracting [=================================>                 ]  74.09MB/111.5MB
+ 576cb8ef4643 Extracting [====================================>              ]  81.33MB/111.5MB
+ 576cb8ef4643 Extracting [=====================================>             ]  83.56MB/111.5MB
+ 576cb8ef4643 Extracting [=======================================>           ]  88.57MB/111.5MB
+ 576cb8ef4643 Extracting [==========================================>        ]  95.81MB/111.5MB
+ 576cb8ef4643 Extracting [=============================================>     ]  102.5MB/111.5MB
  576cb8ef4643 Extracting [==================================================>]  111.5MB/111.5MB
  576cb8ef4643 Pull complete 
  47714f1b82c2 Extracting [==================================================>]  9.673kB/9.673kB
@@ -1210,21 +1226,21 @@ installed_deb_packages=112
 #1 reading from stdin 857B done
 #1 DONE 0.0s
 
-#2 [portal internal] load build definition from Dockerfile
+#2 [lms internal] load build definition from Dockerfile
 #2 transferring dockerfile: 658B done
 #2 DONE 0.0s
 
-#3 [lms internal] load metadata for docker.io/library/python:3.12-slim
+#3 [portal internal] load metadata for docker.io/library/python:3.12-slim
 #3 DONE 0.1s
 
-#4 [lms internal] load .dockerignore
+#4 [portal internal] load .dockerignore
 #4 transferring context: 102B done
 #4 DONE 0.0s
 
 #5 [lms 1/6] FROM docker.io/library/python:3.12-slim@sha256:191083cdf6c7bda8c76158983163ead5d5cf7b77cf3033e805bb0f5296f51b4b
 #5 DONE 0.0s
 
-#6 [portal internal] load build context
+#6 [lms internal] load build context
 #6 transferring context: 103B done
 #6 DONE 0.0s
 
@@ -1234,10 +1250,10 @@ installed_deb_packages=112
 #8 [portal 2/6] WORKDIR /app
 #8 CACHED
 
-#9 [portal 5/6] COPY webapp/app.py ./app.py
+#9 [portal 3/6] COPY webapp/requirements.txt ./requirements.txt
 #9 CACHED
 
-#10 [portal 3/6] COPY webapp/requirements.txt ./requirements.txt
+#10 [portal 5/6] COPY webapp/app.py ./app.py
 #10 CACHED
 
 #11 [portal 6/6] RUN chown -R portal:portal /app
@@ -1245,13 +1261,13 @@ installed_deb_packages=112
 
 #12 [portal] exporting to image
 #12 exporting layers done
-#12 writing image sha256:cb62a595c6bf1042d49375230bec3e88f655f1778ca90d9dbb021c41e182068b done
+#12 writing image sha256:8712febecf042c9af4879c465e262ec468ba76c32c63888923e1a6ca01f96415 done
 #12 naming to docker.io/library/result-portal:compose done
 #12 DONE 0.0s
 
 #13 [lms] exporting to image
 #13 exporting layers done
-#13 writing image sha256:cb62a595c6bf1042d49375230bec3e88f655f1778ca90d9dbb021c41e182068b done
+#13 writing image sha256:8712febecf042c9af4879c465e262ec468ba76c32c63888923e1a6ca01f96415 done
 #13 naming to docker.io/library/result-portal:compose done
 #13 DONE 0.0s
 
@@ -1260,8 +1276,8 @@ installed_deb_packages=112
 
 #15 [portal] resolving provenance for metadata file
 #15 DONE 0.0s
- portal  Built
  lms  Built
+ portal  Built
  Network taskb2_default  Creating
  Network taskb2_default  Created
  Volume "taskb2_result-db"  Creating
@@ -1272,8 +1288,8 @@ installed_deb_packages=112
  Container taskb2-database-1  Created
  Container taskb2-portal-1  Creating
  Container taskb2-portal-1  Created
- Container taskb2-lms-1  Starting
  Container taskb2-database-1  Starting
+ Container taskb2-lms-1  Starting
  Container taskb2-database-1  Started
  Container taskb2-database-1  Waiting
  Container taskb2-lms-1  Started
@@ -1288,13 +1304,16 @@ NAME                IMAGE                   COMMAND                  SERVICE    
 taskb2-database-1   postgres:16-alpine      "docker-entrypoint.s…"   database   8 seconds ago   Up 7 seconds (healthy)   5432/tcp
 taskb2-lms-1        result-portal:compose   "gunicorn --bind 0.0…"   lms        8 seconds ago   Up 7 seconds             0.0.0.0:8001->8000/tcp, [::]:8001->8000/tcp
 taskb2-portal-1     result-portal:compose   "gunicorn --bind 0.0…"   portal     8 seconds ago   Up 2 seconds             0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
-CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O           BLOCK I/O    PIDS
-4b70d5236b00   taskb2-portal-1     0.01%     48.73MiB / 512MiB   9.52%     5.75kB / 4.8kB    0B / 0B      3
-e1b9ac0e61da   taskb2-database-1   0.03%     24.71MiB / 512MiB   4.83%     3.92kB / 2.98kB   0B / 105MB   6
-95169c6b3c41   taskb2-lms-1        0.01%     46.88MiB / 512MiB   9.16%     2.1kB / 707B      0B / 0B      3
+CONTAINER ID   NAME                CPU %     MEM USAGE / LIMIT   MEM %     NET I/O           BLOCK I/O     PIDS
+f4a5508be880   taskb2-portal-1     0.01%     49.07MiB / 512MiB   9.58%     5.69kB / 4.93kB   0B / 0B       3
+352e507703b1   taskb2-database-1   0.03%     24.96MiB / 512MiB   4.88%     3.88kB / 2.98kB   0B / 52.7MB   6
+a6d318772fa1   taskb2-lms-1        0.01%     46.86MiB / 512MiB   9.15%     2.1kB / 707B      0B / 0B       3
 portal
  Container taskb2-portal-1  Stopping
  Container taskb2-lms-1  Stopping
+ Container taskb2-lms-1  Stopped
+ Container taskb2-lms-1  Removing
+ Container taskb2-lms-1  Removed
  Container taskb2-portal-1  Stopped
  Container taskb2-portal-1  Removing
  Container taskb2-portal-1  Removed
@@ -1302,21 +1321,18 @@ portal
  Container taskb2-database-1  Stopped
  Container taskb2-database-1  Removing
  Container taskb2-database-1  Removed
- Container taskb2-lms-1  Stopped
- Container taskb2-lms-1  Removing
- Container taskb2-lms-1  Removed
  Network taskb2_default  Removing
  Network taskb2_default  Removed
  Network taskb2_default  Creating
  Network taskb2_default  Created
- Container taskb2-database-1  Creating
  Container taskb2-lms-1  Creating
- Container taskb2-lms-1  Created
+ Container taskb2-database-1  Creating
  Container taskb2-database-1  Created
+ Container taskb2-lms-1  Created
  Container taskb2-portal-1  Creating
  Container taskb2-portal-1  Created
- Container taskb2-database-1  Starting
  Container taskb2-lms-1  Starting
+ Container taskb2-database-1  Starting
  Container taskb2-database-1  Started
  Container taskb2-database-1  Waiting
  Container taskb2-lms-1  Started
@@ -1325,8 +1341,8 @@ portal
  Container taskb2-portal-1  Started
 curl: (56) Recv failure: Connection reset by peer
 {"grade":"A","semester":"2025-odd","service":"University Result Portal","student_id":10001}
- Container taskb2-lms-1  Stopping
  Container taskb2-portal-1  Stopping
+ Container taskb2-lms-1  Stopping
  Container taskb2-lms-1  Stopped
  Container taskb2-lms-1  Removing
  Container taskb2-lms-1  Removed
@@ -1340,7 +1356,7 @@ curl: (56) Recv failure: Connection reset by peer
  Network taskb2_default  Removing
  Network taskb2_default  Removed
 === B3.1 container deployment and benchmark ===
-3a9dda544431b35f7b2c73e52a22debd8ae7baf9df879d6cbc1fb72065235094
+66db5b72ffee36a7b028387e0ecd4a3a5aace18d05bc469de4d534d5594408ba
 curl: (56) Recv failure: Connection reset by peer
 Completed 200 requests
 Completed 400 requests
@@ -1354,7 +1370,7 @@ Completed 1800 requests
 Completed 2000 requests
 Finished 2000 requests
 CONTAINER ID   NAME           CPU %     MEM USAGE / LIMIT   MEM %     NET I/O          BLOCK I/O   PIDS
-3a9dda544431   portal-bench   0.01%     47.19MiB / 512MiB   9.22%     1.05MB / 1.2MB   0B / 0B     3
+66db5b72ffee   portal-bench   0.01%     47.27MiB / 512MiB   9.23%     1.05MB / 1.2MB   0B / 0B     3
 === B3.3 kind three-pod cluster, deletion recovery, load and scale ===
 Creating cluster "assignment5" ...
  • Ensuring node image (kindest/node:v1.37.0) 🖼️  ...
@@ -1373,16 +1389,16 @@ Creating cluster "assignment5" ...
  ✓ Joining worker nodes 🚜
  • Waiting ≤ 3m0s for control-plane = Ready ⏳  ...
  ✓ Waiting ≤ 3m0s for control-plane = Ready ⏳
- • Ready after 11s 💚
+ • Ready after 7s 💚
 Set kubectl context to "kind-assignment5"
 You can now use your cluster with:
 
 kubectl cluster-info --context kind-assignment5
 
-Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
-Image: "result-portal:compose" with ID "sha256:cb62a595c6bf1042d49375230bec3e88f655f1778ca90d9dbb021c41e182068b" not yet present on node "assignment5-worker", loading...
-Image: "result-portal:compose" with ID "sha256:cb62a595c6bf1042d49375230bec3e88f655f1778ca90d9dbb021c41e182068b" not yet present on node "assignment5-control-plane", loading...
-Image: "result-portal:compose" with ID "sha256:cb62a595c6bf1042d49375230bec3e88f655f1778ca90d9dbb021c41e182068b" not yet present on node "assignment5-worker2", loading...
+Have a nice day! 👋
+Image: "result-portal:compose" with ID "sha256:8712febecf042c9af4879c465e262ec468ba76c32c63888923e1a6ca01f96415" not yet present on node "assignment5-worker2", loading...
+Image: "result-portal:compose" with ID "sha256:8712febecf042c9af4879c465e262ec468ba76c32c63888923e1a6ca01f96415" not yet present on node "assignment5-control-plane", loading...
+Image: "result-portal:compose" with ID "sha256:8712febecf042c9af4879c465e262ec468ba76c32c63888923e1a6ca01f96415" not yet present on node "assignment5-worker", loading...
 deployment.apps/result-portal created
 service/result-portal created
 Waiting for deployment "result-portal" rollout to finish: 0 of 3 updated replicas are available...
@@ -1390,15 +1406,15 @@ Waiting for deployment "result-portal" rollout to finish: 1 of 3 updated replica
 Waiting for deployment "result-portal" rollout to finish: 2 of 3 updated replicas are available...
 deployment "result-portal" successfully rolled out
 NAME                             READY   STATUS    RESTARTS   AGE   IP           NODE                  NOMINATED NODE   READINESS GATES
-result-portal-55744f64c4-4wwzz   1/1     Running   0          6s    10.244.3.3   assignment5-worker    <none>           <none>
-result-portal-55744f64c4-b6777   1/1     Running   0          6s    10.244.3.2   assignment5-worker    <none>           <none>
-result-portal-55744f64c4-x47d2   1/1     Running   0          6s    10.244.1.2   assignment5-worker2   <none>           <none>
-Name:             result-portal-55744f64c4-4wwzz
+result-portal-55744f64c4-g8lht   1/1     Running   0          6s    10.244.3.3   assignment5-worker    <none>           <none>
+result-portal-55744f64c4-pwnt8   1/1     Running   0          6s    10.244.1.2   assignment5-worker2   <none>           <none>
+result-portal-55744f64c4-sw6lm   1/1     Running   0          6s    10.244.3.2   assignment5-worker    <none>           <none>
+Name:             result-portal-55744f64c4-g8lht
 Namespace:        default
 Priority:         0
 Service Account:  default
 Node:             assignment5-worker/172.18.0.2
-Start Time:       Tue, 24 Nov 2026 17:52:39 +0000
+Start Time:       Tue, 24 Nov 2026 19:07:57 +0000
 Labels:           app=result-portal
                   pod-template-hash=55744f64c4
 Annotations:      <none>
@@ -1409,13 +1425,13 @@ IPs:
 Controlled By:  ReplicaSet/result-portal-55744f64c4
 Containers:
   portal:
-    Container ID:   containerd://862d36b9b1a5ac6f22d9ccb569024a4eb9384d0138fa909e31919d295591d564
+    Container ID:   containerd://bf3993b49d3e81a48efeb25b40faa6c494dbc52c30f405c6702916f14e7e00c7
     Image:          result-portal:compose
-    Image ID:       docker.io/library/import-2026-11-24@sha256:70298d0f03ddf7fd0dba92ad6746798c8a7d540e7c19ace1b15cc46f58787938
+    Image ID:       docker.io/library/import-2026-11-24@sha256:80c5d8a780c4e13321f346131f904ec30485082408fc1a6bd348642b72395b3e
     Port:           8000/TCP
     Host Port:      0/TCP
     State:          Running
-      Started:      Tue, 24 Nov 2026 17:52:39 +0000
+      Started:      Tue, 24 Nov 2026 19:07:57 +0000
     Ready:          True
     Restart Count:  0
     Limits:
@@ -1427,7 +1443,7 @@ Containers:
     Readiness:    http-get http://:8000/health delay=2s timeout=1s period=5s successThreshold=1 failureThreshold=3
     Environment:  <none>
     Mounts:
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-57n6z (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-xcrwm (ro)
 Conditions:
   Type                        Status
   PodReadyToStartContainers   True 
@@ -1436,7 +1452,7 @@ Conditions:
   ContainersReady             True 
   PodScheduled                True 
 Volumes:
-  kube-api-access-57n6z:
+  kube-api-access-xcrwm:
     Type:                    Projected (a volume that contains injected data from multiple sources)
     TokenExpirationSeconds:  3607
     ConfigMapName:           kube-root-ca.crt
@@ -1449,18 +1465,17 @@ Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists fo
 Events:
   Type    Reason     Age   From               Message
   ----    ------     ----  ----               -------
-  Normal  Scheduled  6s    default-scheduler  Successfully assigned default/result-portal-55744f64c4-4wwzz to assignment5-worker
+  Normal  Scheduled  6s    default-scheduler  Successfully assigned default/result-portal-55744f64c4-g8lht to assignment5-worker
   Normal  Pulled     6s    kubelet            spec.containers{portal}: Container image "result-portal:compose" already present on machine and can be accessed by the pod
   Normal  Created    6s    kubelet            spec.containers{portal}: Container created
   Normal  Started    6s    kubelet            spec.containers{portal}: Container started
-Deleting pod result-portal-55744f64c4-4wwzz
-pod "result-portal-55744f64c4-4wwzz" deleted from default namespace
-Waiting for deployment "result-portal" rollout to finish: 2 of 3 updated replicas are available...
+Deleting pod result-portal-55744f64c4-g8lht
+pod "result-portal-55744f64c4-g8lht" deleted from default namespace
 deployment "result-portal" successfully rolled out
 NAME                             READY   STATUS    RESTARTS   AGE   IP           NODE                  NOMINATED NODE   READINESS GATES
-result-portal-55744f64c4-7hrsc   1/1     Running   0          7s    10.244.1.3   assignment5-worker2   <none>           <none>
-result-portal-55744f64c4-b6777   1/1     Running   0          13s   10.244.3.2   assignment5-worker    <none>           <none>
-result-portal-55744f64c4-x47d2   1/1     Running   0          13s   10.244.1.2   assignment5-worker2   <none>           <none>
+result-portal-55744f64c4-74sk9   1/1     Running   0          4s    10.244.1.3   assignment5-worker2   <none>           <none>
+result-portal-55744f64c4-pwnt8   1/1     Running   0          11s   10.244.1.2   assignment5-worker2   <none>           <none>
+result-portal-55744f64c4-sw6lm   1/1     Running   0          11s   10.244.3.2   assignment5-worker    <none>           <none>
 === B4.1 second workload with independent resource limits ===
 deployment.apps/lms created
 service/lms created
@@ -1474,12 +1489,12 @@ metadata:
     deployment.kubernetes.io/revision: "1"
     kubectl.kubernetes.io/last-applied-configuration: |
       {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"lms","namespace":"default"},"spec":{"replicas":2,"selector":{"matchLabels":{"app":"lms"}},"template":{"metadata":{"labels":{"app":"lms"}},"spec":{"containers":[{"env":[{"name":"APP_NAME","value":"Learning Management Service"}],"image":"result-portal:compose","imagePullPolicy":"IfNotPresent","name":"lms","ports":[{"containerPort":8000}],"readinessProbe":{"httpGet":{"path":"/health","port":8000}},"resources":{"limits":{"cpu":"400m","memory":"256Mi"},"requests":{"cpu":"200m","memory":"128Mi"}}}]}}}}
-  creationTimestamp: "2026-11-24T17:52:52Z"
+  creationTimestamp: "2026-11-24T19:08:08Z"
   generation: 1
   name: lms
   namespace: default
-  resourceVersion: "778"
-  uid: eeaf318d-c5b4-44a0-83e4-deb9af93acf4
+  resourceVersion: "833"
+  uid: f0a19698-1ae5-4941-8c5e-cd1897285e5b
 spec:
   progressDeadlineSeconds: 600
   replicas: 2
@@ -1533,14 +1548,14 @@ spec:
 status:
   availableReplicas: 2
   conditions:
-  - lastTransitionTime: "2026-11-24T17:52:53Z"
-    lastUpdateTime: "2026-11-24T17:52:53Z"
+  - lastTransitionTime: "2026-11-24T19:08:19Z"
+    lastUpdateTime: "2026-11-24T19:08:19Z"
     message: Deployment has minimum availability.
     reason: MinimumReplicasAvailable
     status: "True"
     type: Available
-  - lastTransitionTime: "2026-11-24T17:52:52Z"
-    lastUpdateTime: "2026-11-24T17:52:53Z"
+  - lastTransitionTime: "2026-11-24T19:08:08Z"
+    lastUpdateTime: "2026-11-24T19:08:19Z"
     message: ReplicaSet "lms-6895f5cf59" has successfully progressed.
     reason: NewReplicaSetAvailable
     status: "True"
@@ -1557,29 +1572,29 @@ Waiting for deployment "result-portal" rollout to finish: 4 of 6 updated replica
 Waiting for deployment "result-portal" rollout to finish: 5 of 6 updated replicas are available...
 deployment "result-portal" successfully rolled out
 NAME                            READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                  SELECTOR
-deployment.apps/lms             2/2     2            2           22s   lms          result-portal:compose   app=lms
-deployment.apps/result-portal   6/6     6            6           35s   portal       result-portal:compose   app=result-portal
+deployment.apps/lms             2/2     2            2           32s   lms          result-portal:compose   app=lms
+deployment.apps/result-portal   6/6     6            6           43s   portal       result-portal:compose   app=result-portal
 
 NAME                                 READY   STATUS    RESTARTS   AGE   IP           NODE                  NOMINATED NODE   READINESS GATES
-pod/lms-6895f5cf59-2wbr6             1/1     Running   0          22s   10.244.3.4   assignment5-worker    <none>           <none>
-pod/lms-6895f5cf59-fgt9d             1/1     Running   0          22s   10.244.1.4   assignment5-worker2   <none>           <none>
-pod/result-portal-55744f64c4-5rxhc   1/1     Running   0          18s   10.244.3.5   assignment5-worker    <none>           <none>
-pod/result-portal-55744f64c4-7hrsc   1/1     Running   0          29s   10.244.1.3   assignment5-worker2   <none>           <none>
-pod/result-portal-55744f64c4-b6777   1/1     Running   0          35s   10.244.3.2   assignment5-worker    <none>           <none>
-pod/result-portal-55744f64c4-k47cz   1/1     Running   0          18s   10.244.1.5   assignment5-worker2   <none>           <none>
-pod/result-portal-55744f64c4-pjff9   1/1     Running   0          18s   10.244.3.6   assignment5-worker    <none>           <none>
-pod/result-portal-55744f64c4-x47d2   1/1     Running   0          35s   10.244.1.2   assignment5-worker2   <none>           <none>
+pod/lms-6895f5cf59-92bhk             1/1     Running   0          32s   10.244.1.4   assignment5-worker2   <none>           <none>
+pod/lms-6895f5cf59-p6j6z             1/1     Running   0          32s   10.244.3.4   assignment5-worker    <none>           <none>
+pod/result-portal-55744f64c4-74sk9   1/1     Running   0          36s   10.244.1.3   assignment5-worker2   <none>           <none>
+pod/result-portal-55744f64c4-pwnt8   1/1     Running   0          43s   10.244.1.2   assignment5-worker2   <none>           <none>
+pod/result-portal-55744f64c4-rgrn7   1/1     Running   0          18s   10.244.3.5   assignment5-worker    <none>           <none>
+pod/result-portal-55744f64c4-sw6lm   1/1     Running   0          43s   10.244.3.2   assignment5-worker    <none>           <none>
+pod/result-portal-55744f64c4-wjxhf   1/1     Running   0          18s   10.244.1.5   assignment5-worker2   <none>           <none>
+pod/result-portal-55744f64c4-xxfkt   1/1     Running   0          18s   10.244.3.6   assignment5-worker    <none>           <none>
 Deleting cluster "assignment5" ...
-Deleted nodes: ["assignment5-worker" "assignment5-control-plane" "assignment5-worker2"]
+Deleted nodes: ["assignment5-worker2" "assignment5-control-plane" "assignment5-worker"]
 === B4 capacity, annual compute-only sensitivity and plots ===
 requests_per_student=1; average_rps=20.83; modeled_5x_peak_rps=104.17; required_at_70pct=1
-requests_per_student=5; average_rps=104.17; modeled_5x_peak_rps=520.83; required_at_70pct=3
-requests_per_student=10; average_rps=208.33; modeled_5x_peak_rps=1041.67; required_at_70pct=6
+requests_per_student=5; average_rps=104.17; modeled_5x_peak_rps=520.83; required_at_70pct=4
+requests_per_student=10; average_rps=208.33; modeled_5x_peak_rps=1041.67; required_at_70pct=7
 Input: 150,000 students / 2 hours; 1/5/10 HTTP requests per student; modeled 5x peak; 70% target utilization
-measured_container_rps=270.20; conservative_10_request_replica_count=ceil(peak/(measured_rps*0.70))=6
-three-replica_safety_floor=3; fixed_instances=6
-fixed_peak_fleet_cloud_compute_only_usd_year=4388.76
-cloud_only_3_vm_baseline_plus_8h_burst_compute_only_usd_year=2196.38
-hybrid_incremental_cloud_burst_compute_only_usd_year=2.00; existing campus baseline cost excluded
+measured_container_rps=247.49; conservative_10_request_replica_count=ceil(peak/(measured_rps*0.70))=7
+three-replica_safety_floor=3; fixed_instances=7
+fixed_peak_fleet_cloud_compute_only_usd_year=5120.22
+cloud_only_3_vm_baseline_plus_8h_burst_compute_only_usd_year=2197.05
+hybrid_incremental_cloud_burst_compute_only_usd_year=2.67; existing campus baseline cost excluded
 Excludes database, cluster control plane, load balancer, disks, backups, egress, taxes, support and campus-host cost. Synthetic password-hash throughput is an optimistic lower bound for database-backed result lookup; load-test the real query before production sizing.
 OK: B1 TODO output, Nginx/systemd/ufw health, Docker build/user/limits/DB volume, three deployment rates, pod replacement, six replicas during load, LMS limits, capacity model and charts.
