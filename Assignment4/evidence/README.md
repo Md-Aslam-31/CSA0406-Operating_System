@@ -7,3 +7,8 @@ The source programs were compiled and run locally with MSYS2 UCRT64 GCC on Windo
 - [Workflow definition](../.github/workflows/assignment4-linux.yml)
 
 Reproduce the Linux run with `bash scripts/run_linux_evidence.sh` in Ubuntu 24.04. Disk and streaming queue timings are stated-assumption simulations, not physical benchmarks. Linux virtual-device values describe the hosted runner.
+
+
+## OnlineGDB screenshot
+
+- onlinegdb/task02-fragmentation-demo.jpg: OnlineGDB compile/run view for Task02/fragmentation_demo.c.

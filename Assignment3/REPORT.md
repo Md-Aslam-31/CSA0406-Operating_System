@@ -167,3 +167,9 @@ On a small RTOS with no virtual memory, preallocate and statically partition the
 | Q7 | `Task07/`; `evidence/task07-memory-plan.txt` |
 
 Rebuild with `bash scripts/run_linux_evidence.sh` from `Assignment3/`. Measurements are from the Ubuntu CI runner and are system-specific; the disk and real-time limitations above are explicit. Reference concepts: Silberschatz, Galvin and Gagne, *Operating System Concepts*, 10th ed.; Linux `ld.so(8)`, `dlopen(3)`, `mmap(2)`, `mlock(2)`, `getrusage(2)`, `proc(5)` and `proc_pid_smaps(5)` manual pages.
+
+## OnlineGDB output screenshot
+
+This capture shows `Task05/replacement_lab.c` compiled and run in OnlineGDB. It includes the replacement-policy measurements, FIFO hand-check, and exit code 0. The raw result files remain in `evidence/`.
+
+![OnlineGDB run of Assignment 3 page replacement lab](evidence/onlinegdb/task05-replacement-lab.jpg)

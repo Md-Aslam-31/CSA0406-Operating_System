@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 from xml.sax.saxutils import escape
 
 from docx import Document
@@ -10,7 +11,7 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.platypus import (BaseDocTemplate, Frame, PageBreak, PageTemplate, Paragraph,
-                                Preformatted, Spacer, Table, TableStyle)
+                                Image as RLImage, Preformatted, Spacer, Table, TableStyle)
 
 BASE = Path(__file__).resolve().parent.parent
 lines = (BASE / "REPORT.md").read_text(encoding="utf-8").splitlines()
@@ -50,6 +51,12 @@ def flush_table():
 for line in lines:
     if line.strip() == "<!-- pagebreak -->":
         doc.add_page_break(); continue
+    image_match=re.fullmatch(r"!\[([^]]*)\]\(([^)]+)\)",line.strip())
+    if image_match:
+        p=doc.add_paragraph(); p.alignment=WD_ALIGN_PARAGRAPH.CENTER
+        p.add_run().add_picture(str(BASE/image_match.group(2)),width=Inches(6.0))
+        cap=doc.add_paragraph(image_match.group(1)); cap.alignment=WD_ALIGN_PARAGRAPH.CENTER
+        continue
     if line.startswith("```"):
         if in_code:
             p=doc.add_paragraph(); r=p.add_run("\n".join(code)); r.font.name="Consolas"; r.font.size=Pt(8); p.paragraph_format.left_indent=Inches(.18); code=[]; in_code=False
@@ -100,6 +107,14 @@ def flush_pdf_table():
 for line in lines:
     if line.strip() == "<!-- pagebreak -->":
         story.append(PageBreak()); continue
+    image_match=re.fullmatch(r"!\[([^]]*)\]\(([^)]+)\)",line.strip())
+    if image_match:
+        im=RLImage(str(BASE/image_match.group(2)))
+        scale=min(160*mm/im.imageWidth,170*mm/im.imageHeight)
+        im.drawWidth=im.imageWidth*scale; im.drawHeight=im.imageHeight*scale
+        if im.drawHeight>170*mm: im.drawHeight=170*mm; im.drawWidth=170*mm*im.imageWidth/im.imageHeight
+        story.extend([im,Paragraph(inline(image_match.group(1)),styles["Smallx"]),Spacer(1,5)])
+        continue
     if line.startswith("```"):
         if in_code: story.append(Preformatted("\n".join(code),ParagraphStyle("code",fontName="Courier",fontSize=7.2,leading=9,backColor=colors.HexColor("#f2f4f7"),borderPadding=5))); story.append(Spacer(1,5)); code=[]; in_code=False
         else: flush_pdf_table(); in_code=True

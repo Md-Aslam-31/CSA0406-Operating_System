@@ -175,3 +175,9 @@ Virtualizing everything on two large servers may improve consolidation and snaps
 10. Canonical, Install Ubuntu on WSL 2, https://ubuntu.com/wsl/docs/latest/howto/install-ubuntu-wsl2/.
 
 The assignment PDF and evaluation key supplied for this work are the controlling rubric. Quantitative formulas (call counts, complexity, interrupt estimate) are derived explicitly in text. Timing values are actual single-run CI measurements and are not universal benchmarks. No vendor certification or price is asserted without a target system. Linux program outputs and measurements were executed in the Ubuntu 24.04.5 CI workflow; local Windows WSL installation remains pending an elevated install and restart.
+
+## OnlineGDB output screenshot
+
+This capture shows `Task-07/flush_demo.c` compiled and run in OnlineGDB. The terminal displays `shell: running job 2` and exit code 0. The complete task output and evidence remain in `evidence/`.
+
+![OnlineGDB run of Assignment 1 Task 7 flush demo](evidence/onlinegdb/task07-flush-demo.jpg)

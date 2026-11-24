@@ -178,3 +178,9 @@ The runner compiles every C program with gcc -std=c11 -Wall -Wextra -pthread, ca
 * Linux kernel, [ext4 documentation](https://www.kernel.org/doc/html/latest/admin-guide/ext4.html) and [XFS documentation](https://docs.kernel.org/next/admin-guide/xfs.html).
 * [Btrfs documentation](https://btrfs.readthedocs.io/en/stable/btrfs-man5.html), [OpenZFS copy-on-write](https://openzfs.github.io/openzfs-docs/Basic%20Concepts/Copy-on-write.html), and [Apple APFS overview](https://support.apple.com/en-asia/guide/security/seca6147599e/web) and the [published APFS size table](https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/APFS_Guide/VolumeFormatComparison/VolumeFormatComparison.html).
 * Apache Hadoop, [HDFS architecture guide](https://hadoop.apache.org/docs/r3.4.3/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html); AWS, [S3 consistency model](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html).
+
+## OnlineGDB output screenshot
+
+This capture shows `Task02/fragmentation_demo.c` compiled and run in OnlineGDB. It demonstrates the fragmented free-space layout, failure of the contiguous request, successful indexed allocation, and exit code 0.
+
+![OnlineGDB run of Assignment 4 fragmentation demo](evidence/onlinegdb/task02-fragmentation-demo.jpg)

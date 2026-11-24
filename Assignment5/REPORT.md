@@ -194,3 +194,9 @@ Reproduce from Ubuntu 24.04 with `bash scripts/run_linux_evidence.sh`; command o
 - Linux: [CFS](https://docs.kernel.org/scheduler/sched-design-CFS.html), [EEVDF](https://docs.kernel.org/scheduler/sched-eevdf.html), [cgroups](https://docs.kernel.org/admin-guide/cgroup-v2.html), [namespaces](https://man7.org/linux/man-pages/man7/namespaces.7.html).
 - Platforms: [Ubuntu 24.04 requirements](https://ubuntu.com/server/docs/reference/installation/system-requirements/), [Windows Server Core](https://learn.microsoft.com/windows-server/administration/server-core/what-is-server-core), [Windows pricing](https://www.microsoft.com/en-us/windows-server/pricing).
 - Operations: [systemd](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html), [Ansible](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html), [Docker](https://docs.docker.com/build/building/best-practices/), [Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), [kind](https://kind.sigs.k8s.io/docs/user/quick-start/), [AWS T3 pricing](https://aws.amazon.com/ec2/instance-types/t3/).
+
+## OnlineGDB output screenshot
+
+This capture shows the capacity arithmetic in OnlineGDB Python 3 using the measured container throughput of 263.61 requests/s from `evidence/benchmark.csv`. The full `TaskB4/capacity_estimate.py` reads that CSV from the repository, which OnlineGDB does not have in its isolated workspace; therefore, the screenshot is a standalone reproduction of the same calculation, not a run of the full file-reading script. The full script output is preserved in `evidence/`.
+
+![OnlineGDB Python capacity calculation using measured container throughput](evidence/onlinegdb/taskb4-capacity-calculation.jpg)

@@ -111,8 +111,9 @@ for line in lines:
         story.append(PageBreak()); continue
     image_match=re.fullmatch(r"!\[([^]]*)\]\(([^)]+)\)",line.strip())
     if image_match:
-        im=RLImage(str(BASE/image_match.group(2)),width=160*mm)
-        if im.drawHeight>86*mm: im.drawHeight=86*mm; im.drawWidth=86*mm*im.imageWidth/im.imageHeight
+        im=RLImage(str(BASE/image_match.group(2)))
+        scale=min(160*mm/im.imageWidth,170*mm/im.imageHeight)
+        im.drawWidth=im.imageWidth*scale; im.drawHeight=im.imageHeight*scale
         story.extend([im,Paragraph(inline(image_match.group(1)),styles["Smallx"]),Spacer(1,5)])
         continue
     if line.startswith("```"):

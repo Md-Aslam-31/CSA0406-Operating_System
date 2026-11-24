@@ -145,3 +145,9 @@ For a research cluster with known, bounded job classes, use admission control an
 | Q6 | `Task06/banker_todo.c`, `Task06/banker.c`; `evidence/task06-banker*` |
 
 Run all with `bash scripts/run_linux_evidence.sh` from `Assignment2/`. The workflow uploads the raw logs as an Actions artifact; the same captured files are committed in `evidence/`. The process snapshot is intentionally transient, and all performance measurements depend on runner load/hardware. References: Silberschatz, Galvin and Gagne, *Operating System Concepts*, 10th ed.; Linux `fork(2)`, `pipe(2)`, `shm_open(3)`, `pthread(7)` and `proc(5)` manual pages.
+
+## OnlineGDB output screenshot
+
+This capture shows `Task02/scheduling.c` compiled and run in OnlineGDB. It displays the FCFS Gantt output and the first completion-time rows; the complete output for every scheduling policy remains in `evidence/task02-scheduling.txt`.
+
+![OnlineGDB run of Assignment 2 CPU scheduling simulator](evidence/onlinegdb/task02-scheduling.jpg)
