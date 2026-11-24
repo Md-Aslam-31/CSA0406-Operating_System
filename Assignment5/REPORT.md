@@ -197,12 +197,12 @@ Reproduce from Ubuntu 24.04 with `bash scripts/run_linux_evidence.sh`; command o
 
 ## Preliminary capacity arithmetic screenshot
 
-This first standalone calculation used an earlier throughput value and is superseded by the complete file-reading run in “Complete capacity estimator run in OnlineGDB” below. The final run reads the committed benchmark CSV and reports 303.12 measured container requests/s.
+This first standalone calculation is preliminary. The complete OnlineGDB file-reading run below captured the preceding benchmark sample at 303.12 requests/s. A later Linux evidence run (#45451421902) refreshed the committed benchmark CSV to 270.20 requests/s; the current capacity table and cost figures in this report use that latest run.
 
 ![Preliminary OnlineGDB capacity arithmetic](evidence/onlinegdb/taskb4-capacity-calculation.jpg)
 ## Complete capacity estimator run in OnlineGDB
 
-The full `TaskB4/capacity_estimate.py` was entered and run with the assignment's actual `evidence/benchmark.csv` data. OnlineGDB uses a flat project directory, so the run copy changed only the default CSV path from `evidence/benchmark.csv` to `benchmark.csv`; the script logic and CSV values were unchanged. The measured container rate is 303.12 requests/s. The screenshots show all 1/5/10 request-per-student scenarios and the annual compute-only cost summary. The original script and unchanged benchmark CSV remain in the repository.
+The full `TaskB4/capacity_estimate.py` was entered and run with the then-committed benchmark CSV. OnlineGDB uses a flat project directory, so that run copy changed only the default CSV path from `evidence/benchmark.csv` to `benchmark.csv`; the script logic and input rows were unchanged. The captured run measured 303.12 requests/s and shows all 1/5/10 request-per-student scenarios and annual compute-only costs. The subsequent Linux evidence run #45451421902 remeasured 270.20 requests/s; the latest CSV and capacity/cost transcript in this repository are authoritative for the current written analysis. This difference is expected for a noisy synthetic benchmark.
 
 ![Capacity estimator scenarios and final summary](evidence/onlinegdb/capacity_estimate-full.jpg)
 
